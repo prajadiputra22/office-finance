@@ -54,6 +54,24 @@ class AdminAuthController extends Controller
         return redirect(route('admin.dashboard'));
     }
 
+    public function reset(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required'],
+            'new_password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $admin = Auth::guard('admin')->user();
+
+        if ($admin instanceof Admin) {
+            $admin->update([
+                'password' => Hash::make($request->new_password),
+            ]);
+        }
+
+        return back()->with('status', 'Password berhasil diubah.');
+    }
+
     public function logout(Request $request)
     {
         Auth::guard('admin')->logout();

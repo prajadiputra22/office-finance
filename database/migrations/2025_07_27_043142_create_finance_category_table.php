@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('finance_category', function (Blueprint $table) {
             $table->id();
             $table->string('category_name');
-            $table->enum('tipe', ['income', 'expenditure']);
+            $table->enum('type', ['income', 'expenditure']);
             $table->timestamps();
         });
     }

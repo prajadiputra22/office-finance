@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('income', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained('finance_category')->onDelete('restrict');
+            $table->string('description', 25);
             $table->decimal('nominal', 15);
             $table->date('date');
             $table->timestamps();
