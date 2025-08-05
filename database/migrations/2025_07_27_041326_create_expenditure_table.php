@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->constrained('finance_category')->onDelete('restrict');
             $table->text('description',25);
-            $table->decimal('nominal', 15);
+            $table->decimal('amount', 15);
             $table->date('date');
             $table->timestamps();
         });
