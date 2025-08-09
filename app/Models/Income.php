@@ -10,9 +10,14 @@ class Income extends Model
     use HasFactory;
 
     protected $fillable = [
-        'description',
-        'category_finance',
+        'category_id',
+        'customer',
         'amount',
+        'gyro_cash',
+        'date_entry',
+        'description',
+        'date_factur',
+        'no_factur',
         'date',
     ];
 }
