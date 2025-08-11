@@ -15,7 +15,7 @@ class IncomeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'category_id'   => 'required|exists:finance_category,id',
+            'category_id'   => 'required|exists:category,id',
             'customer'      => 'required|string|max:25',
             'amount'        => 'required|numeric',
             'gyro_cash'     => 'required|numeric',
