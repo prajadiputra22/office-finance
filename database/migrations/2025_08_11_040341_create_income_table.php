@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('date_entry');
             $table->string('description', 255);
             $table->date('date_factur');
-            $table->integer('no_factur',17);
+            $table->integer('no_factur');
             $table->date('date');
             $table->timestamps();
         });
