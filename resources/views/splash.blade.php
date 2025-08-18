@@ -11,12 +11,12 @@
 
     <h1 class="font-poppins font-bold text-4xl splash-animation flex space-x-2">
         <span class="text-black splash-animation">Office</span>
-        <span class="text-[#B6F500] splash-animation" style="animation-delay: 0.3s">Finance</span>
+        <span class="text-[#B6F500] splash-animation">Finance</span>
     </h1>
 
     <script>
         setTimeout(function(){
-            window.location.href = "/login";
+            window.location.href = "{{ Auth::guard('admin')->check() ? route('welcome') : route('admin.login') }}";
         }, 3000); 
     </script>
 
