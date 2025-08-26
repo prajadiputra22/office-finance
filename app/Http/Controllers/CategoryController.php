@@ -7,14 +7,12 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    // Tampilkan semua kategori
     public function index()
     {
         $categories = Category::all();
         return view('category.index', compact('categories'));
     }
 
-    // Form tambah kategori
     public function create()
     {
         return view('category.create');
