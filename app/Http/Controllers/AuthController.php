@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 
-class AdminAuthController extends Controller
+class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('Admin.login');
+        return view('login');
     }
 
     public function login(Request $request)
@@ -24,7 +24,7 @@ class AdminAuthController extends Controller
 
         if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('admin.dashboard'));
+            return redirect()->intended(route('dashboard'));
         }
 
         return back()->withErrors([
@@ -34,7 +34,7 @@ class AdminAuthController extends Controller
 
     public function showRegistrationForm()
     {
-        return view('Admin.register');
+        return view('register');
     }
 
     public function register(Request $request)
@@ -51,7 +51,7 @@ class AdminAuthController extends Controller
 
         Auth::guard('admin')->login($admin);
 
-        return redirect(route('admin.dashboard'));
+        return redirect(route('dashboard'));
     }
 
     public function reset(Request $request)
