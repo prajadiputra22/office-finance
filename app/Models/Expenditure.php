@@ -9,6 +9,8 @@ class Expenditure extends Model
 {
     use HasFactory;
 
+    protected $table = 'expenditure';
+    
     protected $fillable = [
         'category_id',
         'customer',
