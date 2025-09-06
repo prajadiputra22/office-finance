@@ -10,44 +10,56 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        return view('category.index', compact('categories'));
+        return view('category', compact('categories'));
     }
 
     public function create()
     {
-        return view('category.create');
+        return view('categories.create');
     }
 
     // Simpan kategori baru
     public function store(Request $request)
     {
         $request->validate([
-            'category_name' => 'required|string|max:255',
-            'type' => 'required|in:income,expenditure',
+            'category'   => 'required|in:masuk,keluar',
+            'subcategory'=> 'nullable|string|max:255',
+            'type'       => 'required|in:income,expenditure',
+        ]);
+        
+        $categoryName = $request->subcategory ?? ucfirst($request->category);
+        
+        Category::create([
+            'category_name' => $categoryName,
+            'type' => $request->type,
         ]);
 
-        Category::create($request->only('category_name', 'type'));
-
-        return redirect()->route('category.index')->with('success', 'Kategori berhasil ditambahkan.');
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
 
     // Form edit kategori
     public function edit(Category $category)
     {
-        return view('category.edit', compact('category'));
+        return view('categories.edit', compact('category'));
     }
 
     // Update kategori
     public function update(Request $request, Category $category)
     {
         $request->validate([
-            'category_name' => 'required|string|max:255',
-            'type' => 'required|in:income,expenditure',
+            'category'   => 'required|in:masuk,keluar',
+            'subcategory'=> 'nullable|string|max:255',
+            'type'       => 'required|in:income,expenditure',
         ]);
 
-        $category->update($request->only('category_name', 'type'));
+        $categoryName = $request->subcategory ?? ucfirst($request->category);
+        
+        $category->update([
+            'category_name' => $categoryName,
+            'type' => $request->type,
+        ]);
 
-        return redirect()->route('category.index')->with('success', 'Kategori berhasil diperbarui.');
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil diperbarui.');
     }
 
     // Hapus kategori
@@ -55,7 +67,7 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return redirect()->route('category.index')->with('success', 'Kategori berhasil dihapus.');
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus.');
     }
 
     // Ambil kategori berdasarkan tipe

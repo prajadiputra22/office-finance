@@ -6,6 +6,7 @@
     <title>@yield('title', 'Office Finance')</title>
     @vite('resources/css/app.css')
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<<<<<<< HEAD
 </head>
 <body class="font-Poppins bg-[#f5f5f5]">
     <div class="flex min-h-screen">
@@ -72,6 +73,21 @@
             </nav>
         </aside>
         <main class="flex-1 p-6">
+=======
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-[#f5f5f5] font-poppins">
+    <div class="flex min-h-screen">
+        @include('layouts.sidebar')
+
+        <main class="flex-1 p-6">
+            @hasSection('header')
+            @yield('header')
+            @else
+            @include('layouts.header')
+            @endif
+            
+>>>>>>> origin/ui-ux
             @yield('content')
         </main>
     </div>
