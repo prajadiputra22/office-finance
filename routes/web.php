@@ -12,14 +12,14 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::get('/transaksi', function () {
-    return view('transaksi');
-})->name('transaksi');
+Route::get('/transaction', function () {
+    return view('transaction');
+})->name('transaction');
 
 
-Route::get('/kategori', function () {
-    return view('kategori');
-})->name('kategori');
+Route::get('/category', function () {
+    return view('category');
+})->name('category');
 
 // Route::middleware('guest:admin')->group(function () {
 //     // Login
