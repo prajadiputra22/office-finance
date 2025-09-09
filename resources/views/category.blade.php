@@ -3,203 +3,144 @@
 @section('title', 'Kategori')
 
 @section('content')
-<<<<<<< HEAD
-<header class="flex justify-end mb-6 animate-fadeIn">
-    <h1 class="text-2xl font-bold">
-        Office <span class="text-lime-500">Finance</span>
-    </h1>
-</header>
+    <main class="flex-1 p-6" x-data="{ openAddCategory: false }">
+        <!-- Updated header section to match the reference design exactly -->
+        <section class="flex justify-start items-center gap-4 mb-8">
+            <button type="button" @click="openAddCategory = true"
+                class="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-all duration-200 shadow-sm">
+                <span class="mr-2 text-lg font-bold">⊕</span>
+                Tambah Kategori pemasukan
+            </button>
+        </section>
 
-<section class="mb-6 animate-fadeIn">
-    <button class="flex items-center px-5 py-3 bg-white border border-gray-300 rounded-lg shadow hover:bg-lime-500 hover:text-white transition">
-        <span class="mr-2 font-bold text-xl">+</span>
-        Tambah Kategori Pemasukan
-    </button>
-</section>
+        <!-- Updated table section with proper styling to match reference -->
+        <section class="mt-8">
+            <h2 class="text-2xl font-bold text-center mb-8">Daftar Kategori</h2>
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <!-- Added No column to show sequential numbering -->
+                            <th class="px-6 py-4 text-left font-semibold text-gray-900 w-16">No</th>
+                            <th class="px-6 py-4 text-left font-semibold text-gray-900 w-1/4">Status</th>
+                            <th class="px-6 py-4 text-left font-semibold text-gray-900 w-1/2">Kategori</th>
+                            <th class="px-6 py-4 text-center font-semibold text-gray-900 w-1/4">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        @forelse ($categories as $index => $category)
+                            <tr class="hover:bg-gray-50">
+                                <!-- Display sequential number starting from 1 -->
+                                <td class="px-6 py-4 text-gray-600 font-medium">{{ $index + 1 }}</td>
+                                <td class="px-6 py-4">
+                                    @if ($category->type === 'income')
+                                        <span class="text-green-600 font-semibold">Pemasukan</span>
+                                    @else
+                                        <span class="text-red-600 font-semibold">Pengeluaran</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 text-gray-900">{{ $category->category_name }}</td>
+                                <td class="px-6 py-4 text-center">
+                                    <!-- Added delete form with proper route and method -->
+                                    <form action="{{ route('category.destroy', $category->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <!-- Updated colspan to include new No column -->
+                                <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                                    Belum ada kategori yang ditambahkan
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-<section>
-    <h2 class="text-2xl font-semibold text-center mb-6 animate-fadeIn">
-        Daftar Kategori
-    </h2>
+        <!-- Added success message display -->
+        @if(session('success'))
+            <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
+                {{ session('success') }}
+            </div>
+        @endif
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="animate-slideInUp">
-            <h3 class="text-lg font-semibold text-center mb-4">Pemasukan</h3>
-            <table class="w-full bg-white rounded-lg shadow border border-gray-200">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-4 py-2 text-left">Sumber Pemasukan</th>
-                        <th class="px-4 py-2 text-left">Nominal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-t hover:bg-gray-50">
-                        <td class="px-4 py-2">CV Tiga Jaya</td>
-                        <td class="px-4 py-2 text-green-600 font-semibold">IDR 100.000.000</td>
-                    </tr>
-                    <tr class="border-t hover:bg-gray-50">
-                        <td class="px-4 py-2">CV Tiga Jaya</td>
-                        <td class="px-4 py-2 text-green-600 font-semibold">IDR 100.000.000</td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- Added validation error display -->
+        @if($errors->any())
+            <div class="fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <!-- Modal remains the same -->
+        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-show="openAddCategory"
+            x-transition.opacity style="display: none;">
+            <div class="bg-white rounded-lg w-full max-w-md mx-4 shadow-xl" @click.outside="openAddCategory = false">
+                <!-- Modal Header -->
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h3 class="text-lg font-semibold text-gray-900">Tambah Kategori</h3>
+                    <button type="button" class="text-gray-400 hover:text-gray-600 text-xl"
+                        @click="openAddCategory = false">
+                        ✕
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <form action="{{ route('category.store') }}" method="POST" class="p-4">
+                    @csrf
+
+                    <!-- Kategori Field -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                        <input type="text" name="category_name" value="{{ old('category_name') }}"
+                            class="w-full px-3 py-2 bg-gray-100 border-0 rounded-md focus:bg-white focus:ring-2 focus:ring-[#84cc16] focus:outline-none transition-colors @error('category_name') ring-2 ring-red-500 @enderror"
+                            placeholder="Masukkan nama kategori" required>
+                        @error('category_name')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Status Field -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                        <select name="type"
+                            class="w-full px-3 py-2 bg-gray-100 border-0 rounded-md focus:bg-white focus:ring-2 focus:ring-[#84cc16] focus:outline-none transition-colors @error('type') ring-2 ring-red-500 @enderror" required>
+                            <option value="">Pilih status</option>
+                            <option value="income" {{ old('type') == 'income' ? 'selected' : '' }}>Pemasukan</option>
+                            <option value="expenditure" {{ old('type') == 'expenditure' ? 'selected' : '' }}>Pengeluaran</option>
+                        </select>
+                        @error('type')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="flex justify-end gap-3">
+                        <button type="button" @click="openAddCategory = false"
+                            class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors font-medium">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2 bg-[#84cc16] text-white rounded-md hover:bg-[#65a30d] transition-colors font-medium">
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="animate-slideInUp">
-            <h3 class="text-lg font-semibold text-center mb-4">Pengeluaran</h3>
-            <table class="w-full bg-white rounded-lg shadow border border-gray-200">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-4 py-2 text-left">Sumber Pengeluaran</th>
-                        <th class="px-4 py-2 text-left">Nominal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-t hover:bg-gray-50">
-                        <td class="px-4 py-2">Angsuran Perusahaan</td>
-                        <td class="px-4 py-2 text-red-600 font-semibold">IDR 100.000.000</td>
-                    </tr>
-                    <tr class="border-t hover:bg-gray-50">
-                        <td class="px-4 py-2">Angsuran Perusahaan</td>
-                        <td class="px-4 py-2 text-red-600 font-semibold">IDR 100.000.000</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</section>
+    </main>
 @endsection
-=======
-<main class="flex-1 p-0" x-data="{ openAddKategori: false }">
-    <section class="flex justify-between items-center gap-4 mb-8 flex-wrap">
-        <button
-        type="button"
-        @click="openAddKategori = true"
-        class="flex items-center px-6 py-4 bg-white border-2 border-[#e1e5e9] rounded-xl font-semibold text-gray-700 hover:bg-[#84cc16] hover:border-[#84cc16] hover:text-white hover-translate shadow">
-        <span class="mr-2 font-bold text-xl">+</span>
-        Tambah Kategori Pemasukan
-    </button>
-    
-    <div class="flex gap-2">
-        <input type="text" placeholder="Cari kategori..." class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-lime-500 focus:ring focus:ring-lime-200">
-        <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-lime-500 focus:ring focus:ring-lime-200">
-            <option value="">Filter</option>
-            <option value="income">Pemasukan</option>
-            <option value="expenditure">Pengeluaran</option>
-            <option value="terbaru">Terbaru</option>
-            <option value="terlama">Terlama</option>
-        </select>
-    </div>
-</section>
-
-<section>
-    <h2 class="text-2xl font-semibold text-center mt-12 mb-8 animate-fadeIn">Daftar Kategori</h2>
-    <div class="bg-white rounded-xl shadow p-5">
-        <table class="w-full border-collapse text-sm">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-4 py-3 text-left font-bold">Kategori</th>
-                    <th class="px-4 py-3 text-left font-bold">Tipe</th>
-                    <th class="px-4 py-3 font-bold">Edit</th>
-                    <th class="px-4 py-3 font-bold">Delete</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                @foreach ($categories as $category)
-                <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-3">{{ $category->category_name }}</td>
-                    <td class="px-4 py-3">
-                        @if($category->type === 'income')
-                        <span class="text-green-600 font-semibold">Pemasukan</span>
-                        @else
-                        <span class="text-red-600 font-semibold">Pengeluaran</span>
-                        @endif
-                    </td>
-                    <td class="px-4 py-3 text-center">
-                        <a href="{{ route('categories.edit', $category->id) }}"
-                            class="bg-blue-500 hover:bg-blue-600 text-white px-2.5 py-2 rounded text-base">
-                            ✎
-                        </a>
-                    </td>
-                    <td class="px-4 py-3 text-center">
-                        <form action="{{ route('categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Yakin ingin hapus?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded text-base">
-                                 ⃠
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</section>
-<div 
-class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-x-show="openAddKategori"
-x-transition.opacity
-style="display: none;"
->
-<div class="bg-white p-6 rounded-xl w-full max-w-md shadow-lg" @click.outside="openAddKategori = false">
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg font-semibold">Tambah Kategori</h2>
-        <button 
-        type="button"
-        class="text-gray-500 hover:text-gray-800"
-        @click="openAddKategori = false">
-        ✕
-    </button>
-</div>
-<form action="{{ route('categories.store') }}" method="POST">
-    @csrf
-    <div x-data="{ category: '' }">
-        <div class="mb-3">
-            <label class="block text-sm font-medium">Kategori</label>
-            <select name="category" x-model="category"
-            class="w-full p-2 border rounded focus:ring focus:ring-[#84cc16]">
-            <option value="">-- Pilih Kategori --</option>
-            <option value="keluar">Kas Keluar</option>
-            <option value="masuk">Kas Masuk</option>
-        </select>
-    </div>
-    <div class="mb-3" x-show="category === 'keluar'" x-transition>
-        <label class="block text-sm font-medium">Sub Kategori (Kas Keluar)</label>
-        <select name="subcategory" class="w-full p-2 border rounded focus:ring focus:ring-[#84cc16]">
-            <option value="">-- Pilih Sub Kategori --</option>
-            <option value="angsuran">Angsuran Perusahaan</option>
-            <option value="hutang">Hutang Perusahaan</option>
-            <option value="kasbesar">KAS Besar</option>
-            <option value="kaskecil">KAS Kecil</option>
-        </select>
-    </div>
-    <div class="mb-3" x-show="category === 'masuk'" x-transition>
-        <label class="block text-sm font-medium">Sub Kategori (Kas Masuk)</label>
-        <select name="subcategory" class="w-full p-2 border rounded focus:ring focus:ring-[#84cc16]">
-            <option value="">-- Pilih Sub Kategori --</option>
-            <option value="cvtiga">CV Tiga Jaya</option>
-            <option value="sassu">SAS Sukabumi</option>
-            <option value="saska">SAS Karawang</option>
-        </select>
-    </div>
-</div>
-<div class="mb-3">
-    <label class="block text-sm font-medium">Status</label>
-    <select name="type" class="w-full p-2 border rounded focus:ring focus:ring-[#84cc16]">
-        <option value="income">Pemasukan</option>
-        <option value="expenditure">Pengeluaran</option>
-    </select>
-</div>
-<div class="flex justify-end gap-2 mt-4">
-    <button type="reset" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Hapus</button>
-    <button type="button" 
-    @click="openAddKategori = false" 
-    class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
-    <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Simpan</button>
-</div>
-</form>
-</div>
-</div>
-</main>
-@endsection
->>>>>>> origin/ui-ux

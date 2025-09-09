@@ -9,17 +9,21 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $table = 'transaction';  
+    protected $table = 'transactions'; // nama tabel
 
     protected $fillable = [
         'type',
+        'category_id',
         'amount',
-        'customer',
-        'gyro_cash',
-        'date_entry',
-        'description',
-        'date_factur',
-        'no_factur',
         'date',
+        'description',
     ];
+
+    /**
+     * Relasi ke Category
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 }

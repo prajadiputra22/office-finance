@@ -7,67 +7,49 @@ use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
-    public function index()
-    {  
-        $transactions = Transaction::latest()->get();
-        $income = Transaction::where('type', 'income')->sum('amount');
-        $expenditure = Transaction::where('type', 'expenditure')->sum('amount');    
 
-        return view('transaction', compact('transactions', 'income', 'expenditure'));
-    }
-
-    public function create()
+    public function index(Request $request)
     {
-        return view('transaction');
+        $query = Transaction::query();
+
+        if ($request->has('type') && in_array($request->type, ['income', 'expenditure'])) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $query->whereBetween('date', [$request->start_date, $request->end_date]);
+        }
+
+        $transactions = $query->orderBy('date', 'desc')->paginate(10);
+
+        return view('transaction.index', compact('transactions'));
     }
 
-    public function store(Request $request)
-{
-    $request->validate([
-        'date' => 'required|date',
-        'type' => 'required|in:income,expenditure',
-        'amount' => 'required|numeric',
-        'customer' => 'nullable|string|max:255',
-        'gyro_cash' => 'nullable|string|max:255',
-        'date_entry' => 'nullable|date',
-        'description' => 'nullable|string',
-        'date_factur' => 'nullable|date',
-        'no_factur' => 'nullable|string|max:255',
-    ]);
+    // Detail transaksi
+    public function show($id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        return view('transaction.show', compact('transaction'));
+    }
 
-    Transaction::create($request->all());
-    
-    return redirect()->route('transaction')->with('success', 'Transaksi berhasil ditambahkan');
-}
+    // Hapus transaksi (optional, biasanya jangan hapus manual kalau sinkron dengan income/expenditure)
+    public function destroy($id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        $transaction->delete();
 
-public function edit(Transaction $transaction)
-{
-    return view('transaction', compact('transaction'));
-}
+        return redirect()->route('transactions.index')->with('success', 'Transaction deleted successfully!');
+    }
 
-public function update(Request $request, Transaction $transaction)
-{
-    $request->validate([
-        'date' => 'required|date',
-        'type' => 'required|in:income,expenditure',
-        'amount' => 'required|numeric',
-        'customer' => 'nullable|string|max:255',
-        'gyro_cash' => 'nullable|string|max:255',
-        'date_entry' => 'nullable|date',
-        'description' => 'nullable|string',
-        'date_factur' => 'nullable|date',
-        'no_factur' => 'nullable|string|max:255',
-    ]);
-    
-    $transaction->update($request->all());
-    
-    return redirect()->route('transaction.index')->with('success', 'Transaksi berhasil diperbarui');
-}
+    // Laporan ringkas cashflow bulanan
+    public function report()
+    {
+        $report = Transaction::selectRaw('type, MONTH(date) as month, YEAR(date) as year, SUM(amount) as total')
+            ->groupBy('type', 'year', 'month')
+            ->orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->get();
 
-public function destroy(Transaction $transaction)
-{
-    $transaction->delete();
-    
-    return redirect()->route('transaction.index')->with('success', 'Transaksi berhasil dihapus');
-}
+        return view('transaction.report', compact('report'));
+    }
 }

@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('login');
+        return view('auth.login');
     }
 
     # Proses login
@@ -25,11 +25,7 @@ class AuthController extends Controller
 
         if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-<<<<<<<< HEAD:app/Http/Controllers/AdminAuthController.php
-            return redirect()->intended(route('kategori'));
-========
-            return redirect()->intended(route('dashboard'));
->>>>>>>> origin/ui-ux:app/Http/Controllers/AuthController.php
+            return redirect()->intended(route('category'));
         }
 
         return back()->withErrors([
@@ -39,11 +35,7 @@ class AuthController extends Controller
 
     public function showRegisterForm()
     {
-<<<<<<<< HEAD:app/Http/Controllers/AdminAuthController.php
-        return view('admin.register');
-========
-        return view('register');
->>>>>>>> origin/ui-ux:app/Http/Controllers/AuthController.php
+        return view('auth.register');
     }
 
     # Proses register
@@ -59,13 +51,7 @@ class AuthController extends Controller
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
         ]);
 
-<<<<<<<< HEAD:app/Http/Controllers/AdminAuthController.php
-        return redirect()->route('admin.login')->with('success', 'Registration successful! Please login.');
-========
-        Auth::guard('admin')->login($admin);
-
-        return redirect(route('dashboard'));
->>>>>>>> origin/ui-ux:app/Http/Controllers/AuthController.php
+        return redirect()->route('auth.login')->with('success', 'Registration successful! Please login.');
     }
 
     # Proses reset

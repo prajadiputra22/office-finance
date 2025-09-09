@@ -13,6 +13,9 @@ export default {
       fontFamily: {
         poppins: ['Poppins', 'sans-serif', ...defaultTheme.fontFamily.sans],
       },
+      colors: {
+        finance: '#B6F500',
+      },
     },
   },
   plugins: [],

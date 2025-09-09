@@ -13,62 +13,34 @@ class CategoryController extends Controller
         return view('category', compact('categories'));
     }
 
-    public function create()
-    {
-        return view('categories.create');
-    }
-
     // Simpan kategori baru
     public function store(Request $request)
     {
         $request->validate([
-            'category'   => 'required|in:masuk,keluar',
-            'subcategory'=> 'nullable|string|max:255',
-            'type'       => 'required|in:income,expenditure',
-        ]);
-        
-        $categoryName = $request->subcategory ?? ucfirst($request->category);
-        
-        Category::create([
-            'category_name' => $categoryName,
-            'type' => $request->type,
+            'category_name' => 'required|string|max:255',
+            'type' => 'required|in:income,expenditure',
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil ditambahkan.');
+        Category::create($request->only('category_name', 'type'));
+
+        return redirect()->route('category.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
 
     // Form edit kategori
     public function edit(Category $category)
     {
-        return view('categories.edit', compact('category'));
-    }
-
-    // Update kategori
-    public function update(Request $request, Category $category)
-    {
-        $request->validate([
-            'category'   => 'required|in:masuk,keluar',
-            'subcategory'=> 'nullable|string|max:255',
-            'type'       => 'required|in:income,expenditure',
-        ]);
-
-        $categoryName = $request->subcategory ?? ucfirst($request->category);
-        
-        $category->update([
-            'category_name' => $categoryName,
-            'type' => $request->type,
-        ]);
-
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil diperbarui.');
+        return view('category.edit', compact('category'));
     }
 
     // Hapus kategori
-    public function destroy(Category $category)
+    public function destroy($id)
     {
+        $category = Category::findOrFail($id);
         $category->delete();
 
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus.');
+        return redirect()->back()->with('success', 'Kategori berhasil dihapus!');
     }
+
 
     // Ambil kategori berdasarkan tipe
     public function getByType($type)
