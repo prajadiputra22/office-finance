@@ -6,7 +6,7 @@
                 class="flex items-center p-3 mb-2 rounded-lg 
                 {{ request()->is('dashboard') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
                  <img src="{{ asset('assets/picture/home.png') }}" alt="Home Icon" class="w-5 h-5 mr-3">
-                 <span class="font-bold">Home</span>
+                 <span class="font-bold">Beranda</span>
                 </a>
             </li>
             <li>
@@ -26,7 +26,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ url('laporan') }}" 
+                <a href="{{ route('report.index') }}" 
                 class="flex items-center p-3 mb-2 rounded-lg 
                 {{ request()->is('laporan') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
                  <img src="{{ asset('assets/picture/report.png') }}" alt="Report Icon" class="w-5 h-5 mr-3">

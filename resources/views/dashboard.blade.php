@@ -9,18 +9,28 @@
         <div class="grid md:grid-cols-2 gap-6 mb-6">
             <article class="flex-1 bg-white p-5 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
                 <h3 class="text-base text-[#6b7280] mb-2 font-medium">Saldo Perusahaan</h3>
-                <p class="text-[25px] font-bold text-[#1f2937]">{{ 'IDR ' . number_format($saldo ?? 0, 0,',', '.') }}</p>
+                <p class="text-[25px] font-bold text-[#1f2937]">
+                    {{ 'IDR ' . number_format($saldo ?? 0, 0,',', '.') }}
+                </p>
             </article>
             <article class="flex-1 bg-white p-5 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
                 <h3 class="text-base text-[#6b7280] mb-2 font-medium">Saldo Giro</h3>
-                <p class="text-[25px] font-bold text-[#1f2937]">{{ 'IDR ' . number_format($saldoGiro ?? 0, 0, ',', '.') }}</p>
+                <p class="text-[25px] font-bold text-[#1f2937]">
+                    {{ 'IDR ' . number_format($saldoGiro ?? 0, 0, ',', '.') }}
+                </p>
             </article>
         </div>
     </section>
     <section class="mb-8" aria-labelledby="chart-title">
         <h2 id="chart-title" class="text-[20px] font-semibold mb-3 text-[#1f2937]">Grafik Keuangan Perusahaan</h2>
         <div class="bg-white p-6 rounded-xl shadow max-w-[1000px] mx-auto" role="img" aria-label="Grafik Keuangan">
-            {!! $chart->container() !!}
+            @if($totalIncome > 0 || $totalExpenditure > 0)
+                {!! $chart->container() !!}
+            @else
+                <div class="h-[350px] flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg text-gray-500" role="img" aria-label="Grafik Keuangan" aria-describedby="chart-desc">
+                    <span id="chart-desc" class="text-sm">Belum ada data keuangan</span>
+                </div>
+            @endif
         </div>
     </section>
     <section class="bg-white border-[#e5e7eb] p-6 rounded-xl shadow mt-8" aria-labelledby="transaksi-title">
@@ -41,9 +51,10 @@
 </main>
 
 @push('scripts')
-<script src="{{ $chart->cdn() }}"></script>
-{!! $chart->script() !!}
-
+    <script src="{{ LarapexChart::cdn() }}"></script>
+    @if($totalIncome > 0 || $totalExpenditure > 0)
+        {{ $chart->script() }}
+    @endif
 <script>
 function dashboardData() {
     return {
