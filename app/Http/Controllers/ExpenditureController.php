@@ -15,7 +15,6 @@ class ExpenditureController extends Controller
 
     public function store(Request $request)
     {
-        // Simpan ke expenditure
         $expenditure = Expenditure::create([
             'category_id' => $request->category_id,
             'customer' => $request->customer,
@@ -27,9 +26,8 @@ class ExpenditureController extends Controller
             'date' => $request->date,
         ]);
 
-        // Simpan ke transactions
         Transaction::create([
-            'type' => 'expenditure',
+            'type' => 'income',
             'category_id' => $request->category_id,
             'amount' => $request->amount,
             'date' => $request->date,

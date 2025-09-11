@@ -14,27 +14,26 @@ class IncomeController extends Controller
     }
 
     public function store(Request $request)
-{
-    // Simpan ke income
-    $income = Income::create([
-        'category_id' => $request->category_id,
-        'customer' => $request->customer,
-        'amount' => $request->amount,
-        'date_entry' => $request->date_entry,
-        'description' => $request->description,
-        'date_factur' => $request->date_factur,
-        'no_factur' => $request->no_factur,
-        'date' => $request->date,
-    ]);
+    {
+        $income = Income::create([
+            'category_id' => $request->category_id,
+            'customer' => $request->customer,
+            'amount' => $request->amount,
+            'date_entry' => $request->date_entry,
+            'description' => $request->description,
+            'date_factur' => $request->date_factur,
+            'no_factur' => $request->no_factur,
+            'date' => $request->date,
+        ]);
 
-    Transaction::create([
-        'type' => 'income',
-        'category_id' => $request->category_id,
-        'amount' => $request->amount,
-        'date' => $request->date,
-        'description' => $request->description,
-    ]);
+        Transaction::create([
+            'type' => 'income',
+            'category_id' => $request->category_id,
+            'amount' => $request->amount,
+            'date' => $request->date,
+            'description' => $request->description,
+        ]);
 
-    return redirect()->route('income.index')->with('success', 'Income saved successfully!');
-}
+        return redirect()->route('income.index')->with('success', 'Income saved successfully!');
+    }
 }

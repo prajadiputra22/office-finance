@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use App\Models\Category;
+use App\Models\Income;
+use App\Models\Expenditure;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
-
     public function index(Request $request)
     {
         $query = Transaction::query();
@@ -20,36 +22,59 @@ class TransactionController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
-        $transactions = $query->orderBy('date', 'desc')->paginate(10);
+        $transactions = $query->with('category')->orderBy('date', 'desc')->get();
+        $category = Category::all();
+        
+        $income = Transaction::where('type', 'income')->sum('amount');
+        $expenditure = Transaction::where('type', 'expenditure')->sum('amount');
 
-        return view('transaction.index', compact('transactions'));
+        return view('transaction', compact('transactions', 'category', 'income', 'expenditure'));
     }
 
-    // Detail transaksi
-    public function show($id)
+    public function store(Request $request)
     {
-        $transaction = Transaction::findOrFail($id);
-        return view('transaction.show', compact('transaction'));
+        $request->validate([
+            'description' => 'nullable|string|max:255',
+            'amount' => 'required|numeric|min:0',
+            'type' => 'required|in:income,expenditure',
+            'category_id' => 'required|exists:category,id',
+            'date' => 'required|date',
+        ]);
+
+        Transaction::create($request->all());
+
+        if ($request->type === 'income') {
+            Income::create([
+                'category_id' => $request->category_id,
+                'customer' => 'System',
+                'amount' => $request->amount,
+                'date_entry' => $request->date,
+                'description' => $request->description ?? '',
+                'date_factur' => $request->date,
+                'no_factur' => rand(1000, 9999),
+                'date' => $request->date,
+            ]);
+        } elseif ($request->type === 'expenditure') {
+            Expenditure::create([
+                'category_id' => $request->category_id,
+                'customer' => 'System',
+                'amount' => $request->amount,
+                'date_entry' => $request->date,
+                'description' => $request->description ?? '',
+                'date_factur' => $request->date,
+                'no_factur' => rand(1000, 9999),
+                'date' => $request->date,
+            ]);
+        }
+
+        return redirect()->route('transactions.index')->with('success', 'Transaksi berhasil ditambahkan.');
     }
 
-    // Hapus transaksi (optional, biasanya jangan hapus manual kalau sinkron dengan income/expenditure)
     public function destroy($id)
     {
         $transaction = Transaction::findOrFail($id);
         $transaction->delete();
 
-        return redirect()->route('transactions.index')->with('success', 'Transaction deleted successfully!');
-    }
-
-    // Laporan ringkas cashflow bulanan
-    public function report()
-    {
-        $report = Transaction::selectRaw('type, MONTH(date) as month, YEAR(date) as year, SUM(amount) as total')
-            ->groupBy('type', 'year', 'month')
-            ->orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
-            ->get();
-
-        return view('transaction.report', compact('report'));
+        return redirect()->back()->with('success', 'Transaksi berhasil dihapus!');
     }
 }

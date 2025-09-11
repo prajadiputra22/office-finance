@@ -14,21 +14,18 @@ Route::get('/home', function () {
     return view('home');
 })->name('home');
 
-Route::get('/transaksi', function () {
-    return view('transaction');
-})->name('transaction');
-
-Route::get('/laporan', function () {
-    return view('laporan');
-})->name('laporan');
-
-Route::get('/category', function () {
-    return view('category');
-})->name('category');
+Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
+Route::get('/transactions/create', [TransactionController::class, 'create'])->name('transactions.create');
+Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
+Route::get('/transactions/{transaction}/edit', [TransactionController::class, 'edit'])->name('transactions.edit');
+Route::put('/transactions/{transaction}', [TransactionController::class, 'update'])->name('transactions.update');
+Route::delete('/transactions/{transaction}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
 
 Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
 Route::post('/category', [CategoryController::class, 'store'])->name('category.store');
 Route::delete('/category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
+Route::get('/api/category/{type}', [CategoryController::class, 'getByType'])->name('api.category.byType');
 
 Route::middleware('guest:admin')->group(function () {
     // Login
