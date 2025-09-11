@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('date_factur');
             $table->integer('no_factur');
             $table->date('date');
+            $table->string('attachment')->nullable();
             $table->timestamps();
         });
     }

@@ -21,5 +21,6 @@ class Expenditure extends Model
         'date_factur',
         'no_factur',
         'date',
+        'attachment',
     ];
 }

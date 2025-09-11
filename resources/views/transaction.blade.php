@@ -4,7 +4,7 @@
 
 @section('content')
     <main class="flex-1 pt-4" x-data="{ openAddTransaksi: false, sliderValue: 50000 }">
-        <!-- Added missing search bar -->
+        <!-- Search bar -->
         <div class="relative flex-1 bg-white max-w-[600px] rounded-xl  mb-8">
             <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor">
                 <circle cx="11" cy="11" r="8"></circle>
@@ -24,13 +24,13 @@
             <div class="flex gap-5 flex-1 flex-wrap">
                 <div
                     class="flex-1 px-6 py-4 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
-                    <h3 class="text-[#0B3B9F] font-medium mb-2">Pemasukan</h3>
+                    <h3 class="text-[#0B3B9F] font-bold mb-2">Pemasukan</h3>
                     <p class="text-[25px] font-bold text-[#1f2937]">
                         {{ 'IDR ' . number_format($income ?? 0, 0, ',', '.') }}</p>
                 </div>
                 <div
                     class="flex-1 px-6 py-4 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
-                    <h3 class="text-[#F20E0F] font-medium mb-2">Pengeluaran</h3>
+                    <h3 class="text-[#F20E0F] font-bold mb-2">Pengeluaran</h3>
                     <p class="text-[25px] font-bold text-[#1f2937]">
                         {{ 'IDR ' . number_format($expenditure ?? 0, 0, ',', '.') }}</p>
                 </div>
@@ -40,37 +40,73 @@
         <!-- Riwayat Transaksi -->
         <div class="bg-white rounded-xl shadow p-6 animate-fadeIn">
             <h2 class="text-lg font-bold mb-5 text-[#333]">Riwayat Transaksi</h2>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border border-[#e1e5e9] rounded-lg overflow-hidden text-sm">
+            <div
+                class="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400">
+                <table class="w-full text-center border border-[#e1e5e9] rounded-lg overflow-hidden text-sm min-w-[800px]">
                     <thead class="bg-[#f8f9fa]">
                         <tr>
-                            <th class="p-4 font-semibold text-[#333]">Tanggal</th>
-                            <th class="p-4 font-semibold text-[#333]">Kategori</th>
-                            <th class="p-4 font-semibold text-[#333]">Status</th>
-                            <th class="p-4 font-semibold text-[#333]">Jumlah</th>
-                            <th class="p-4 font-semibold text-[#333]">Keterangan</th>
-                            <th class="p-4 font-semibold text-[#333]">Lampiran</th>
+                            <th class="p-4 font-semibold text-[#333] text-center">Tanggal</th>
+                            <th class="p-4 font-semibold text-[#333] text-center">Kategori</th>
+                            <th class="p-4 font-semibold text-[#333] text-center">Status</th>
+                            <th class="p-4 font-semibold text-[#333] text-center">Jumlah</th>
+                            <th class="p-4 font-semibold text-[#333] text-center">No.Faktur</th>
+                            <th class="p-4 font-semibold text-[#333] text-center">Tgl.Faktur</th>
+                            <th class="p-4 font-semibold text-[#333] text-center">Keterangan</th>
+                            <th class="p-4 font-semibold text-[#333] text-center">Attachment</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($transactions as $trx)
                             <tr class="border-b border-[#e1e5e9] hover:bg-[#f8f9fa]">
-                                <td class="p-4">{{ \Carbon\Carbon::parse($trx->date)->format('d/m/Y') }}</td>
-                                <td class="p-4">{{ $trx->category->name ?? $trx->category->category_name ?? 'Tidak ada kategori' }}</td>
-                                <td class="p-4">
+                                <td class="p-4 text-center">{{ \Carbon\Carbon::parse($trx->date)->format('d/m/Y') }}</td>
+                                <td class="p-4 text-center">
+                                    {{ $trx->category->name ?? ($trx->category->category_name ?? 'Tidak ada kategori') }}
+                                </td>
+                                <td class="p-4 text-center">
                                     <span
                                         class="{{ $trx->type == 'income' ? 'bg-blue-100 text-[#0B3B9F]' : 'bg-red-100 text-[#F20E0F]' }} px-3 py-1 rounded-full text-sm font-medium">
                                         {{ $trx->type == 'income' ? 'Pemasukan' : 'Pengeluaran' }}
                                     </span>
                                 </td>
-                                <td class="p-4">
+                                <td class="p-4 text-center">
                                     <span class="font-semibold text-gray-800">
-                                        {{ 'IDR ' . number_format($trx->amount, 0, ',', '.') }}
+                                        {{ number_format($trx->amount, 0, ',', '.') }}
                                     </span>
                                 </td>
-                                <td class="p-4">
+                                <td class="p-4 text-center">
+                                    @if ($trx->no_factur)
+                                        <span class="text-sm text-gray-800">{{ $trx->no_factur }}</span>
+                                    @else
+                                        <span class="text-sm text-gray-400 italic">-</span>
+                                    @endif
+                                </td>
+                                <td class="p-4 text-center">
+                                    @if ($trx->date_factur)
+                                        <span
+                                            class="text-sm text-gray-800">{{ \Carbon\Carbon::parse($trx->date_factur)->format('d/m/Y') }}</span>
+                                    @else
+                                        <span class="text-sm text-gray-400 italic">-</span>
+                                    @endif
+                                </td>
+                                <td class="p-4 text-center">
                                     @if ($trx->description)
                                         <span class="text-sm text-gray-600">{{ $trx->description }}</span>
+                                    @else
+                                        <span class="text-sm text-gray-400 italic">-</span>
+                                    @endif
+                                </td>
+                                <td class="p-4 text-center">
+                                    @if ($trx->attachment)
+                                        <a href="{{ asset('storage/' . $trx->attachment) }}" target="_blank"
+                                            class="inline-flex items-center px-3 py-1 bg-[#0B3B9F] text-white text-xs rounded-md hover:bg-blue-700 transition">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                </path>
+                                            </svg>
+                                            Download
+                                        </a>
                                     @else
                                         <span class="text-sm text-gray-400 italic">-</span>
                                     @endif
@@ -78,7 +114,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="p-8 text-center text-gray-500">
+                                <td colspan="8" class="p-8 text-center text-gray-500 text-sm">
                                     Belum ada transaksi
                                 </td>
                             </tr>
@@ -97,26 +133,28 @@
         <!-- Form Transaksi -->
         <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-show="openAddTransaksi"
             x-transition.opacity style="display: none;">
-            <div class="bg-white p-4 rounded-xl w-full max-w-sm shadow-lg max-h-[90vh] overflow-y-auto" @click.outside="openAddTransaksi = false">
+            <div class="bg-white p-4 rounded-xl w-full max-w-sm shadow-lg max-h-[90vh] overflow-y-auto"
+                @click.outside="openAddTransaksi = false">
                 <div class="flex justify-between items-center mb-3">
                     <h2 class="text-base font-semibold">Tambah Transaksi</h2>
                     <button type="button" class="text-gray-500 hover:text-gray-800" @click="openAddTransaksi = false">
                         ✕
                     </button>
                 </div>
-                
+
                 <!-- Validation -->
                 <div id="validation-errors" class="hidden mb-3 p-2 bg-red-100 border border-red-300 rounded-md">
                     <ul id="error-list" class="text-xs text-red-600 list-disc list-inside"></ul>
                 </div>
-                
-                <form action="{{ route('transactions.store') }}" method="POST" class="space-y-3" id="transaction-form" onsubmit="return validateForm()">
+
+                <form action="{{ route('transactions.store') }}" method="POST" class="space-y-3" id="transaction-form"
+                    onsubmit="return validateForm()">
                     @csrf
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-medium mb-1">Tipe <span class="text-red-500">*</span></label>
                             <select name="type" id="transaction-type" onchange="loadCategories(this.value)"
-                                class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#84cc16] focus:border-[#84cc16]">
+                                class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
                                 <option value="">Pilih Tipe</option>
                                 <option value="income">Pemasukan</option>
                                 <option value="expenditure">Pengeluaran</option>
@@ -124,9 +162,10 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs font-medium mb-1">Kategori <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-medium mb-1">Kategori <span
+                                    class="text-red-500">*</span></label>
                             <select name="category_id" id="category-select"
-                                class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#84cc16] focus:border-[#84cc16]">
+                                class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
                                 <option value="">Pilih Tipe Dulu</option>
                             </select>
                         </div>
@@ -134,23 +173,17 @@
 
                     <div>
                         <label class="block text-xs font-medium mb-1">
-                            Jumlah: <span class="font-bold text-[#84cc16] text-xs" x-text="'IDR ' + sliderValue.toLocaleString('id-ID')"></span>
+                            Jumlah: <span class="font-bold text-[#0B3B9F] text-xs"
+                                x-text="'IDR ' + sliderValue.toLocaleString('id-ID')"></span>
                         </label>
                         <div class="space-y-2">
-                            <input type="range" 
-                                x-model="sliderValue"
-                                min="10000" 
-                                max="10000000" 
-                                step="10000"
+                            <input type="range" x-model="sliderValue" min="10000" max="10000000" step="10000"
                                 @input="updateAmountFromSlider()"
                                 class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
-                            
-                            <input type="text" 
-                                id="amount-input"
-                                name="amount_display" 
-                                placeholder="Contoh: 1.000.000"
-                                oninput="formatAmountInput(this)"
-                                class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#84cc16] focus:border-[#84cc16]">
+
+                            <input type="text" id="amount-input" name="amount_display"
+                                placeholder="Contoh: 1.000.000" oninput="formatAmountInput(this)"
+                                class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
                             <input type="hidden" name="amount" id="amount-hidden">
                         </div>
                     </div>
@@ -158,13 +191,32 @@
                     <div>
                         <label class="block text-xs font-medium mb-1">Tanggal</label>
                         <input type="date" name="date" value="{{ date('Y-m-d') }}"
-                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#84cc16] focus:border-[#84cc16]">
+                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium mb-1">No. Faktur</label>
+                        <input type="text" name="no_factur" placeholder="Masukkan nomor faktur"
+                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium mb-1">Tanggal Faktur</label>
+                        <input type="date" name="date_factur"
+                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium mb-1">Lampiran (Attachment)</label>
+                        <input type="file" name="attachment"
+                            class="w-full text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                        <p class="text-[10px] text-gray-500 mt-1">Format: JPG, PNG, PDF (max 2MB)</p>
                     </div>
 
                     <div>
                         <label class="block text-xs font-medium mb-1">Keterangan</label>
                         <textarea name="description" rows="2" placeholder="Keterangan (opsional)"
-                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#84cc16] focus:border-[#84cc16] resize-none"></textarea>
+                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F] resize-none"></textarea>
                     </div>
 
                     <!-- Button -->
@@ -174,7 +226,7 @@
                             Batal
                         </button>
                         <button type="submit"
-                            class="px-3 py-1.5 bg-[#84cc16] text-white rounded-md hover:bg-[#65a30d] transition text-xs">
+                            class="px-3 py-1.5 bg-blue-500 text-white rounded-md hover:bg-blue-900 transition text-xs">
                             Simpan
                         </button>
                     </div>
@@ -189,67 +241,67 @@
             const type = document.getElementById('transaction-type').value;
             const category = document.getElementById('category-select').value;
             const amount = document.getElementById('amount-hidden').value;
-            
+
             if (!type) {
                 errors.push('Tipe transaksi harus dipilih');
             }
-            
+
             if (!category) {
                 errors.push('Kategori harus dipilih');
             }
-            
+
             if (!amount || amount <= 0) {
                 errors.push('Jumlah harus diisi dan lebih dari 0');
             }
-            
+
             if (errors.length > 0) {
                 showValidationErrors(errors);
                 return false;
             }
-            
+
             hideValidationErrors();
             return true;
         }
-        
+
         function showValidationErrors(errors) {
             const errorContainer = document.getElementById('validation-errors');
             const errorList = document.getElementById('error-list');
-            
+
             errorList.innerHTML = '';
             errors.forEach(error => {
                 const li = document.createElement('li');
                 li.textContent = error;
                 errorList.appendChild(li);
             });
-            
+
             errorContainer.classList.remove('hidden');
         }
-        
+
         function hideValidationErrors() {
             document.getElementById('validation-errors').classList.add('hidden');
         }
-        
+
         function formatAmountInput(input) {
             let value = input.value.replace(/\D/g, '');
-            
+
             if (value) {
                 const formatted = parseInt(value).toLocaleString('id-ID');
                 input.value = formatted;
-                
+
                 document.getElementById('amount-hidden').value = value;
-            
+
             } else {
                 document.getElementById('amount-hidden').value = '';
             }
-            
+
             hideValidationErrors();
         }
-        
+
         function updateAmountInput() {
             const slider = document.querySelector('input[type="range"]');
             const amountInput = document.getElementById('amount-input');
             const hiddenInput = document.getElementById('amount-hidden');
-            
+
             const value = slider.value;
             amountInput.value = parseInt(value).toLocaleString('id-ID');
             hiddenInput.value = value;
@@ -259,21 +311,21 @@
             const sliderValue = document.querySelector('input[type="range"]').value;
             const amountInput = document.getElementById('amount-input');
             const hiddenInput = document.getElementById('amount-hidden');
-            
+
             amountInput.value = parseInt(sliderValue).toLocaleString('id-ID');
             hiddenInput.value = sliderValue;
         }
 
         function loadCategories(type) {
             const categorySelect = document.getElementById('category-select');
-            
+
             categorySelect.innerHTML = '<option value="">Loading...</option>';
-            
+
             if (!type) {
                 categorySelect.innerHTML = '<option value="">Pilih Tipe Dulu</option>';
                 return;
             }
-            
+
             fetch(`/api/category/${type}`)
                 .then(response => {
                     if (!response.ok) {
@@ -283,12 +335,14 @@
                 })
                 .then(categories => {
                     categorySelect.innerHTML = '<option value="">-- Pilih Kategori --</option>';
-                    
+
                     if (categories.length === 0) {
-                        categorySelect.innerHTML += `<option value="" disabled>Tidak ada kategori ${type === 'income' ? 'pemasukan' : 'pengeluaran'}</option>`;
+                        categorySelect.innerHTML +=
+                            `<option value="" disabled>Tidak ada kategori ${type === 'income' ? 'pemasukan' : 'pengeluaran'}</option>`;
                     } else {
                         categories.forEach(category => {
-                            categorySelect.innerHTML += `<option value="${category.id}">${category.category_name}</option>`;
+                            categorySelect.innerHTML +=
+                                `<option value="${category.id}">${category.category_name}</option>`;
                         });
                     }
                 })
@@ -296,7 +350,7 @@
                     console.error('Error loading categories:', error);
                     categorySelect.innerHTML = '<option value="">Gagal memuat kategori</option>';
                 });
-            
+
             hideValidationErrors();
         }
 
@@ -308,7 +362,8 @@
                     this.$watch('openAddTransaksi', (value) => {
                         if (!value) {
                             document.getElementById('transaction-type').value = '';
-                            document.getElementById('category-select').innerHTML = '<option value="">Pilih Tipe Dulu</option>';
+                            document.getElementById('category-select').innerHTML =
+                                '<option value="">Pilih Tipe Dulu</option>';
                             document.getElementById('amount-input').value = '';
                             document.getElementById('amount-hidden').value = '';
                             this.sliderValue = 50000;
@@ -317,7 +372,7 @@
                             updateAmountFromSlider();
                         }
                     });
-                    
+
                     this.$watch('sliderValue', (value) => {
                         const amountInput = document.getElementById('amount-input');
                         const hiddenInput = document.getElementById('amount-hidden');

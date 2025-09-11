@@ -9,7 +9,7 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $table = 'transactions'; // nama tabel
+    protected $table = 'transactions';
 
     protected $fillable = [
         'type',
@@ -17,11 +17,17 @@ class Transaction extends Model
         'amount',
         'date',
         'description',
+        'date_factur',
+        'no_factur',
+        'attachment'
     ];
 
-    /**
-     * Relasi ke Category
-     */
+    protected $casts = [
+        'date' => 'date',
+        'date_factur' => 'date',
+        'amount' => 'decimal:2'
+    ];
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
