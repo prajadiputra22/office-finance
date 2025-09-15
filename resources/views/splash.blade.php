@@ -12,13 +12,13 @@
 <body class="flex items-center justify-center h-screen bg-white">
 
     <h1 class="font-poppins font-bold text-4xl splash-animation flex space-x-2">
-        <span class="text-black splash-animation">Office</span>
-        <span class="text-[#B6F500] splash-animation">Finance</span>
+        <span class="text-[#0B3B9F] splash-animation">Tigajaya</span>
+        <span class="text-[#F20E0F] splash-animation">Finance</span>
     </h1>
 
     {{-- <script>
         setTimeout(function(){
-            window.location.href = "{{ Auth::guard('admin')->check() ? route('welcome') : route('admin.login') }}";
+            window.location.href = "{{ Auth::guard('admin')->check() ? route('transactions.index') : route('auth.login') }}";
         }, 3000); 
     </script> --}}
 

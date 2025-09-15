@@ -1,4 +1,4 @@
-<aside class="fixed top-0 left-0 w-[220px] h-screen bg-[#0B3B9F] text-white p-5 flex flex-col shadow-md overflow-y-auto">
+<aside class="fixed top-0 left-0 w-[250px] h-screen bg-[#0B3B9F] text-white p-5 flex flex-col shadow-md overflow-y-auto">
     <nav class="space-y-2">
         <!-- Menu Utama -->
         <a href="" class="flex items-center p-2 rounded hover:text-[#F20E0F] cursor-pointer transition group">

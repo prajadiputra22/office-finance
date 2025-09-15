@@ -12,11 +12,12 @@ return new class extends Migration
             $table->id();
             $table->enum('type', ['income', 'expenditure']);
             $table->foreignId('category_id')->constrained('category')->onDelete('restrict');
-            $table->decimal('amount', 15, 2);
-            $table->date('date');
+            $table->decimal('amount', 15);
+            $table->date('date_entry');
+            $table->string('description', 255)->nullable();
             $table->date('date_factur');
             $table->integer('no_factur');
-            $table->string('description', 255)->nullable();
+            $table->date('date');
             $table->string('attachment')->nullable();
             $table->timestamps();
         });

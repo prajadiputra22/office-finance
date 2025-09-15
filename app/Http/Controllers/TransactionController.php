@@ -33,6 +33,25 @@ class TransactionController extends Controller
         return view('transaction', compact('transactions', 'category', 'income', 'expenditure'));
     }
 
+    public function show($id)
+    {
+        $transaction = Transaction::with('category')->findOrFail($id);
+        return response()->json($transaction);
+    }
+
+    public function edit($id)
+    {
+        try {
+            $transaction = Transaction::with('category')->findOrFail($id);
+            $categories = Category::all();
+
+            return view('transactions.edit', compact('transaction', 'categories'));
+        } catch (\Exception $e) {
+            Log::error('Error loading transaction for edit:', ['error' => $e->getMessage()]);
+            return redirect()->route('transactions.index')->with('error', 'Transaction not found.');
+        }
+    }
+
     public function store(Request $request)
     {
         try {
@@ -43,7 +62,7 @@ class TransactionController extends Controller
                 'date' => 'required|date',
                 'description' => 'nullable|string|max:255',
                 'date_factur' => 'nullable|date',
-                'no_factur' => 'nullable|integer',
+                'no_factur' => 'nullable|string',
             ];
 
             // Only add file validation if attachment is actually present
@@ -60,10 +79,21 @@ class TransactionController extends Controller
                 $attachmentPath = $request->file('attachment')->store('attachments', 'public');
             }
 
-            Log::info('Creating transaction with data:', $request->all());
+            Log::info('Creating transaction with data:', [
+                'type' => $request->type,
+                'category_id' => $request->category_id,
+                'amount' => $request->amount,
+                'date' => $request->date,
+                'all_request_data' => $request->all()
+            ]);
+
+            $transactionType = $request->input('type');
+            if (!in_array($transactionType, ['income', 'expenditure'])) {
+                throw new \Exception('Invalid transaction type: ' . $transactionType);
+            }
 
             $transaction = Transaction::create([
-                'type' => $request->type,
+                'type' => $transactionType, // Use explicit variable instead of $request->type
                 'category_id' => $request->category_id,
                 'amount' => $request->amount,
                 'date' => $request->date,
@@ -71,35 +101,14 @@ class TransactionController extends Controller
                 'date_factur' => $request->date_factur,
                 'no_factur' => $request->no_factur,
                 'attachment' => $attachmentPath,
+                'date_entry' => now(),
             ]);
 
-            Log::info('Transaction created successfully:', ['id' => $transaction->id]);
-
-            if ($request->type === 'income' && class_exists('App\Models\Income')) {
-                Income::create([
-                    'category_id' => $request->category_id,
-                    'customer' => 'System',
-                    'amount' => $request->amount,
-                    'date_entry' => $request->date,
-                    'description' => $request->description ?? '',
-                    'date_factur' => $request->date_factur,
-                    'no_factur' => $request->no_factur,
-                    'date' => $request->date,
-                    'attachment' => $attachmentPath,
-                ]);
-            } elseif ($request->type === 'expenditure' && class_exists('App\Models\Expenditure')) {
-                Expenditure::create([
-                    'category_id' => $request->category_id,
-                    'customer' => 'System',
-                    'amount' => $request->amount,
-                    'date_entry' => $request->date,
-                    'description' => $request->description ?? '',
-                    'date_factur' => $request->date_factur,
-                    'no_factur' => $request->no_factur,
-                    'date' => $request->date,
-                    'attachment' => $attachmentPath,
-                ]);
-            }
+            Log::info('Transaction created successfully:', [
+                'id' => $transaction->id,
+                'type' => $transaction->type,
+                'category_id' => $transaction->category_id
+            ]);
 
             DB::commit();
 
@@ -111,9 +120,11 @@ class TransactionController extends Controller
         }
     }
 
-    public function update(Request $request, Transaction $transaction)
+    public function update(Request $request, $id)
     {
         try {
+            $transaction = Transaction::findOrFail($id);
+
             $validationRules = [
                 'type' => 'required|in:income,expenditure',
                 'category_id' => 'required|exists:category,id',
@@ -121,10 +132,9 @@ class TransactionController extends Controller
                 'date' => 'required|date',
                 'description' => 'nullable|string|max:255',
                 'date_factur' => 'nullable|date',
-                'no_factur' => 'nullable|integer',
+                'no_factur' => 'nullable|string',
             ];
 
-            // Only add file validation if attachment is actually present
             if ($request->hasFile('attachment')) {
                 $validationRules['attachment'] = 'file|mimes:jpg,jpeg,png,pdf|max:2048';
             }
@@ -148,40 +158,8 @@ class TransactionController extends Controller
                 'date_factur' => $request->date_factur,
                 'no_factur' => $request->no_factur,
                 'attachment' => $attachmentPath,
+                'date_entry' => now(),
             ]);
-
-            // Update related income/expenditure records if they exist
-            if ($request->type === 'income' && class_exists('App\Models\Income')) {
-                $income = Income::where('no_factur', $transaction->no_factur)->first();
-                if ($income) {
-                    $income->update([
-                        'category_id' => $request->category_id,
-                        'customer' => 'System',
-                        'amount' => $request->amount,
-                        'date_entry' => $request->date,
-                        'description' => $request->description ?? '',
-                        'date_factur' => $request->date_factur,
-                        'no_factur' => $request->no_factur,
-                        'date' => $request->date,
-                        'attachment' => $attachmentPath,
-                    ]);
-                }
-            } elseif ($request->type === 'expenditure' && class_exists('App\Models\Expenditure')) {
-                $expenditure = Expenditure::where('no_factur', $transaction->no_factur)->first();
-                if ($expenditure) {
-                    $expenditure->update([
-                        'category_id' => $request->category_id,
-                        'customer' => 'System',
-                        'amount' => $request->amount,
-                        'date_entry' => $request->date,
-                        'description' => $request->description ?? '',
-                        'date_factur' => $request->date_factur,
-                        'no_factur' => $request->no_factur,
-                        'date' => $request->date,
-                        'attachment' => $attachmentPath,
-                    ]);
-                }
-            }
 
             DB::commit();
 
@@ -193,17 +171,69 @@ class TransactionController extends Controller
         }
     }
 
-
     public function destroy($id)
     {
         try {
             $transaction = Transaction::findOrFail($id);
+
+            if ($transaction->type === 'income' && $transaction->no_factur) {
+                Income::where('no_factur', $transaction->no_factur)->delete();
+            } elseif ($transaction->type === 'expenditure' && $transaction->no_factur) {
+                Expenditure::where('no_factur', $transaction->no_factur)->delete();
+            }
+
             $transaction->delete();
 
             return redirect()->back()->with('success', 'Transaksi berhasil dihapus!');
         } catch (\Exception $e) {
             Log::error('Error deleting transaction:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Error deleting transaction: ' . $e->getMessage());
+        }
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        try {
+            $request->validate([
+                'transaction_ids' => 'required|array|min:1',
+                'transaction_ids.*' => 'exists:transactions,id'
+            ]);
+
+            DB::beginTransaction();
+
+            $transactionIds = $request->transaction_ids;
+            $transactions = Transaction::whereIn('id', $transactionIds)->get();
+
+            Log::info('Bulk delete request received', [
+                'transaction_ids' => $transactionIds,
+                'count' => count($transactionIds)
+            ]);
+
+            foreach ($transactions as $transaction) {
+                if ($transaction->type === 'income' && $transaction->no_factur) {
+                    Income::where('no_factur', $transaction->no_factur)->delete();
+                } elseif ($transaction->type === 'expenditure' && $transaction->no_factur) {
+                    Expenditure::where('no_factur', $transaction->no_factur)->delete();
+                }
+            }
+
+            $deletedCount = Transaction::whereIn('id', $transactionIds)->delete();
+
+            DB::commit();
+
+            Log::info('Bulk delete completed successfully', [
+                'deleted_count' => $deletedCount
+            ]);
+
+            return redirect()->route('transactions.index')
+                ->with('success', "Berhasil menghapus {$deletedCount} transaksi!");
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Error bulk deleting transactions:', [
+                'error' => $e->getMessage(),
+                'transaction_ids' => $request->transaction_ids ?? []
+            ]);
+            return redirect()->back()->with('error', 'Error menghapus transaksi: ' . $e->getMessage());
         }
     }
 

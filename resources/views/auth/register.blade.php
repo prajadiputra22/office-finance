@@ -24,10 +24,10 @@
 <body class="h-screen flex items-center justify-center font-poppins">
     <main class="flex w-full h-screen">
         <section class="flex flex-col justify-center items-center flex-1 bg-white fade-in">
-            <div class="mb-3">
+            <div class="mb-4">
                 <h1 class="text-4xl font-bold justify-center">
                     <span class="text-black font-bold">Office</span>
-                    <span class="text-[#B6F500] font-bold">Finance</span>
+                    <span class="text-[#F20E0F] font-bold">Finance</span>
                 </h1>
             </div>
 
@@ -42,13 +42,13 @@
                     </div>
                 @endif
 
-                <form id="registerForm" method="POST" action="{{ route('admin.register') }}">
+                <form id="registerForm" method="POST" action="{{ route('auth.register') }}">
                     @csrf
                     <div id="username" class="mt-2">
                         <label for="usernameInput" class="sr-only">Username</label>
                         <input id="usernameInput" name="username" type="text" placeholder="Username"
                             value="{{ old('username') }}" autofocus
-                            class="w-full px-6 py-1 border border-[#B6F500] rounded-full mb-2 outline-none focus:border-[#B4E50D] focus:shadow-[0_0_5px_rgba(180,229,13,0.7)]">
+                            class="w-full px-6 py-1 border border-[#0B3B9F] rounded-full mb-2 outline-none focus:border-[#0B3B9F] focus:shadow-[0_0_5px_rgba(180,229,13,0.7)]">
                         <div id="usernameError" class="hidden mt-1 mb-4">
                             <p class="text-red-500 text-xs italic">Username is required.</p>
                         </div>
@@ -61,7 +61,7 @@
                     <div id="password" class="mt-4">
                         <label for="passwordInput" class="sr-only">Password</label>
                         <input id="passwordInput" name="password" type="password" placeholder="Password"
-                            class="w-full px-6 py-1 border border-[#B6F500] rounded-full mb-2 outline-none focus:border-[#B4E50D] focus:shadow-[0_0_5px_rgba(180,229,13,0.7)]">
+                            class="w-full px-6 py-1 border border-[#0B3B9F] rounded-full mb-2 outline-none focus:border-[#0B3B9F] focus:shadow-[0_0_5px_rgba(180,229,13,0.7)]">
                         <div id="passwordError" class="hidden mt-1 mb-3">
                             <p class="text-red-500 text-xs italic">Password is required.</p>
                         </div>
@@ -74,7 +74,7 @@
                     <div id="confirmPassword" class="mt-4">
                         <label for="confirmPasswordInput" class="sr-only">Confirm Password</label>
                         <input id="confirmPasswordInput" name="password_confirmation" type="password" placeholder="Confirm Password"
-                            class="w-full px-6 py-1 border border-[#B6F500] rounded-full mb-2 outline-none focus:border-[#B4E50D] focus:shadow-[0_0_5px_rgba(180,229,13,0.7)]">
+                            class="w-full px-6 py-1 border border-[#0B3B9F] rounded-full mb-2 outline-none focus:border-[#0B3B9F] focus:shadow-[0_0_5px_rgba(180,229,13,0.7)]">
                         <div id="confirmPasswordError" class="hidden mt-1 mb-3">
                             <p class="text-red-500 text-xs italic">Confirm password is required.</p>
                         </div>
@@ -94,7 +94,7 @@
                     <div class="flex items-center justify-between mt-2 mb-4">
                         <div class="flex items-center">
                             <input type="checkbox" name="terms" id="terms"
-                                class="w-5 h-5 mr-2 appearance-none rounded border border-gray-400 checked:bg-[#B6F500] checked:border-[#B6F500] relative">
+                                class="w-5 h-5 mr-2 appearance-none rounded border border-gray-400 checked:bg-[#0B3B9F] checked:border-[#0B3B9F] relative">
                             <label for="terms" class="text-sm text-gray-700">Saya setuju dengan syarat & ketentuan</label>
                         </div>
                     </div>
@@ -104,18 +104,18 @@
 
                     <div id="button">
                         <button type="submit"
-                            class="w-64 text-md bg-black text-white py-1 rounded-full transition duration-300 hover:bg-[#B4E50D] hover:text-black active:scale-95">
+                            class="w-64 text-md bg-black text-white py-1 rounded-full transition duration-300 hover:bg-[#0B3B9F] hover:text-black active:scale-95">
                             Daftar
                         </button>
                     </div>
 
                     <p class="mt-3 text-sm text-center whitespace-nowrap">
-                        Sudah punya akun? <a href="{{ route('admin.login') }}" class="text-[#B6F500]">login</a> disini.
+                        Sudah punya akun? <a href="{{ route('auth.login') }}" class="text-[#0B3B9F]">login</a> disini.
                     </p>
                 </form>
             </div>
         </section>
-        <aside class="flex-1 bg-[#B4E50D] hidden md:flex justify-center items-center">
+        <aside class="flex-1 bg-[#0B3B9F] hidden md:flex justify-center items-center">
             <img src="{{ asset('assets/picture/LoginAnimation.png') }}" alt="Finance Illustration"
                 class="w-3/4 max-w-md">
         </aside>

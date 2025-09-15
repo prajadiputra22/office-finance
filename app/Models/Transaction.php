@@ -19,17 +19,34 @@ class Transaction extends Model
         'description',
         'date_factur',
         'no_factur',
-        'attachment'
+        'attachment',
+        'date_entry',
     ];
 
     protected $casts = [
         'date' => 'date',
         'date_factur' => 'date',
-        'amount' => 'decimal:2'
+        'date_entry' => 'datetime',
+        'amount' => 'decimal:2',
     ];
 
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id');
+        return $this->belongsTo(Category::class);
+    }
+
+    public function scopeIncome($query)
+    {
+        return $query->where('type', 'income');
+    }
+
+    public function scopeExpenditure($query)
+    {
+        return $query->where('type', 'expenditure');
+    }
+
+    public function scopeByDateRange($query, $startDate, $endDate)
+    {
+        return $query->whereBetween('date', [$startDate, $endDate]);
     }
 }
