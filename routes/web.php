@@ -26,27 +26,27 @@ Route::post('/category', [CategoryController::class, 'store'])->name('category.s
 Route::delete('/category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 Route::get('/api/category/{type}', [CategoryController::class, 'getByType'])->name('api.category.byType');
 
-// Route::middleware('guest:admin')->group(function () {
-//     // Login
-//     Route::get('/auth/login', [AuthController::class, 'showLoginForm'])->name('auth.login');
-//     Route::post('/auth/login', [AuthController::class, 'login']);
+Route::middleware('guest:admin')->group(function () {
+    // Login
+    Route::get('/auth/login', [AuthController::class, 'showLoginForm'])->name('auth.login');
+    Route::post('/auth/login', [AuthController::class, 'login']);
 
-//     // Register
-//     Route::get('/auth/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
-//     Route::post('/auth/register', [AuthController::class, 'register']);
-// });
+    // Register
+    Route::get('/auth/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
+    Route::post('/auth/register', [AuthController::class, 'register']);
+});
 
-// Route::middleware('auth:admin')->group(function () {
-//     Route::post('/admin/logout', [AuthController::class, 'logout'])->name('auth.logout');
+Route::middleware('auth:admin')->group(function () {
+    Route::post('/admin/logout', [AuthController::class, 'logout'])->name('auth.logout');
     
-//     Route::get('/transactions', [TransactionController::class, 'index'], function () {
-//         return redirect()->route('transactions');
-//     })->name('transactions.index');
+    Route::get('/transactions', [TransactionController::class, 'index'], function () {
+        return redirect()->route('transactions');
+    })->name('transactions.index');
 
-//     // Route::get('/transactions', function () {
-//     //     return redirect()->route('transactions');
-//     // })->name('transactions');
-// });
+    // Route::get('/transactions', function () {
+    //     return redirect()->route('transactions');
+    // })->name('transactions');
+});
 
 Route::get('/login', function () {
     return redirect()->route('auth.login');

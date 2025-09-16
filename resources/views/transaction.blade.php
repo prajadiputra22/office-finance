@@ -69,7 +69,7 @@
                 <table class="w-full text-center border border-[#e1e5e9] rounded-lg overflow-hidden text-sm min-w-[800px]">
                     <thead class="bg-[#f8f9fa]">
                         <tr>
-                            <!-- Simplified checkbox handling -->
+                            <!-- Checkbox handling -->
                             <th class="p-4 font-semibold text-[#333] text-center w-12">
                                 <input type="checkbox" @change="toggleSelectAll()" :checked="selectAllChecked"
                                     :indeterminate="selectAllIndeterminate"
@@ -88,7 +88,7 @@
                     <tbody>
                         @forelse ($transactions as $trx)
                             <tr class="border-b border-[#e1e5e9] hover:bg-[#f8f9fa]">
-                                <!-- Alpine.js checkbox binding -->
+                                <!-- Checkbox Binding -->
                                 <td class="p-4 text-center">
                                     <input type="checkbox" x-model="selectedTransactions" value="{{ $trx->id }}"
                                         @change="updateSelectAllState()"
@@ -395,20 +395,15 @@
         </div>
     </main>
 
-    <!-- Completely rewritten JavaScript with proper Alpine.js integration -->
     <script>
         function transactionManager() {
             return {
-                // Modal states
                 showAddModal: false,
                 showEditModal: false,
-
-                // Selection states
                 selectedTransactions: [],
                 selectAllChecked: false,
                 selectAllIndeterminate: false,
 
-                // Form data
                 addForm: {
                     type: '',
                     category_id: '',
@@ -433,15 +428,12 @@
                     current_attachment: ''
                 },
 
-                // Categories
                 addCategories: [],
                 editCategories: [],
 
-                // Form display values
                 addFormAmountDisplay: '',
                 editFormAmountDisplay: '',
 
-                // Validation errors
                 addFormErrors: [],
                 editFormErrors: [],
 
@@ -457,7 +449,6 @@
                     });
                 },
 
-                // Modal methods
                 openAddModal() {
                     this.resetAddForm();
                     this.showAddModal = true;
@@ -475,7 +466,6 @@
                     this.updateSelectAllState();
                 },
 
-                // Selection methods
                 toggleSelectAll() {
                     const checkboxes = document.querySelectorAll('input[x-model="selectedTransactions"]');
                     if (this.selectAllChecked) {
@@ -502,7 +492,6 @@
                     }
                 },
 
-                // Category loading methods
                 async loadAddCategories() {
                     if (!this.addForm.type) {
                         this.addCategories = [];
@@ -515,9 +504,9 @@
                     try {
                         const response = await fetch(`/api/category/${this.addForm.type}`);
                         this.addCategories = await response.json();
-                        
+
                         this.addForm.category_id = '';
-                        
+
                         console.log('[v0] Categories loaded:', this.addCategories);
                     } catch (error) {
                         console.error('[v0] Error loading categories:', error);
@@ -540,7 +529,6 @@
                     }
                 },
 
-                // Amount formatting methods
                 formatAddAmount() {
                     let value = this.addFormAmountDisplay.replace(/\D/g, '');
                     if (value) {
@@ -562,7 +550,6 @@
                     this.editFormAmountDisplay = parseInt(this.editForm.amount).toLocaleString('id-ID');
                 },
 
-                // Form reset methods
                 resetAddForm() {
                     this.addForm = {
                         type: '',
@@ -579,14 +566,13 @@
                     this.updateAmountDisplays();
                 },
 
-                // Validation methods
                 validateAddForm() {
                     const errors = [];
 
                     if (!this.addForm.type) errors.push('Tipe transaksi harus dipilih');
                     if (!this.addForm.category_id) errors.push('Kategori harus dipilih');
                     if (!this.addForm.amount || this.addForm.amount <= 0) errors.push(
-                    'Jumlah harus diisi dan lebih dari 0');
+                        'Jumlah harus diisi dan lebih dari 0');
 
                     this.addFormErrors = errors;
                     return errors.length === 0;
@@ -604,7 +590,6 @@
                     return errors.length === 0;
                 },
 
-                // Form submission methods
                 async submitAddForm() {
                     if (!this.validateAddForm()) return;
 
@@ -688,7 +673,6 @@
                     }
                 },
 
-                // Action methods
                 async editSelected() {
                     if (this.selectedTransactions.length !== 1) {
                         alert('Pilih tepat satu transaksi untuk diedit!');
@@ -728,15 +712,15 @@
                         return;
                     }
 
-                    const confirmMessage = this.selectedTransactions.length === 1 
-                        ? 'Apakah Anda yakin ingin menghapus transaksi ini?'
-                        : `Apakah Anda yakin ingin menghapus ${this.selectedTransactions.length} transaksi yang dipilih?`;
+                    const confirmMessage = this.selectedTransactions.length === 1 ?
+                        'Apakah Anda yakin ingin menghapus transaksi ini?' :
+                        `Apakah Anda yakin ingin menghapus ${this.selectedTransactions.length} transaksi yang dipilih?`;
 
                     if (confirm(confirmMessage)) {
                         try {
                             const formData = new FormData();
                             formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-                            
+
                             this.selectedTransactions.forEach(id => {
                                 formData.append('transaction_ids[]', id);
                             });

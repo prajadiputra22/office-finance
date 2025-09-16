@@ -15,8 +15,8 @@ return new class extends Migration
             $table->decimal('amount', 15);
             $table->date('date_entry');
             $table->string('description', 255)->nullable();
-            $table->date('date_factur');
-            $table->integer('no_factur');
+            $table->date('date_factur')->nullable();
+            $table->integer('no_factur')->nullable();
             $table->date('date');
             $table->string('attachment')->nullable();
             $table->timestamps();

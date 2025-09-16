@@ -16,11 +16,11 @@
         <span class="text-[#F20E0F] splash-animation">Finance</span>
     </h1>
 
-    {{-- <script>
+    <script>
         setTimeout(function(){
             window.location.href = "{{ Auth::guard('admin')->check() ? route('transactions.index') : route('auth.login') }}";
         }, 3000); 
-    </script> --}}
+    </script>
 
 </body>
 

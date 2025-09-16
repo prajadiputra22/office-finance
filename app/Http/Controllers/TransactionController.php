@@ -9,6 +9,7 @@ use App\Models\Expenditure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class TransactionController extends Controller
 {
@@ -24,7 +25,10 @@ class TransactionController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
-        $transactions = $query->with('category')->orderBy('date', 'desc')->get();
+        $transactions = $query->with('category')
+            ->orderBy('date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
         $category = Category::all();
 
         $income = Transaction::where('type', 'income')->sum('amount');
@@ -65,7 +69,6 @@ class TransactionController extends Controller
                 'no_factur' => 'nullable|string',
             ];
 
-            // Only add file validation if attachment is actually present
             if ($request->hasFile('attachment')) {
                 $validationRules['attachment'] = 'file|mimes:jpg,jpeg,png,pdf|max:2048';
             }
@@ -93,7 +96,7 @@ class TransactionController extends Controller
             }
 
             $transaction = Transaction::create([
-                'type' => $transactionType, // Use explicit variable instead of $request->type
+                'type' => $transactionType,
                 'category_id' => $request->category_id,
                 'amount' => $request->amount,
                 'date' => $request->date,
@@ -120,6 +123,7 @@ class TransactionController extends Controller
         }
     }
 
+    // Edit Transaksi
     public function update(Request $request, $id)
     {
         try {
@@ -142,6 +146,14 @@ class TransactionController extends Controller
             $request->validate($validationRules);
 
             DB::beginTransaction();
+
+            if ($request->hasFile('attachment')) {
+                if ($transaction->attachment) {
+                    Storage::disk('public')->delete($transaction->attachment);
+                }
+
+                $attachmentPath = $request->file('attachment')->store('attachments', 'public');
+            }
 
             $attachmentPath = $transaction->attachment;
 
@@ -171,6 +183,7 @@ class TransactionController extends Controller
         }
     }
 
+    // Hapus Transaksi
     public function destroy($id)
     {
         try {
@@ -181,16 +194,20 @@ class TransactionController extends Controller
             } elseif ($transaction->type === 'expenditure' && $transaction->no_factur) {
                 Expenditure::where('no_factur', $transaction->no_factur)->delete();
             }
+            if ($transaction->attachment) {
+                Storage::disk('public')->delete($transaction->attachment);
+            }
 
             $transaction->delete();
 
-            return redirect()->back()->with('success', 'Transaksi berhasil dihapus!');
+            return redirect()->back()->with('success', 'Transaksi dan lampirannya berhasil dihapus!');
         } catch (\Exception $e) {
             Log::error('Error deleting transaction:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Error deleting transaction: ' . $e->getMessage());
         }
     }
 
+    // Hapus Banyak Transaksi
     public function bulkDelete(Request $request)
     {
         try {
@@ -215,6 +232,9 @@ class TransactionController extends Controller
                 } elseif ($transaction->type === 'expenditure' && $transaction->no_factur) {
                     Expenditure::where('no_factur', $transaction->no_factur)->delete();
                 }
+                if ($transaction->attachment) {
+                    Storage::disk('public')->delete($transaction->attachment);
+                }
             }
 
             $deletedCount = Transaction::whereIn('id', $transactionIds)->delete();
@@ -226,7 +246,7 @@ class TransactionController extends Controller
             ]);
 
             return redirect()->route('transactions.index')
-                ->with('success', "Berhasil menghapus {$deletedCount} transaksi!");
+                ->with('success', "Berhasil menghapus {$deletedCount} transaksi dan lampirannya!");
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Error bulk deleting transactions:', [
@@ -237,6 +257,7 @@ class TransactionController extends Controller
         }
     }
 
+    // Download Lampiran
     public function downloadAttachment($id)
     {
         $transaction = Transaction::findOrFail($id);
