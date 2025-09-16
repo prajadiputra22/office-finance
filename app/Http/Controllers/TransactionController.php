@@ -25,6 +25,14 @@ class TransactionController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('no_factur', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhere('description', 'LIKE', '%' . $searchTerm . '%');
+            });
+        }
+
         $transactions = $query->with('category')
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')

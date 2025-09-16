@@ -3,17 +3,31 @@
 @section('title', 'Tigajaya Finance')
 
 @section('content')
-    <!-- Simplified Alpine.js data structure and fixed event handling -->
+
     <main class="flex-1 pt-4" x-data="transactionManager()">
         <!-- Search bar -->
-        <div class="relative flex-1 bg-white max-w-[600px] rounded-xl mb-8">
-            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-            </svg>
-            <input type="text" placeholder="Cari riwayat transaksi"
-                class="w-full pl-12 pr-4 py-2 border-2 rounded-lg bg-[#f8f9fa] focus:border-[#0B3B9F] focus:bg-white outline-none text-sm">
-        </div>
+        <form method="GET" action="{{ route('transactions.index') }}" class="mb-8">
+            <div class="relative flex-1 bg-white max-w-[600px] rounded-xl">
+                <input type="text" name="search" value="{{ request('search') }}"
+                    placeholder="Cari berdasarkan No. Faktur atau Keterangan"
+                    class="w-full pl-4 pr-2 py-2 border-2 rounded-lg bg-[#f8f9fa] focus:border-[#0B3B9F] focus:bg-white outline-none text-sm">
+                <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                    @if (request('search'))
+                        <a href="{{ route('transactions.index') }}" class=" py-1 text-[#F20E0F] text-xl transition">
+                            ✕
+                        </a>
+                        <div class="h-6 border-l border-gray-300"></div>
+                    @endif
+                    <button type="submit" class="py-2 pr-2 text-[#0B3B9F] flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#0B3B9F]" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="M21 21l-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </form>
 
         <div class="flex gap-5 mb-8 flex-wrap animate-fadeIn">
             <button type="button" @click="openAddModal()"
@@ -41,8 +55,14 @@
         <!-- Riwayat Transaksi -->
         <div class="bg-white rounded-xl shadow p-6 animate-fadeIn">
             <div class="flex justify-between items-center mb-5">
-                <h2 class="text-lg font-bold text-[#333]">Riwayat Transaksi</h2>
-                <!-- Simplified button handling with Alpine.js -->
+                <h2 class="text-lg font-bold text-[#333]">
+                    Riwayat Transaksi
+                    @if (request('search'))
+                        <span class="text-sm font-normal text-gray-600">
+                            - Hasil pencarian: "{{ request('search') }}"
+                        </span>
+                    @endif
+                </h2>
                 <div class="flex gap-3">
                     <button @click="editSelected()" :disabled="selectedTransactions.length !== 1"
                         class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition text-sm">
@@ -81,14 +101,13 @@
                             <th class="p-4 font-semibold text-[#333] text-center">Jumlah</th>
                             <th class="p-4 font-semibold text-[#333] text-center">No. Faktur</th>
                             <th class="p-4 font-semibold text-[#333] text-center">Tgl. Faktur</th>
-                            <th class="p-4 font-semibold text-[#333] text-center">Keterangan</th>
                             <th class="p-4 font-semibold text-[#333] text-center">Lampiran</th>
+                            <th class="p-4 font-semibold text-[#333] text-center">Keterangan</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($transactions as $trx)
                             <tr class="border-b border-[#e1e5e9] hover:bg-[#f8f9fa]">
-                                <!-- Checkbox Binding -->
                                 <td class="p-4 text-center">
                                     <input type="checkbox" x-model="selectedTransactions" value="{{ $trx->id }}"
                                         @change="updateSelectAllState()"
@@ -125,13 +144,6 @@
                                     @endif
                                 </td>
                                 <td class="p-4 text-center">
-                                    @if ($trx->description)
-                                        <span class="text-sm text-gray-600">{{ $trx->description }}</span>
-                                    @else
-                                        <span class="text-sm text-gray-400 italic">-</span>
-                                    @endif
-                                </td>
-                                <td class="p-4 text-center">
                                     @if ($trx->attachment)
                                         <a href="{{ asset('storage/' . $trx->attachment) }}" target="_blank"
                                             class="inline-flex items-center px-3 py-1 bg-[#0B3B9F] text-white text-xs rounded-md hover:bg-blue-700 transition">
@@ -143,6 +155,13 @@
                                             </svg>
                                             Download
                                         </a>
+                                    @else
+                                        <span class="text-sm text-gray-400 italic">-</span>
+                                    @endif
+                                </td>
+                                <td class="p-4 text-center">
+                                    @if ($trx->description)
+                                        <span class="text-sm text-gray-600">{{ $trx->description }}</span>
                                     @else
                                         <span class="text-sm text-gray-400 italic">-</span>
                                     @endif
