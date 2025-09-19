@@ -6,23 +6,32 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::dropIfExists('income');
+        Schema::create('income', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['income', 'expenditure']);
             $table->foreignId('category_id')->constrained('category')->onDelete('restrict');
-            $table->decimal('amount', 15, 2);
-            $table->date('date');
+            $table->string('customer', 25);
+            $table->decimal('amount', 15);
+            $table->date('date_entry');
+            $table->string('description', 255);
             $table->date('date_factur');
             $table->integer('no_factur');
-            $table->string('description', 255)->nullable();
+            $table->date('date');
             $table->string('attachment')->nullable();
             $table->timestamps();
         });
     }
+
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('income');
     }
 };

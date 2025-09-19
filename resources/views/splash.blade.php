@@ -1,18 +1,22 @@
-@extends('layouts.splash')
-
-@section('title', 'Splash Screen')
-
-@section('content')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'TigaJaya Finance')</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="h-screen flex items-center justify-center font-poppins bg-white">
     <h1 class="font-bold text-4xl splash-animation flex space-x-2">
-        <span class="text-black splash-animation">Office</span>
-        <span class="text-[#B6F500] splash-animation" style="animation-delay: 0.3s">Finance</span>
+        <span class="text-[#F20E0F] splash-animation">TigaJaya</span>
+        <span class="text-[#0B3B9F] splash-animation">Finance</span>
     </h1>
-@endsection
 
-@section('scripts')
 <script>
-    setTimeout(function(){
-        window.location.href = "/login";
-    }, 3000);
+setTimeout(function(){
+    window.location.href = "{{ Auth::guard('admin')->check() ? route('home') : route('auth.login') }}";
+}, 3000);
 </script>
-@endsection
+</body>
+</html>

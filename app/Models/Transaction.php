@@ -9,17 +9,43 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $table = 'transaction';  
+    protected $table = 'transactions';
 
     protected $fillable = [
         'type',
+        'category_id',
         'amount',
-        'customer',
-        'gyro_cash',
-        'date_entry',
+        'date',
         'description',
         'date_factur',
         'no_factur',
-        'date',
+        'attachment',
+        'date_entry',
     ];
+
+    protected $casts = [
+        'date' => 'date',
+        'date_factur' => 'date',
+        'date_entry' => 'datetime',
+        'amount' => 'decimal:2'
+    ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+     public function scopeIncome($query)
+    {
+        return $query->where('type', 'income');
+    }
+
+    public function scopeExpenditure($query)
+    {
+        return $query->where('type', 'expenditure');
+    }
+
+    public function scopeByDateRange($query, $startDate, $endDate)
+    {
+        return $query->whereBetween('date', [$startDate, $endDate]);
+    }
 }

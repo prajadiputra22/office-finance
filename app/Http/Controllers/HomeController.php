@@ -2,46 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Income;
-use App\Models\Expenditure;
-use App\Models\Transaction;
 use Illuminate\Http\Request;
-use ArielMejiaDev\LarapexCharts\LarapexChart;
+use App\Charts\TransactionsChart;
+use App\Models\Transaction;
 
 class HomeController extends Controller
 {
-    public function index() {
-        $totalIncome = Income::sum('amount');
-        $totalExpenditure = Expenditure::sum('amount');
-        $saldo = $totalIncome - $totalExpenditure;
-
-        $saldoGiro = Transaction::where('type', 'giro')->sum('amount');
-
-        $incomePerMonth = Income::selectRaw('MONTH(created_at) as month, SUM(amount) as total')
-            ->groupBy('month')
-            ->pluck('total', 'month')
-            ->toArray();
-
-        $expenditurePerMonth = Expenditure::selectRaw('MONTH(created_at) as month, SUM(amount) as total')
-            ->groupBy('month')
-            ->pluck('total', 'month')
-            ->toArray();
-
-        $chart = (new LarapexChart)->lineChart()
-            ->setTitle('Grafik Keuangan Perusahaan')
-            ->addData('Pemasukan', array_values($incomePerMonth))
-            ->addData('Pengeluaran', array_values($expenditurePerMonth))
-            ->setXAxis(['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des']);
-
-        $recentTransactions = Transaction::latest()->take(5)->get();
-
-        return view('dashboard', compact(
-            'saldo', 
-            'saldoGiro', 
-            'chart', 
-            'recentTransactions',
-            'totalIncome', 
-            'totalExpenditure'
-        ));
+    public function index(TransactionsChart $transactionsChart)
+    {
+        $chart = $transactionsChart->build();
+        
+        $totalIncome = Transaction::where('type', 'income')->sum('amount');
+        $totalExpenditure = Transaction::where('type', 'expenditure')->sum('amount');
+        $balance = $totalIncome - $totalExpenditure;
+        
+        $recentTransactions = Transaction::with('category')
+            ->orderBy('date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+        
+        return view('home', compact('chart', 'balance', 'totalIncome', 'totalExpenditure', 'recentTransactions'));
     }
 }

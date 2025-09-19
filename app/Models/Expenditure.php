@@ -15,11 +15,11 @@ class Expenditure extends Model
         'category_id',
         'customer',
         'amount',
-        'gyro_cash',
         'date_entry',
         'description',
         'date_factur',
         'no_factur',
         'date',
+        'attachment',
     ];
 }

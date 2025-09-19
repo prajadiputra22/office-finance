@@ -7,72 +7,44 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    // Tampilkan semua kategori
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::all();
-        return view('category', compact('categories'));
+        $type = $request->get('type');
+        
+        if ($type && in_array($type, ['income', 'expenditure'])) {
+            $categories = Category::where('type', $type)->get();
+        } else {
+            $categories = Category::all();
+        }
+        
+        return view('category', compact('categories', 'type'));
     }
 
-    // Form tambah kategori
-    public function create()
-    {
-        return view('categories.create');
-    }
-
-    // Simpan kategori baru
     public function store(Request $request)
     {
         $request->validate([
-            'category'   => 'required|in:masuk,keluar',
-            'subcategory'=> 'nullable|string|max:255',
-            'type'       => 'required|in:income,expenditure',
-        ]);
-        
-        $categoryName = $request->subcategory ?? ucfirst($request->category);
-        
-        Category::create([
-            'category_name' => $categoryName,
-            'type' => $request->type,
+            'category_name' => 'required|string|max:255',
+            'type' => 'required|in:income,expenditure',
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil ditambahkan.');
+        Category::create($request->only('category_name', 'type'));
+
+        return redirect()->route('category.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
 
-    // Form edit kategori
     public function edit(Category $category)
     {
-        return view('categories.edit', compact('category'));
+        return view('category.edit', compact('category'));
     }
 
-    // Update kategori
-    public function update(Request $request, Category $category)
+    public function destroy($id)
     {
-        $request->validate([
-            'category'   => 'required|in:masuk,keluar',
-            'subcategory'=> 'nullable|string|max:255',
-            'type'       => 'required|in:income,expenditure',
-        ]);
-
-        $categoryName = $request->subcategory ?? ucfirst($request->category);
-        
-        $category->update([
-            'category_name' => $categoryName,
-            'type' => $request->type,
-        ]);
-
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil diperbarui.');
-    }
-
-    // Hapus kategori
-    public function destroy(Category $category)
-    {
+        $category = Category::findOrFail($id);
         $category->delete();
 
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus.');
+        return redirect()->back()->with('success', 'Kategori berhasil dihapus!');
     }
 
-    // Ambil kategori berdasarkan tipe
     public function getByType($type)
     {
         $categories = Category::where('type', $type)->get();

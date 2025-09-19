@@ -12,9 +12,10 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('login');
+        return view('auth.login');
     }
 
+    # Proses login
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -24,7 +25,7 @@ class AuthController extends Controller
 
         if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('dashboard'));
+            return redirect()->intended(route('home'));
         }
 
         return back()->withErrors([
@@ -32,28 +33,28 @@ class AuthController extends Controller
         ])->onlyInput('username');
     }
 
-    public function showRegistrationForm()
+    public function showRegisterForm()
     {
-        return view('register');
+        return view('auth.register');
     }
 
+    # Proses register
     public function register(Request $request)
     {
         $request->validate([
             'username' => ['required', 'string', 'max:255', 'unique:admin'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
         ]);
 
-        $admin = Admin::create([
+        $admin = \App\Models\Admin::create([
             'username' => $request->username,
-            'password' => Hash::make($request->password),
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
         ]);
 
-        Auth::guard('admin')->login($admin);
-
-        return redirect(route('dashboard'));
+        return redirect()->route('auth.login')->with('success', 'Registration successful! Please login.');
     }
 
+    # Proses reset
     public function reset(Request $request)
     {
         $request->validate([
