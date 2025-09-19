@@ -12,12 +12,10 @@ class HomeController extends Controller
     {
         $chart = $transactionsChart->build();
         
-        // Calculate company balance (total income - total expenditure)
         $totalIncome = Transaction::where('type', 'income')->sum('amount');
         $totalExpenditure = Transaction::where('type', 'expenditure')->sum('amount');
         $balance = $totalIncome - $totalExpenditure;
         
-        // Get 5 latest transactions with category information
         $recentTransactions = Transaction::with('category')
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
