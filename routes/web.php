@@ -4,15 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\HomeController;
 
 
 Route::get('/', function () {
     return view('splash');
 })->name('splash');
 
-// Route::get('/home', function () {
-//     return view('home');
-// })->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
 Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');

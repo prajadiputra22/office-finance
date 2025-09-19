@@ -131,7 +131,6 @@ class TransactionController extends Controller
         }
     }
 
-    // Edit Transaksi
     public function update(Request $request, $id)
     {
         try {
@@ -215,7 +214,6 @@ class TransactionController extends Controller
         }
     }
 
-    // Hapus Banyak Transaksi
     public function bulkDelete(Request $request)
     {
         try {
@@ -265,7 +263,6 @@ class TransactionController extends Controller
         }
     }
 
-    // Download Lampiran
     public function downloadAttachment($id)
     {
         $transaction = Transaction::findOrFail($id);

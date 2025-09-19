@@ -9,13 +9,12 @@ class Income extends Model
 {
     use HasFactory;
 
-    protected $table = 'income';
+    protected $table = 'transactions';
 
     protected $fillable = [
         'category_id',
         'customer',
         'amount',
-        'gyro_cash',
         'date_entry',
         'description',
         'date_factur',

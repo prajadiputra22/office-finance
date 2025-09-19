@@ -8,14 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Expenditure extends Model
 {
     use HasFactory;
-
-    protected $table = 'expenditure';
     
+    protected $table = 'transactions';
+
     protected $fillable = [
         'category_id',
         'customer',
         'amount',
-        'gyro_cash',
         'date_entry',
         'description',
         'date_factur',

@@ -26,7 +26,6 @@ class IncomeController extends Controller
             'date' => 'required|date',
         ];
 
-        // Only add file validation if attachment is actually present
         if ($request->hasFile('attachment')) {
             $validationRules['attachment'] = 'file|mimes:jpg,jpeg,png,pdf|max:2048';
         }

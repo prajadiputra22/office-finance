@@ -3,16 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Income;
-use App\Models\Expenditure;
+use App\Charts\TransactionsChart;
+use App\Models\Transaction;
 
 class HomeController extends Controller
 {
-    public function index() {
-        $totalIncome = Income::sum('amount');
-        $totalExpenditure = Expenditure::sum('amount');
-        $saldo = $totalIncome - $totalExpenditure;
-
-    return view('home', compact('saldo', 'totalIncome', 'totalExpenditure'));
+    public function index(TransactionsChart $transactionsChart)
+    {
+        $chart = $transactionsChart->build();
+        
+        // Calculate company balance (total income - total expenditure)
+        $totalIncome = Transaction::where('type', 'income')->sum('amount');
+        $totalExpenditure = Transaction::where('type', 'expenditure')->sum('amount');
+        $balance = $totalIncome - $totalExpenditure;
+        
+        // Get 5 latest transactions with category information
+        $recentTransactions = Transaction::with('category')
+            ->orderBy('date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+        
+        return view('home', compact('chart', 'balance', 'totalIncome', 'totalExpenditure', 'recentTransactions'));
     }
 }
