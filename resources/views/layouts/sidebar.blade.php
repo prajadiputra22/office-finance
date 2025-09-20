@@ -1,6 +1,6 @@
 <aside class="fixed top-0 left-0 w-[250px] h-screen bg-[#0B3B9F] text-white p-5 flex flex-col shadow-md overflow-y-auto">
     <nav class="space-y-2">
-        <!-- Menu Utama -->
+
         <a href="home" class="flex items-center p-2 rounded hover:text-[#F20E0F] cursor-pointer transition group">
             <img src="{{ asset('assets/picture/home.png') }}" alt="Home Icon"
                 class="w-5 h-5 mr-3 filter invert brightness-0 duration-300 group-hover:invert group-hover:red group-hover:saturate-200 group-hover:hue-rotate-0 group-hover:brightness-100 group-hover:contrast-200">
@@ -14,7 +14,7 @@
             <img src="{{ asset('assets/picture/category.png') }}" alt="Category Icon" class="w-5 h-5 mr-3 filter invert brightness-0">
             <span class="font-medium">Kategori</span>
         </a>
-        <a herf="" class="flex items-center p-2 rounded hover:text-[#F20E0F] cursor-pointer transition">
+        <a herf="report" class="flex items-center p-2 rounded hover:text-[#F20E0F] cursor-pointer transition">
             <img src="{{ asset('assets/picture/report.png') }}" alt="Report Icon" class="w-5 h-5 mr-3 filter invert brightness-0">
             <span class="font-medium">Laporan</span>
         </a>

@@ -98,7 +98,7 @@
                                         {{ \Carbon\Carbon::parse($transaction->date)->format('d/m/Y') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $transaction->category->name ?? '-' }}
+                                        {{ $transaction->category->category_name ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span

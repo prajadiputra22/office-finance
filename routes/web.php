@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReportsController;
 
 
 Route::get('/', function () {
@@ -25,12 +26,14 @@ Route::post('/category', [CategoryController::class, 'store'])->name('category.s
 Route::delete('/category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 Route::get('/api/category/{type}', [CategoryController::class, 'getByType'])->name('api.category.byType');
 
+Route::get('/report', [ReportsController::class, 'index'])->name('report');
+Route::get('/api/chart-data', [ReportsController::class, 'getChartData'])->name('chart.data');
+
 Route::middleware('guest:admin')->group(function () {
-    // Login
+
     Route::get('/auth/login', [AuthController::class, 'showLoginForm'])->name('auth.login');
     Route::post('/auth/login', [AuthController::class, 'login']);
 
-    // Register
     Route::get('/auth/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
     Route::post('/auth/register', [AuthController::class, 'register']);
 });
