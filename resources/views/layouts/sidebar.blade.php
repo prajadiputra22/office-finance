@@ -6,7 +6,7 @@
                 class="w-5 h-5 mr-3 filter invert brightness-0 duration-300 group-hover:invert group-hover:red group-hover:saturate-200 group-hover:hue-rotate-0 group-hover:brightness-100 group-hover:contrast-200">
             <span class="font-medium">Home</span>
         </a>
-        <a href="transactions" class="flex items-center p-2 rounded hover:text-[#F20E0F] cursor-pointer transition">
+        <a href="/transactions" class="flex items-center p-2 rounded hover:text-[#F20E0F] cursor-pointer transition">
             <img src="{{ asset('assets/picture/transaction.png') }}" alt="Transaction Icon"
                 class="w-5 h-5 mr-3 filter invert brightness-0">
             <span class="font-medium">Transaksi</span>
@@ -31,9 +31,17 @@
                     <i :class="open ? 'fa fa-chevron-up' : 'fa fa-chevron-down'" class="text-sm"></i>
                 </button>
                 <div x-show="open" x-transition class="ml-4 space-y-1">
-                    <div class="text-sm text-gray-200 py-1 cursor-pointer hover:text-[#F20E0F]">CV. Tiga Jaya</div>
-                    <div class="text-sm text-gray-200 py-1 cursor-pointer hover:text-[#F20E0F]">SAS Sukabumi</div>
-                    <div class="text-sm text-gray-200 py-1 cursor-pointer hover:text-[#F20E0F]">SAS Karawang</div>
+                    {{-- Replace hardcoded items with dynamic categories from database --}}
+                    @if(isset($sidebarIncomeCategories) && $sidebarIncomeCategories->count() > 0)
+                        @foreach($sidebarIncomeCategories as $category)
+                            <a href="/transactions?category_id={{ $category->id }}&type=income" 
+                               class="block text-sm text-gray-200 py-1 cursor-pointer hover:text-[#F20E0F] transition">
+                                {{ $category->category_name }}
+                            </a>
+                        @endforeach
+                    @else
+                        <div class="text-sm text-gray-400 py-1">Belum ada kategori kas masuk</div>
+                    @endif
                 </div>
             </div>
 
@@ -45,11 +53,17 @@
                     <i :class="open ? 'fa fa-chevron-up' : 'fa fa-chevron-down'" class="text-sm"></i>
                 </button>
                 <div x-show="open" x-transition class="ml-4 space-y-1">
-                    <div class="text-sm text-gray-200 py-1 cursor-pointer hover:text-[#F20E0F]">Angsuran Perusahaan
-                    </div>
-                    <div class="text-sm text-gray-200 py-1 cursor-pointer hover:text-[#F20E0F]">Hutang Perusahaan</div>
-                    <div class="text-sm text-gray-200 py-1 cursor-pointer hover:text-[#F20E0F]">KAS Besar</div>
-                    <div class="text-sm text-gray-200 py-1 cursor-pointer hover:text-[#F20E0F]">KAS Kecil</div>
+                    {{-- Replace hardcoded items with dynamic categories from database --}}
+                    @if(isset($sidebarExpenditureCategories) && $sidebarExpenditureCategories->count() > 0)
+                        @foreach($sidebarExpenditureCategories as $category)
+                            <a href="/transactions?category_id={{ $category->id }}&type=expenditure" 
+                               class="block text-sm text-gray-200 py-1 cursor-pointer hover:text-[#F20E0F] transition">
+                                {{ $category->category_name }}
+                            </a>
+                        @endforeach
+                    @else
+                        <div class="text-sm text-gray-400 py-1">Belum ada kategori kas keluar</div>
+                    @endif
                 </div>
             </div>
         </div>
