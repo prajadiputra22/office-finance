@@ -26,9 +26,16 @@
                 <div class="mt-4 text-left">
                     <h3 class="font-semibold text-sm mb-2">Detail per Kategori:</h3>
                     @foreach($incomePercentages as $item)
-                        <div class="flex justify-between items-center py-1 text-sm">
-                            <span>{{ $item['category'] }}</span>
-                            <span class="font-semibold">{{ $item['percentage'] }}% (Rp {{ number_format($item['amount'], 0, ',', '.') }})</span>
+                        <div class="flex justify-between items-center py-2 text-sm border-b border-gray-100 last:border-b-0">
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded-full border-2 border-white shadow-sm" 
+                                     style="background-color: {{ $item['color'] }}"></div>
+                                <span class="font-medium">{{ $item['category'] }}</span>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-semibold text-green-600">{{ $item['percentage'] }}%</div>
+                                <div class="text-xs text-gray-600">Rp {{ number_format($item['amount'], 0, ',', '.') }}</div>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -53,9 +60,16 @@
                 <div class="mt-4 text-left">
                     <h3 class="font-semibold text-sm mb-2">Detail per Kategori:</h3>
                     @foreach($expenditurePercentages as $item)
-                        <div class="flex justify-between items-center py-1 text-sm">
-                            <span>{{ $item['category'] }}</span>
-                            <span class="font-semibold">{{ $item['percentage'] }}% (Rp {{ number_format($item['amount'], 0, ',', '.') }})</span>
+                        <div class="flex justify-between items-center py-2 text-sm border-b border-gray-100 last:border-b-0">
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded-full border-2 border-white shadow-sm" 
+                                     style="background-color: {{ $item['color'] }}"></div>
+                                <span class="font-medium">{{ $item['category'] }}</span>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-semibold text-red-600">{{ $item['percentage'] }}%</div>
+                                <div class="text-xs text-gray-600">Rp {{ number_format($item['amount'], 0, ',', '.') }}</div>
+                            </div>
                         </div>
                     @endforeach
                 </div>

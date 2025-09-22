@@ -59,8 +59,6 @@
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200" role="img"
                 aria-label="Grafik Keuangan">
                 <div class="mb-4">
-                    <p class="text-sm text-gray-600">Grafik menampilkan perbandingan pemasukan (biru) dan pengeluaran
-                        (merah) per bulan</p>
                 </div>
                 {!! $chart->container() !!}
             </div>

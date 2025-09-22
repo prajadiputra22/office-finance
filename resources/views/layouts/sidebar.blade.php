@@ -7,16 +7,19 @@
             <span class="font-medium">Home</span>
         </a>
         <a href="transactions" class="flex items-center p-2 rounded hover:text-[#F20E0F] cursor-pointer transition">
-            <img src="{{ asset('assets/picture/transaction.png') }}" alt="Transaction Icon" class="w-5 h-5 mr-3 filter invert brightness-0">
+            <img src="{{ asset('assets/picture/transaction.png') }}" alt="Transaction Icon"
+                class="w-5 h-5 mr-3 filter invert brightness-0">
             <span class="font-medium">Transaksi</span>
         </a>
         <a href="category" class="flex items-center p-2 rounded hover:text-[#F20E0F] cursor-pointer transition">
-            <img src="{{ asset('assets/picture/category.png') }}" alt="Category Icon" class="w-5 h-5 mr-3 filter invert brightness-0">
+            <img src="{{ asset('assets/picture/category.png') }}" alt="Category Icon"
+                class="w-5 h-5 mr-3 filter invert brightness-0">
             <span class="font-medium">Kategori</span>
         </a>
-        <a herf="report" class="flex items-center p-2 rounded hover:text-[#F20E0F] cursor-pointer transition">
-            <img src="{{ asset('assets/picture/report.png') }}" alt="Report Icon" class="w-5 h-5 mr-3 filter invert brightness-0">
-            <span class="font-medium">Laporan</span>
+        <a href="report" class="flex items-center p-2 rounded hover:text-[#F20E0F] cursor-pointer transition">
+            <img src="{{ asset('assets/picture/report.png') }}" alt="Report Icon"
+                class="w-5 h-5 mr-3 filter invert brightness-0">
+            <span class="font-bold">Laporan</span>
         </a>
 
         <!-- Kas Masuk -->
@@ -42,7 +45,8 @@
                     <i :class="open ? 'fa fa-chevron-up' : 'fa fa-chevron-down'" class="text-sm"></i>
                 </button>
                 <div x-show="open" x-transition class="ml-4 space-y-1">
-                    <div class="text-sm text-gray-200 py-1 cursor-pointer hover:text-[#F20E0F]">Angsuran Perusahaan</div>
+                    <div class="text-sm text-gray-200 py-1 cursor-pointer hover:text-[#F20E0F]">Angsuran Perusahaan
+                    </div>
                     <div class="text-sm text-gray-200 py-1 cursor-pointer hover:text-[#F20E0F]">Hutang Perusahaan</div>
                     <div class="text-sm text-gray-200 py-1 cursor-pointer hover:text-[#F20E0F]">KAS Besar</div>
                     <div class="text-sm text-gray-200 py-1 cursor-pointer hover:text-[#F20E0F]">KAS Kecil</div>

@@ -36,40 +36,46 @@ class ReportsController extends Controller
             return (float) $value;
         })->toArray();
 
+        $incomeColors = ['#16A34A','#22C55E','#4ADE80','#86EFAC','#BBF7D0','#DCFCE7',
+                        '#15803D','#166534','#14532D','#047857','#065F46','#064E3B'];
+        
+        $expenditureColors = ['#DC2626','#EF4444','#F87171','#FCA5A5','#FECACA','#FEE2E2',
+                             '#B91C1C','#991B1B','#7F1D1D','#9F1239','#BE123C','#E11D48'];
+
         $incomeChart = (new LarapexChart)->pieChart()
             ->setTitle('Pemasukan per Kategori')
             ->setDataset($incomeValues)
             ->setLabels($incomeLabels)
             ->setHeight(300)
-            ->setColors(['#16A34A','#22C55E','#4ADE80','#86EFAC','#BBF7D0','#DCFCE7',
-                         '#15803D','#166534','#14532D','#047857','#065F46','#064E3B']);
+            ->setColors($incomeColors);
 
         $expenditureChart = (new LarapexChart)->pieChart()
             ->setTitle('Pengeluaran per Kategori')
             ->setDataset($expenditureValues)
             ->setLabels($expenditureLabels)
             ->setHeight(300)
-            ->setColors(['#DC2626','#EF4444','#F87171','#FCA5A5','#FECACA','#FEE2E2',
-                         '#B91C1C','#991B1B','#7F1D1D','#9F1239','#BE123C','#E11D48']);
+            ->setColors($expenditureColors);
 
         $incomePercentages = [];
         if ($income > 0) {
-            foreach ($incomePerCategory as $item) {
+            foreach ($incomePerCategory as $index => $item) {
                 $incomePercentages[] = [
                     'category' => $item->category_name,
                     'amount' => $item->total,
-                    'percentage' => round(($item->total / $income) * 100, 1)
+                    'percentage' => round(($item->total / $income) * 100, 1),
+                    'color' => $incomeColors[$index % count($incomeColors)]
                 ];
             }
         }
 
         $expenditurePercentages = [];
         if ($expenditure > 0) {
-            foreach ($expenditurePerCategory as $item) {
+            foreach ($expenditurePerCategory as $index => $item) {
                 $expenditurePercentages[] = [
                     'category' => $item->category_name,
                     'amount' => $item->total,
-                    'percentage' => round(($item->total / $expenditure) * 100, 1)
+                    'percentage' => round(($item->total / $expenditure) * 100, 1),
+                    'color' => $expenditureColors[$index % count($expenditureColors)]
                 ];
             }
         }
