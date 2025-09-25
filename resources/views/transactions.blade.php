@@ -26,7 +26,7 @@
         </div>
     </div>
 </form>
-    <div class="ml-5 flex-shrink-0">
+    <div class="ml-5 flex-shrink-0 self-start">
         <h1 class="text-2xl font-bold text-[#F20E0F]"> TigaJaya <span class="text-[#0B3B9F]">Finance</span></h1>
     </div>
 </header>

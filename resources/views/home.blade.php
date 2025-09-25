@@ -57,10 +57,6 @@
             <h2 id="chart-title" class="text-xl font-semibold mb-2 text-gray-800">Grafik Transaksi Bulanan</h2>
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200" role="img"
                 aria-label="Grafik Keuangan">
-                <div class="mb-4">
-                    <p class="text-sm text-gray-600">Grafik menampilkan perbandingan pemasukan (biru) dan pengeluaran
-                        (merah) per bulan</p>
-                </div>
                 {!! $chart->container() !!}
             </div>
         </section>
@@ -73,10 +69,10 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Tanggal
                                 </th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Kategori
                                 </th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -96,10 +92,10 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ \Carbon\Carbon::parse($transaction->date)->format('d/m/Y') }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 ">
                                         {{ $transaction->category->category_name ?? '-' }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <span
                                             class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
                                     {{ $transaction->type == 'income' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800' }}">
@@ -107,12 +103,12 @@
                                         </span>
                                     </td>
                                     <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium 
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center
                                 {{ $transaction->type == 'income' ? 'text-blue-600' : 'text-red-600' }}">
                                         {{ $transaction->type == 'income' ? '+' : '-' }} Rp
                                         {{ number_format($transaction->amount, 0, ',', '.') }}
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate"
+                                    <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate text-center"
                                         title="{{ $transaction->description ?? '-' }}">
                                         {{ $transaction->description ?? '-' }}
                                     </td>
