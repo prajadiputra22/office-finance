@@ -31,7 +31,6 @@
                     <i :class="open ? 'fa fa-chevron-up' : 'fa fa-chevron-down'" class="text-sm"></i>
                 </button>
                 <div x-show="open" x-transition class="ml-4 space-y-1">
-                    {{-- Replace hardcoded items with dynamic categories from database --}}
                     @if(isset($sidebarIncomeCategories) && $sidebarIncomeCategories->count() > 0)
                         @foreach($sidebarIncomeCategories as $category)
                             <a href="/transactions?category_id={{ $category->id }}&type=income" 
@@ -53,7 +52,7 @@
                     <i :class="open ? 'fa fa-chevron-up' : 'fa fa-chevron-down'" class="text-sm"></i>
                 </button>
                 <div x-show="open" x-transition class="ml-4 space-y-1">
-                    {{-- Replace hardcoded items with dynamic categories from database --}}
+                    
                     @if(isset($sidebarExpenditureCategories) && $sidebarExpenditureCategories->count() > 0)
                         @foreach($sidebarExpenditureCategories as $category)
                             <a href="/transactions?category_id={{ $category->id }}&type=expenditure" 
