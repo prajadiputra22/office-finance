@@ -1,5 +1,8 @@
 <?php
 
+use Carbon\Laravel\ServiceProvider;
+use Illuminate\Support\Facades\Facade;
+
 return [
 
     /*
@@ -123,4 +126,28 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Provider Driver
+    |--------------------------------------------------------------------------
+    */
+
+    'provider' => ServiceProvider::defaultProviders()->merge([
+
+        Illuminate\Auth\AuthServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+    ]),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Class Aliases
+    |--------------------------------------------------------------------------
+    */
+
+    'aliases' => Facade::defaultAliases()->merge([
+
+        'App' => Illuminate\Support\Facades\App::class,
+
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+    ])->toArray()
 ];

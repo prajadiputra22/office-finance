@@ -28,6 +28,7 @@ Route::get('/api/category/{type}', [CategoryController::class, 'getByType'])->na
 
 Route::get('/report', [ReportsController::class, 'index'])->name('report');
 Route::get('/api/chart-data', [ReportsController::class, 'getChartData'])->name('chart.data');
+Route::get('/reports/export', [ReportsController::class, 'export'])->name('reports.export');
 
 Route::middleware('guest:admin')->group(function () {
 

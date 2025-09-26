@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use ArielMejiaDev\LarapexCharts\LarapexChart;
 use App\Models\Transaction;
 use App\Models\Category;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TransactionsExport;
+
 
 class ReportsController extends Controller
 {
@@ -85,5 +88,34 @@ class ReportsController extends Controller
             'incomeChart', 'expenditureChart',
             'incomePercentages', 'expenditurePercentages'
         ));
+    }
+
+    public function export()
+    {
+        $transactions = Transaction::with('category')->orderBy('date')->get();
+
+        $rows = [];
+        $rows[] = ['No', 'Tanggal', 'Jenis', 'Kategori', 'Keterangan', 'Nominal', 'No Faktur', 'Tanggal Faktur'];
+
+        foreach ($transactions as $index => $t) {
+            $rows[] = [
+                $index + 1,
+                optional($t->date)->format('Y-m-d'),
+                $t->type,
+                optional($t->category)->category_name,
+                $t->description,
+                (float) $t->amount,
+                $t->no_factur,
+                optional($t->date_factur)->format('Y-m-d'),
+            ];
+        }
+
+        return Excel::download(new TransactionsExport(), 'laporan-transaksi.xlsx');
+
+        return \Maatwebsite\Excel\Facades\Excel::create('laporan-transaksi', function ($excel) use ($rows) {
+            $excel->sheet('Transaksi', function ($sheet) use ($rows) {
+                $sheet->fromArray($rows, null, 'A1', false, false);
+            });
+        })->download('xlsx');
     }
 }
