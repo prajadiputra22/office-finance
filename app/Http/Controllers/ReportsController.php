@@ -91,31 +91,26 @@ class ReportsController extends Controller
     }
 
     public function export()
-    {
-        $transactions = Transaction::with('category')->orderBy('date')->get();
+{
+    $transactions = Transaction::with('category')->orderBy('date')->get();
 
-        $rows = [];
-        $rows[] = ['No', 'Tanggal', 'Jenis', 'Kategori', 'Keterangan', 'Nominal', 'No Faktur', 'Tanggal Faktur'];
+    $rows = [];
+    $rows[] = ['No', 'Tanggal', 'Jenis', 'Kategori', 'Keterangan', 'Nominal', 'No Faktur', 'Tanggal Faktur', 'Lampiran'];
 
-        foreach ($transactions as $index => $t) {
-            $rows[] = [
-                $index + 1,
-                optional($t->date)->format('Y-m-d'),
-                $t->type,
-                optional($t->category)->category_name,
-                $t->description,
-                (float) $t->amount,
-                $t->no_factur,
-                optional($t->date_factur)->format('Y-m-d'),
-            ];
-        }
+    foreach ($transactions as $index => $t) {
+        $rows[] = [
+            $index + 1,
+            optional($t->date)->format('Y-m-d'),
+            $t->type,
+            optional($t->category)->category_name,
+            $t->description,
+            (float) $t->amount,
+            $t->no_factur,
+            optional($t->date_factur)->format('Y-m-d'),
+            $t->attachment,
+        ];
+    }
 
         return Excel::download(new TransactionsExport(), 'laporan-transaksi.xlsx');
-
-        return \Maatwebsite\Excel\Facades\Excel::create('laporan-transaksi', function ($excel) use ($rows) {
-            $excel->sheet('Transaksi', function ($sheet) use ($rows) {
-                $sheet->fromArray($rows, null, 'A1', false, false);
-            });
-        })->download('xlsx');
     }
 }
