@@ -26,10 +26,28 @@ class TransactionController extends Controller
         }
 
         if ($request->has('search') && !empty($request->search)) {
-            $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
+            $searchTerm = strtolower($request->search);
+
+            // mapping manual
+            $map = [
+                'pemasukan'   => 'income',
+                'pengeluaran' => 'expenditure',
+            ];
+
+            $query->where(function ($q) use ($searchTerm, $map) {
                 $q->where('no_factur', 'LIKE', '%' . $searchTerm . '%')
-                  ->orWhere('description', 'LIKE', '%' . $searchTerm . '%');
+                    ->orWhere('description', 'LIKE', '%' . $searchTerm . '%')
+                    ->orWhere('payment', 'LIKE', '%' . $searchTerm . '%')
+                    ->orWhereHas('category', function ($q2) use ($searchTerm) {
+                        $q2->where('category_name', 'LIKE', '%' . $searchTerm . '%');
+                    });
+
+                // mapping untuk type
+                if (array_key_exists($searchTerm, $map)) {
+                    $q->orWhere('type', $map[$searchTerm]);
+                } else {
+                    $q->orWhere('type', 'LIKE', '%' . $searchTerm . '%');
+                }
             });
         }
 
@@ -67,21 +85,20 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         try {
-            $validationRules = [
+            $request->merge([
+                'payment' => strtolower(trim((string) $request->input('payment'))),
+            ]);
+
+            $request->validate([
                 'type' => 'required|in:income,expenditure',
                 'category_id' => 'required|exists:category,id',
                 'amount' => 'required|numeric|min:0',
+                'payment' => 'required|in:cash,transfer,giro',
                 'date' => 'required|date',
                 'description' => 'nullable|string|max:255',
                 'date_factur' => 'nullable|date',
                 'no_factur' => 'nullable|string',
-            ];
-
-            if ($request->hasFile('attachment')) {
-                $validationRules['attachment'] = 'file|mimes:jpg,jpeg,png,pdf|max:2048';
-            }
-
-            $request->validate($validationRules);
+            ]);
 
             DB::beginTransaction();
 
@@ -90,35 +107,17 @@ class TransactionController extends Controller
                 $attachmentPath = $request->file('attachment')->store('attachments', 'public');
             }
 
-            Log::info('Creating transaction with data:', [
+            Transaction::create([
                 'type' => $request->type,
                 'category_id' => $request->category_id,
                 'amount' => $request->amount,
-                'date' => $request->date,
-                'all_request_data' => $request->all()
-            ]);
-
-            $transactionType = $request->input('type');
-            if (!in_array($transactionType, ['income', 'expenditure'])) {
-                throw new \Exception('Invalid transaction type: ' . $transactionType);
-            }
-
-            $transaction = Transaction::create([
-                'type' => $transactionType,
-                'category_id' => $request->category_id,
-                'amount' => $request->amount,
+                'payment' => $request->payment,
                 'date' => $request->date,
                 'description' => $request->description,
                 'date_factur' => $request->date_factur,
                 'no_factur' => $request->no_factur,
                 'attachment' => $attachmentPath,
-                'date_entry' => now(),
-            ]);
-
-            Log::info('Transaction created successfully:', [
-                'id' => $transaction->id,
-                'type' => $transaction->type,
-                'category_id' => $transaction->category_id
+                'date_entry' => now()->toDateString(),
             ]);
 
             DB::commit();
@@ -136,35 +135,28 @@ class TransactionController extends Controller
         try {
             $transaction = Transaction::findOrFail($id);
 
-            $validationRules = [
+            $request->merge([
+                'payment' => strtolower(trim((string) $request->input('payment'))),
+            ]);
+
+            $request->validate([
                 'type' => 'required|in:income,expenditure',
                 'category_id' => 'required|exists:category,id',
                 'amount' => 'required|numeric|min:0',
+                'payment' => 'required|in:cash,transfer,giro',
                 'date' => 'required|date',
                 'description' => 'nullable|string|max:255',
                 'date_factur' => 'nullable|date',
                 'no_factur' => 'nullable|string',
-            ];
-
-            if ($request->hasFile('attachment')) {
-                $validationRules['attachment'] = 'file|mimes:jpg,jpeg,png,pdf|max:2048';
-            }
-
-            $request->validate($validationRules);
+            ]);
 
             DB::beginTransaction();
 
+            $attachmentPath = $transaction->attachment;
             if ($request->hasFile('attachment')) {
                 if ($transaction->attachment) {
                     Storage::disk('public')->delete($transaction->attachment);
                 }
-
-                $attachmentPath = $request->file('attachment')->store('attachments', 'public');
-            }
-
-            $attachmentPath = $transaction->attachment;
-
-            if ($request->hasFile('attachment')) {
                 $attachmentPath = $request->file('attachment')->store('attachments', 'public');
             }
 
@@ -172,12 +164,13 @@ class TransactionController extends Controller
                 'type' => $request->type,
                 'category_id' => $request->category_id,
                 'amount' => $request->amount,
+                'payment' => $request->payment,
                 'date' => $request->date,
                 'description' => $request->description,
                 'date_factur' => $request->date_factur,
                 'no_factur' => $request->no_factur,
                 'attachment' => $attachmentPath,
-                'date_entry' => now(),
+                'date_entry' => now()->toDateString(),
             ]);
 
             DB::commit();

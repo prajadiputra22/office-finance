@@ -14,6 +14,7 @@ class Transaction extends Model
     protected $fillable = [
         'type',
         'category_id',
+        'payment',
         'amount',
         'date',
         'description',

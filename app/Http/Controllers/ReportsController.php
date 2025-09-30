@@ -9,7 +9,6 @@ use App\Models\Category;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TransactionsExport;
 
-
 class ReportsController extends Controller
 {
     public function index()
@@ -91,26 +90,7 @@ class ReportsController extends Controller
     }
 
     public function export()
-{
-    $transactions = Transaction::with('category')->orderBy('date')->get();
-
-    $rows = [];
-    $rows[] = ['No', 'Tanggal', 'Jenis', 'Kategori', 'Keterangan', 'Nominal', 'No Faktur', 'Tanggal Faktur', 'Lampiran'];
-
-    foreach ($transactions as $index => $t) {
-        $rows[] = [
-            $index + 1,
-            optional($t->date)->format('Y-m-d'),
-            $t->type,
-            optional($t->category)->category_name,
-            $t->description,
-            (float) $t->amount,
-            $t->no_factur,
-            optional($t->date_factur)->format('Y-m-d'),
-            $t->attachment,
-        ];
-    }
-
+    {
         return Excel::download(new TransactionsExport(), 'laporan-transaksi.xlsx');
     }
 }

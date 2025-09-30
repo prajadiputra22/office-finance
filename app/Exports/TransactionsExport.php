@@ -46,6 +46,14 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                 $attachmentInfo = "➖ Tidak ada lampiran";
             }
 
+            // Format payment method untuk lebih readable
+            $paymentMethod = match($t->payment) {
+                'cash' => 'Tunai',
+                'transfer' => 'Transfer',
+                'giro' => 'Giro',
+                default => ucfirst($t->payment ?? '-')
+            };
+
             return [
                 $index + 1,
                 optional($t->date)->format('Y-m-d'),
@@ -53,6 +61,7 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                 optional($t->category)->category_name,
                 $t->description,
                 (float) $t->amount,
+                $paymentMethod,
                 $t->no_factur,
                 optional($t->date_factur)->format('Y-m-d'),
                 $attachmentInfo,
@@ -69,6 +78,7 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
             'Kategori',
             'Keterangan',
             'Nominal',
+            'Metode Pembayaran',
             'No Faktur',
             'Tanggal Faktur',
             'Lampiran'
@@ -84,9 +94,10 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
             'D' => 20,  // Kategori
             'E' => 30,  // Keterangan
             'F' => 15,  // Nominal
-            'G' => 15,  // No Faktur
-            'H' => 12,  // Tanggal Faktur
-            'I' => 25,  // Lampiran
+            'G' => 18,  // Metode Pembayaran (new)
+            'H' => 15,  // No Faktur
+            'I' => 12,  // Tanggal Faktur
+            'J' => 25,  // Lampiran
         ];
     }
 
@@ -106,7 +117,7 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                 ]
             ],
             // Style untuk kolom lampiran
-            'I:I' => [
+            'J:J' => [
                 'alignment' => [
                     'horizontal' => Alignment::HORIZONTAL_LEFT,
                     'vertical' => Alignment::VERTICAL_CENTER,
@@ -131,38 +142,39 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                             $fileUrl = asset('storage/' . $transaction->attachment);
                             
                             // Tambahkan hyperlink ke cell
-                            $sheet->getCell('I' . $row)->getHyperlink()->setUrl($fileUrl);
+                            $sheet->getCell('J' . $row)->getHyperlink()->setUrl($fileUrl);
                             
                             // Style hyperlink
-                            $sheet->getStyle('I' . $row)->getFont()
+                            $sheet->getStyle('J' . $row)->getFont()
                                 ->setUnderline(true)
                                 ->getColor()->setARGB('FF0000FF');
                                 
                             // Tambahkan tooltip
                             $fileName = basename($transaction->attachment);
-                            $sheet->getComment('I' . $row)
+                            $sheet->getComment('J' . $row)
                                 ->setAuthor('System')
                                 ->getText()->createTextRun('Klik untuk membuka: ' . $fileName);
                         } else {
-                            // Style untuk file yang tidak ditemukan
-                            $sheet->getStyle('I' . $row)->getFont()
+                            // Style file yang tidak ditemukan
+                            $sheet->getStyle('J' . $row)->getFont()
                                 ->getColor()->setARGB('FFFF0000');
                         }
                     }
                     $row++;
                 }
                 
-                // Freeze header row agar tetap terlihat saat scroll
+                // Freeze header row
                 $sheet->freezePane('A2');
                 
-                // Tambahkan auto filter untuk memudahkan pencarian
-                $sheet->setAutoFilter('A1:I1');
+                // auto filter
+                $sheet->setAutoFilter('A1:J1');
                 
-                // Set row height yang konsisten
+                // Set row height
                 $sheet->getDefaultRowDimension()->setRowHeight(18);
                 
+                // Add borders
                 $highestRow = $sheet->getHighestRow();
-                $sheet->getStyle('A1:I' . $highestRow)->getBorders()->getAllBorders()
+                $sheet->getStyle('A1:J' . $highestRow)->getBorders()->getAllBorders()
                     ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
             },
         ];

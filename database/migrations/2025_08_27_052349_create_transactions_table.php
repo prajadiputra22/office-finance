@@ -13,6 +13,7 @@ return new class extends Migration
             $table->enum('type', ['income', 'expenditure']);
             $table->foreignId('category_id')->constrained('category')->onDelete('restrict');
             $table->decimal('amount', 15);
+            $table->enum('payment', ['cash', 'transfer', 'giro']);
             $table->date('date_entry');
             $table->string('description', 255)->nullable();
             $table->date('date_factur')->nullable();

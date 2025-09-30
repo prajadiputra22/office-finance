@@ -13,7 +13,6 @@ class Expenditure extends Model
 
     protected $fillable = [
         'category_id',
-        'customer',
         'amount',
         'date_entry',
         'description',
