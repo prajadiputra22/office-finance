@@ -9,7 +9,7 @@
         <form method="GET" action="{{ route('transactions.index') }}" class="mb-8">
             <div class="relative flex-1 bg-white max-w-[600px] rounded-xl">
                 <input type="text" name="search" value="{{ request('search') }}"
-                    placeholder="Cari berdasarkan No. Faktur atau Keterangan"
+                    placeholder="Cari Data Transaksi..."
                     class="w-full pl-4 pr-2 py-2 border-2 rounded-lg bg-[#f8f9fa] focus:border-[#0B3B9F] focus:bg-white outline-none text-sm">
                 <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
                     @if (request('search'))
@@ -98,6 +98,7 @@
                             <th class="p-4 font-semibold text-[#333] text-center">Tanggal Transaksi</th>
                             <th class="p-4 font-semibold text-[#333] text-center">Kategori</th>
                             <th class="p-4 font-semibold text-[#333] text-center">Status</th>
+                            <th class="p-4 font-semibold text-[#333] text-center">Pembayaran</th>
                             <th class="p-4 font-semibold text-[#333] text-center">Jumlah</th>
                             <th class="p-4 font-semibold text-[#333] text-center">No. Faktur</th>
                             <th class="p-4 font-semibold text-[#333] text-center">Tgl. Faktur</th>
@@ -121,6 +122,12 @@
                                     <span
                                         class="{{ $trx->type == 'income' ? 'bg-blue-100 text-[#0B3B9F]' : 'bg-red-100 text-[#F20E0F]' }} px-3 py-1 rounded-full text-sm font-medium">
                                         {{ $trx->type == 'income' ? 'Pemasukan' : 'Pengeluaran' }}
+                                    </span>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <span
+                                        class="{{ $trx->payment == 'cash' ? '' : '' }} px-3 py-1 rounded-full text-sm font-medium">
+                                        {{ $trx->payment == 'cash' ? 'Cash' : ($trx->payment == 'transfer' ? 'Transfer' : 'Giro') }}
                                     </span>
                                 </td>
                                 <td class="p-4 text-center">
@@ -231,7 +238,17 @@
                             </select>
                         </div>
                     </div>
-
+                    <div>
+                        <label class="block text-xs font-medium mb-1">Pembayaran <span
+                                class="text-red-500">*</span></label>
+                        <select x-model="addForm.payment"
+                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                            <option value="">Pilih Metode Pembayaran</option>
+                            <option value="cash">Cash</option>
+                            <option value="transfer">Transfer</option>
+                            <option value="giro">Giro</option>
+                        </select>
+                    </div>
                     <div>
                         <label class="block text-xs font-medium mb-1">
                             Jumlah: <span class="font-bold text-[#0B3B9F] text-xs"
@@ -343,6 +360,18 @@
                     </div>
 
                     <div>
+                        <label class="block text-xs font-medium mb-1">Pembayaran <span
+                                class="text-red-500">*</span></label>
+                        <select x-model="editForm.payment"
+                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                            <option value="">Pilih Metode Pembayaran</option>
+                            <option value="cash">Cash</option>
+                            <option value="transfer">Transfer</option>
+                            <option value="giro">Giro</option>
+                        </select>
+                    </div>
+
+                    <div>
                         <label class="block text-xs font-medium mb-1">
                             Jumlah: <span class="font-bold text-[#0B3B9F] text-xs"
                                 x-text="'IDR ' + editForm.amount.toLocaleString('id-ID')"></span>
@@ -426,6 +455,7 @@
                 addForm: {
                     type: '',
                     category_id: '',
+                    payment: '',
                     amount: 50000,
                     date: new Date().toISOString().split('T')[0],
                     description: '',
@@ -438,6 +468,7 @@
                     id: '',
                     type: '',
                     category_id: '',
+                    payment: '',
                     amount: 50000,
                     date: '',
                     description: '',
@@ -548,6 +579,18 @@
                     }
                 },
 
+                formatAddPayment() {
+                    if (this.addForm.payment) {
+                        this.addForm.payment = this.addForm.payment.toLowerCase();
+                    }
+                },
+
+                formatEditPayment() {
+                    if (this.editForm.payment) {
+                        this.editForm.payment = this.editForm.payment.toLowerCase();
+                    }
+                },
+
                 formatAddAmount() {
                     let value = this.addFormAmountDisplay.replace(/\D/g, '');
                     if (value) {
@@ -573,6 +616,7 @@
                     this.addForm = {
                         type: '',
                         category_id: '',
+                        payment: '', 
                         amount: 50000,
                         date: new Date().toISOString().split('T')[0],
                         description: '',
@@ -590,8 +634,9 @@
 
                     if (!this.addForm.type) errors.push('Tipe transaksi harus dipilih');
                     if (!this.addForm.category_id) errors.push('Kategori harus dipilih');
-                    if (!this.addForm.amount || this.addForm.amount <= 0) errors.push(
-                        'Jumlah harus diisi dan lebih dari 0');
+                    if (!this.addForm.payment) errors.push('Metode pembayaran harus dipilih'); // ditambahkan
+                    if (!this.addForm.amount || this.addForm.amount <= 0)
+                        errors.push('Jumlah harus diisi dan lebih dari 0');
 
                     this.addFormErrors = errors;
                     return errors.length === 0;
@@ -622,6 +667,7 @@
                     formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
                     formData.append('type', this.addForm.type);
                     formData.append('category_id', this.addForm.category_id);
+                    formData.append('payment', this.addForm.payment);
                     formData.append('amount', this.addForm.amount);
                     formData.append('date', this.addForm.date);
                     formData.append('description', this.addForm.description);
@@ -665,6 +711,7 @@
                     formData.append('_method', 'PUT');
                     formData.append('type', this.editForm.type);
                     formData.append('category_id', this.editForm.category_id);
+                    formData.append('payment', this.editForm.payment);
                     formData.append('amount', this.editForm.amount);
                     formData.append('date', this.editForm.date);
                     formData.append('description', this.editForm.description);
@@ -725,48 +772,34 @@
                     }
                 },
 
-                async deleteSelected() {
-                    if (this.selectedTransactions.length === 0) {
-                        alert('Pilih minimal satu transaksi untuk dihapus!');
-                        return;
+                async editSelected() {
+                    try {
+                        const response = await fetch(`/transactions/${this.selectedTransactions[0]}`);
+                        const transaction = await response.json();
+
+                        this.editForm = {
+                            id: transaction.id,
+                            type: transaction.type,
+                            category_id: transaction.category_id,
+                            payment: transaction.payment,
+                            amount: transaction.amount,
+                            date: transaction.date,
+                            description: transaction.description || '',
+                            date_factur: transaction.date_factur || '',
+                            no_factur: transaction.no_factur || '',
+                            attachment: null,
+                            current_attachment: transaction.attachment || ''
+                        };
+
+                        await this.loadEditCategories();
+                        this.updateAmountDisplays();
+                        this.showEditModal = true;
+
+                    } catch (error) {
+                        console.error('[v0] Error loading transaction:', error);
+                        alert('Gagal memuat data transaksi');
                     }
-
-                    const confirmMessage = this.selectedTransactions.length === 1 ?
-                        'Apakah Anda yakin ingin menghapus transaksi ini?' :
-                        `Apakah Anda yakin ingin menghapus ${this.selectedTransactions.length} transaksi yang dipilih?`;
-
-                    if (confirm(confirmMessage)) {
-                        try {
-                            const formData = new FormData();
-                            formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-
-                            this.selectedTransactions.forEach(id => {
-                                formData.append('transaction_ids[]', id);
-                            });
-
-                            console.log('[v0] Sending delete request for IDs:', this.selectedTransactions);
-
-                            const response = await fetch('/transactions/bulk-delete', {
-                                method: 'POST',
-                                body: formData
-                            });
-
-                            console.log('[v0] Delete response status:', response.status);
-
-                            if (response.ok) {
-                                console.log('[v0] Delete successful, reloading page');
-                                window.location.reload();
-                            } else {
-                                const errorText = await response.text();
-                                console.error('[v0] Delete failed with response:', errorText);
-                                throw new Error('Server error: ' + response.status);
-                            }
-                        } catch (error) {
-                            console.error('[v0] Error deleting transactions:', error);
-                            alert('Gagal menghapus transaksi. Silakan coba lagi.');
-                        }
-                    }
-                }
+                },
             }
         }
     </script>
