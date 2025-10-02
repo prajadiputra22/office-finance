@@ -6,7 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReportsController;
-
+use App\Http\Controllers\CategoryTransactionController;
 
 Route::get('/', function () {
     return view('splash');
@@ -25,6 +25,8 @@ Route::get('/category', [CategoryController::class, 'index'])->name('category.in
 Route::post('/category', [CategoryController::class, 'store'])->name('category.store');
 Route::delete('/category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 Route::get('/api/category/{type}', [CategoryController::class, 'getByType'])->name('api.category.byType');
+Route::get('/category/income', [CategoryTransactionController::class, 'income'])->name('category.income');
+Route::get('/category/expenditure', [CategoryTransactionController::class, 'expenditure'])->name('category.expenditure');
 
 Route::get('/report', [ReportsController::class, 'index'])->name('report');
 Route::get('/api/chart-data', [ReportsController::class, 'getChartData'])->name('chart.data');
