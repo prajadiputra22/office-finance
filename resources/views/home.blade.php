@@ -57,7 +57,9 @@
             <h2 id="chart-title" class="text-xl font-semibold mb-2 text-gray-800">Grafik Transaksi Bulanan</h2>
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200" role="img"
                 aria-label="Grafik Keuangan">
-                {!! $chart->container() !!}
+                <div class="mb-4">
+                    {!! $chart->container() !!}
+                </div>
             </div>
         </section>
 

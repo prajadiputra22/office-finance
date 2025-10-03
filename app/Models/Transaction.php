@@ -14,6 +14,7 @@ class Transaction extends Model
     protected $fillable = [
         'type',
         'category_id',
+        'payment',
         'amount',
         'date',
         'description',
@@ -27,14 +28,15 @@ class Transaction extends Model
         'date' => 'date',
         'date_factur' => 'date',
         'date_entry' => 'datetime',
-        'amount' => 'decimal:2'
+        'amount' => 'decimal:2',
     ];
 
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id');
+        return $this->belongsTo(Category::class);
     }
-     public function scopeIncome($query)
+
+    public function scopeIncome($query)
     {
         return $query->where('type', 'income');
     }

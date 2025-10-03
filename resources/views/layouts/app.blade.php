@@ -17,7 +17,7 @@
     <div class="flex min-h-screen">
         @include('layouts.sidebar')
 
-        <main class="flex-1 p-6 bg-[#f5f5f5]">
+        <main class="flex-1 min-w-0 p-6 bg-[#f5f5f5]">
             @section('header')
                 <header class="flex justify-end mb-8 animate-fadeIn">
                     <h1 class="text-2xl font-bold text-[#F20E0F]"> TigaJaya <span class="text-[#0B3B9F]">Finance</span></h1>

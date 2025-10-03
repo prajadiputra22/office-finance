@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use ArielMejiaDev\LarapexCharts\LarapexChart;
 use App\Models\Transaction;
 use App\Models\Category;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TransactionsExport;
 
 class ReportsController extends Controller
 {
@@ -85,5 +87,10 @@ class ReportsController extends Controller
             'incomeChart', 'expenditureChart',
             'incomePercentages', 'expenditurePercentages'
         ));
+    }
+    
+    public function export()
+    {
+        return Excel::download(new TransactionsExport(), 'laporan-transaksi.xlsx');
     }
 }

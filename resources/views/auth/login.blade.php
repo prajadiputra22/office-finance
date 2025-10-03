@@ -47,7 +47,7 @@
                         <label for="usernameInput" class="sr-only">Username</label>
                         <input id="usernameInput" name="username" type="text" placeholder="Username"
                             value="{{ old('username') }}" autofocus
-                            class="w-full px-4 py-2 border border-[#F20E0F] rounded-full mb-4 outline-none focus:border-[#0B3B9F] focus:shadow-[0_0_5px_rgba(180,229,13,0.7)]">
+                            class="w-full px-4 py-2 border border-[#F20E0F] rounded-full mb-4 outline-none focus:border-[#0B3B9F]">
                         <div id="usernameError" class="hidden mt-1 mb-4">
                             <p class="text-red-500 text-xs italic">Username is required.</p>
                         </div>

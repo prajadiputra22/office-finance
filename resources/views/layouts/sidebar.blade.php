@@ -2,33 +2,33 @@
     <nav>
         <ul class="space-y-2">
             <li>
-                <a href="home"
+                <a href="{{ route('home') }}"
                 class="flex items-center p-3 mb-2 rounded-lg hover:text-[#F20E0F] cursor-pointer transition group
                 {{ request()->is('home') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
-                 <img src="{{ asset('assets/picture/home.png') }}" alt="Home Icon" class="w-5 h-5 mr-3 filter invert brightness-0 duration-300 group-hover:invert group-hover:red group-hover:saturate-200 group-hover:hue-rotate-0 group-hover:brightness-100 group-hover:contrast-200">
+                 <img src="{{ asset('assets/picture/home.png') }}" alt="Home Icon" class="w-5 h-5 mr-3 filter invert brightness-0">
                  <span class="font-bold">Beranda</span>
                 </a>
             </li>
             <li>
-                <a href="transactions" 
+                <a href="{{ route('transactions.index') }}" 
                 class="flex items-center p-3 mb-2 rounded-lg hover:text-[#F20E0F] cursor-pointer transition group
-                {{ request()->is('transaksi') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
+                {{ request()->is('transactions') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
                  <img src="{{ asset('assets/picture/transaction.png') }}" alt="Transaction Icon" class="w-5 h-5 mr-3 filter invert brightness-0 ">
                  <span class="font-bold">Transaksi</span>
                 </a>
             </li>
             <li>
-                <a href="category" 
+                <a href="{{ route('category.index') }}" 
                 class="flex items-center p-3 mb-2 rounded-lg hover:text-[#F20E0F] cursor-pointer transition group
-                {{ request()->is('kategori') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
+                {{ request()->is('category') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
                  <img src="{{ asset('assets/picture/category.png') }}" alt="Category Icon" class="w-5 h-5 mr-3 filter invert brightness-0">
                  <span class="font-bold">Kategori</span>
                 </a>
             </li>
             <li>
-                <a href="report" 
+                <a href="{{ route('report.index') }}" 
                 class="flex items-center p-3 mb-2 rounded-lg hover:text-[#F20E0F] cursor-pointer transition group
-                {{ request()->is('laporan') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
+                {{ request()->is('report') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
                  <img src="{{ asset('assets/picture/report.png') }}" alt="Report Icon" class="w-5 h-5 mr-3 filter invert brightness-0">
                  <span class="font-bold">Laporan</span>
                 </a>
@@ -40,9 +40,16 @@
                     <img src="{{ asset('assets/picture/arrow.png') }}" :class="{'rotate-180': open}" class="w-4 h-4 transition-transform filter invert brightness-0" />
                 </button>
                 <ul x-show="open"  x-transition class="ml-6 mt-2 space-y-1 text-sm">
-                    <li x-show="open"><a href="#" class="block px-3 py-1 text-sm hover:text-[#F20E0F] cursor-pointer transition group hover:bg-white/20 transition transform hover:translate-x-1 rounded-lg">CV Tiga Jaya</a></li>
-                    <li x-show="open"><a href="#" class="block px-3 py-1 text-sm hover:text-[#F20E0F] cursor-pointer transition group hover:bg-white/20 transition transform hover:translate-x-1 rounded-lg">SAS Sukabumi</a></li>
-                    <li x-show="open"><a href="#" class="block px-3 py-1 text-sm hover:text-[#F20E0F] cursor-pointer transition group hover:bg-white/20 transition transform hover:translate-x-1 rounded-lg">SAS Karawang</a></li>
+                    @if(isset($sidebarIncomeCategories) && $sidebarIncomeCategories->count() > 0)
+                        @foreach($sidebarIncomeCategories as $category)
+                            <a href="{{ route('category.income', ['category_id' => $category->id]) }}" 
+                                class="block px-3 py-1 text-sm hover:text-[#F20E0F] cursor-pointer transition group hover:bg-white/20 transition transform hover:translate-x-1 rounded-lg">
+                                {{ $category->category_name }}
+                            </a>
+                        @endforeach
+                    @else
+                        <div class="text-sm text-gray-400 py-1">Belum ada kategori kas masuk</div>
+                    @endif
                 </ul>
             </div>
             <div x-data="{open:false}" class="mt-4">
@@ -51,12 +58,42 @@
                     <img src="{{ asset('assets/picture/arrow.png') }}" :class="{'rotate-180': open}" class="w-4 h-4 transition-transform filter invert brightness-0" />
                 </button>
                 <ul x-show="open" x-transition class="ml-6 mt-2 space-y-1 text-sm">
-                    <li x-show="open"><a href="#" class="block px-3 py-1 text-sm hover:text-[#F20E0F] cursor-pointer transition group hover:bg-white/20 transition transform hover:translate-x-1 rounded-lg">Angsuran Perusahaan</a></li>
-                    <li x-show="open"><a href="#" class="block px-3 py-1 text-sm hover:text-[#F20E0F] cursor-pointer transition group hover:bg-white/20 transition transform hover:translate-x-1 rounded-lg">Hutang Perusahaan</a></li>
-                    <li x-show="open"><a href="#" class="block px-3 py-1 text-sm hover:text-[#F20E0F] cursor-pointer transition group hover:bg-white/20 transition transform hover:translate-x-1 rounded-lg">KAS Besar</a></li>
-                    <li x-show="open"><a href="#" class="block px-3 py-1 text-sm hover:text-[#F20E0F] cursor-pointer transition group hover:bg-white/20 transition transform hover:translate-x-1 rounded-lg">KAS Kecil</a></li>
+                    @if(isset($sidebarExpenditureCategories) && $sidebarExpenditureCategories->count() > 0)
+                        @foreach($sidebarExpenditureCategories as $category)
+                            <a href="{{ route('category.expenditure', ['category_id' => $category->id]) }}" 
+                                class="block px-3 py-1 text-sm hover:text-[#F20E0F] cursor-pointer transition group hover:bg-white/20 transition transform hover:translate-x-1 rounded-lg">
+                                {{ $category->category_name }}
+                            </a>
+                        @endforeach
+                    @else
+                        <div class="text-sm text-gray-400 py-1">Belum ada kategori kas keluar</div>
+                    @endif
                 </ul>
             </div>
         </ul>
-    </nav>
+        <div x-data="{confirm:false}" class="mt-auto">
+        <button @click="confirm=true"
+            class="flex items-center w-full px-4 py-2 mt-6 bg-red-600 hover:bg-red-700 rounded-lg font-semibold text-white transition">
+            <img src="{{ asset('assets/picture/logout.png') }}" alt="Logout Icon" class="w-5 h-5 mr-3 filter invert">
+            Logout
+        </button>
+        <div x-show="confirm" x-cloak class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-80">
+                <h2 class="text-lg font-bold text-gray-800 mb-4">Konfirmasi Logout</h2>
+                <p class="text-gray-600 mb-6">Apakah Anda yakin ingin keluar?</p>
+                <div class="flex justify-end space-x-3">
+                    <button @click="confirm=false" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">
+                        Batal
+                    </button>
+                    <form method="POST" action="{{ route('auth.logout') }}">
+                        @csrf
+                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                            Ya, Keluar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </nav> 
 </aside>

@@ -84,10 +84,11 @@
     </div>
 
     <div class="mt-10">
-        <button class="flex items-center gap-2 px-3 py-2 bg-white border-2 border-gray-200 rounded-lg text-sm font-semibold hover:bg-[#0B3B9F] hover:text-white hover:border-[#0B3B9F] transition">
+        <a href="{{ route('reports.export') }}"
+            class="inline-flex items-center gap-2 px-3 py-2 bg-white border-2 border-gray-200 rounded-lg text-sm font-semibold hover:bg-[#0B3B9F] hover:text-white hover:border-[#0B3B9F] transition">
             <img src="{{ asset('assets/picture/download.png') }}" alt="download" class="w-5 h-5 filter invert-0 hover:invert transition">
             Unduh laporan
-        </button>
+        </a>
     </div>
 
 @endsection
@@ -97,4 +98,3 @@
     {{ $incomeChart->script() }}
     {{ $expenditureChart->script() }}
 @endpush
-
