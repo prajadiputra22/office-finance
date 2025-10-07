@@ -6,13 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+       Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['income', 'expenditure']);
             $table->foreignId('category_id')->constrained('category')->onDelete('restrict');
-<<<<<<< HEAD
             $table->decimal('amount', 15);
             $table->enum('payment', ['cash', 'transfer', 'giro']);
             $table->date('date_entry');
@@ -20,17 +22,14 @@ return new class extends Migration
             $table->date('date_factur')->nullable();
             $table->integer('no_factur')->nullable();
             $table->date('date');
-=======
-            $table->decimal('amount', 15, 2);
-            $table->date('date');
-            $table->date('date_factur');
-            $table->integer('no_factur');
-            $table->string('description', 255)->nullable();
->>>>>>> origin/ui-ux
             $table->string('attachment')->nullable();
             $table->timestamps();
         });
     }
+
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('transactions');

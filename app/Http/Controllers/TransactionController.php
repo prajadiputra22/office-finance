@@ -6,6 +6,10 @@ use App\Models\Transaction;
 use App\Models\Category;
 use App\Models\Income;
 use App\Models\Expenditure;
+<<<<<<< HEAD
+=======
+use App\Charts\SalesChart;
+>>>>>>> origin/ui-ux
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -28,12 +32,17 @@ class TransactionController extends Controller
         if ($request->has('search') && !empty($request->search)) {
             $searchTerm = strtolower($request->search);
 
+<<<<<<< HEAD
             // mapping manual
             $map = [
+=======
+             $map = [
+>>>>>>> origin/ui-ux
                 'pemasukan'   => 'income',
                 'pengeluaran' => 'expenditure',
             ];
 
+<<<<<<< HEAD
             $query->where(function ($q) use ($searchTerm, $map) {
                 $q->where('no_factur', 'LIKE', '%' . $searchTerm . '%')
                     ->orWhere('description', 'LIKE', '%' . $searchTerm . '%')
@@ -43,6 +52,16 @@ class TransactionController extends Controller
                     });
 
                 // mapping untuk type
+=======
+            $query->where(function($q) use ($searchTerm, $map) {
+                $q->where('no_factur', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhere('description', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhere('payment', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhereHas('category', function ($q2) use ($searchTerm) {
+                    $q2->where('category_name', 'LIKE', '%' . $searchTerm . '%');
+                });
+                
+>>>>>>> origin/ui-ux
                 if (array_key_exists($searchTerm, $map)) {
                     $q->orWhere('type', $map[$searchTerm]);
                 } else {
@@ -60,7 +79,11 @@ class TransactionController extends Controller
         $income = Transaction::where('type', 'income')->sum('amount');
         $expenditure = Transaction::where('type', 'expenditure')->sum('amount');
 
+<<<<<<< HEAD
         return view('transaction', compact('transactions', 'category', 'income', 'expenditure'));
+=======
+        return view('transactions', compact('transactions', 'category', 'income', 'expenditure'));
+>>>>>>> origin/ui-ux
     }
 
     public function show($id)
@@ -88,6 +111,7 @@ class TransactionController extends Controller
             $request->merge([
                 'payment' => strtolower(trim((string) $request->input('payment'))),
             ]);
+<<<<<<< HEAD
 
             $request->validate([
                 'type' => 'required|in:income,expenditure',
@@ -120,6 +144,39 @@ class TransactionController extends Controller
                 'date_entry' => now()->toDateString(),
             ]);
 
+=======
+            
+            $request->validate([
+                'type' => 'required|in:income,expenditure',
+                'category_id' => 'required|exists:category,id',
+                'amount' => 'required|numeric|min:0',
+                'date' => 'required|date',
+                'description' => 'nullable|string|max:255',
+                'date_factur' => 'nullable|date',
+                'no_factur' => 'nullable|string',
+            ]);
+
+            DB::beginTransaction();
+
+            $attachmentPath = null;
+            if ($request->hasFile('attachment')) {
+                $attachmentPath = $request->file('attachment')->store('attachments', 'public');
+            }
+
+            $transaction = Transaction::create([
+                'type' => $request->type,
+                'category_id' => $request->category_id,
+                'amount' => $request->amount,
+                'payment' => $request->payment,
+                'date' => $request->date,
+                'description' => $request->description,
+                'date_factur' => $request->date_factur,
+                'no_factur' => $request->no_factur,
+                'attachment' => $attachmentPath,
+                'date_entry' => now()->toDateString(),
+            ]);
+
+>>>>>>> origin/ui-ux
             DB::commit();
 
             return redirect()->route('transactions.index')->with('success', 'Transaction saved successfully!');
@@ -151,7 +208,11 @@ class TransactionController extends Controller
             ]);
 
             DB::beginTransaction();
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/ui-ux
             $attachmentPath = $transaction->attachment;
             if ($request->hasFile('attachment')) {
                 if ($transaction->attachment) {
@@ -183,7 +244,10 @@ class TransactionController extends Controller
         }
     }
 
+<<<<<<< HEAD
     // Hapus Transaksi
+=======
+>>>>>>> origin/ui-ux
     public function destroy($id)
     {
         try {

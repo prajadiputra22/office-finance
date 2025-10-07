@@ -20,7 +20,10 @@ class CategoryController extends Controller
         return view('category', compact('categories', 'type'));
     }
 
+<<<<<<< HEAD
     // Simpan kategori baru
+=======
+>>>>>>> origin/ui-ux
     public function store(Request $request)
     {
         $request->validate([

@@ -1,10 +1,18 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Office Finance</title>
+=======
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'TigaJaya Finance')</title>
+>>>>>>> origin/ui-ux
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -12,7 +20,11 @@
 <style>
     input[type="checkbox"]:checked::after {
         content: "✔";
+<<<<<<< HEAD
         color: black;
+=======
+        color: rgb(255, 254, 254);
+>>>>>>> origin/ui-ux
         font-size: 10px;
         position: absolute;
         top: 50%;
@@ -22,12 +34,21 @@
 </style>
 
 <body class="h-screen flex items-center justify-center font-poppins">
+<<<<<<< HEAD
     <main class="flex w-full h-screen">
         <section class="flex flex-col justify-center items-center flex-1 bg-white fade-in">
             <div class="mb-5">
                 <h1 class="text-4xl font-bold justify-center">
                     <span class="text-[#0B3B9F] font-bold">Tigajaya</span>
                     <span class="text-[#F20E0F] font-bold">Finance</span>
+=======
+    <main class="flex w-full h-screen font-poppins">
+        <section class="flex flex-col justify-center items-center flex-1 bg-white fade-in px-6">
+            <div class="mb-3">
+                <h1 class="text-2xl font-bold justify-center">
+                    <span class="text-[#F20E0F]">TigaJaya</span>
+                    <span class="text-[#0B3B9F]">Finance</span>
+>>>>>>> origin/ui-ux
                 </h1>
             </div>
 
@@ -42,13 +63,21 @@
                     </div>
                 @endif
 
+<<<<<<< HEAD
                 <form id="loginForm" method="POST" action="{{ route('auth.login') }}">
+=======
+                <form id="loginForm" method="POST" action="{{ route('auth.login') }}" class="flex flex-col w-64">
+>>>>>>> origin/ui-ux
                     @csrf
                     <div id="username" class="mt-2">
                         <label for="usernameInput" class="sr-only">Username</label>
                         <input id="usernameInput" name="username" type="text" placeholder="Username"
                             value="{{ old('username') }}" autofocus
+<<<<<<< HEAD
                             class="w-full px-6 py-1 border border-[#0B3B9F] rounded-full mb-2 outline-none focus:border-[#0B3B9F] focus:shadow-[0_0_5px_rgba(180,229,13,0.7)]">
+=======
+                            class="w-full px-4 py-2 border border-[#F20E0F] rounded-full mb-4 outline-none focus:border-[#0B3B9F]">
+>>>>>>> origin/ui-ux
                         <div id="usernameError" class="hidden mt-1 mb-4">
                             <p class="text-red-500 text-xs italic">Username is required.</p>
                         </div>
@@ -60,10 +89,17 @@
                         @enderror
                     </div>
 
+<<<<<<< HEAD
                     <div id="password" class="mt-4">
                         <label for="passwordInput" class="sr-only">Password</label>
                         <input id="passwordInput" name="password" type="password" placeholder="Password"
                             class="w-full px-6 py-1 border border-[#0B3B9F] rounded-full mb-2 outline-none focus:border-[#0B3B9F] focus:shadow-[0_0_5px_rgba(180,229,13,0.7)]">
+=======
+                    <div id="password">
+                        <label for="passwordInput" class="sr-only">Password</label>
+                        <input id="passwordInput" name="password" type="password" placeholder="Password"
+                            class="w-full px-4 py-2 border border-[#0B3B9F] rounded-full mb-4 outline-none focus:border-[#0B3B9F] focus:shadow-[#0B3B9F]">
+>>>>>>> origin/ui-ux
                         <div id="passwordError" class="hidden mt-1 mb-3">
                             <p class="text-red-500 text-xs italic">Password is required.</p>
                         </div>
@@ -80,20 +116,32 @@
                     <div class="flex items-center justify-between mt-2 mb-4">
                         <div class="flex items-center">
                             <input type="checkbox" name="remember" id="remember"
+<<<<<<< HEAD
                                 class="w-4 h-4 mr-2 appearance-none rounded border border-gray-400 checked:bg-[#0B3B9F] checked:border-[#0B3B9F] relative">
+=======
+                                class="w-4 h-4 mr-2 appearance-none rounded border border-gray-400 checked:bg-[#0B3B9F] checked:border-[#B6F500] relative">
+>>>>>>> origin/ui-ux
                             <label for="remember" class="text-sm text-gray-700">Remember me</label>
                         </div>
                     </div>
 
                     <div id="button">
                         <button type="submit"
+<<<<<<< HEAD
                             class="w-64 text-md bg-black text-white py-1 rounded-full transition duration-300 hover:bg-[#0B3B9F] hover:text-black active:scale-95">
+=======
+                            class="w-64 text-md bg-[#F20E0F] text-white py-2 rounded-full font-bold transition duration-300 hover:bg-[#0B3B9F] hover:text-white active:scale-95">
+>>>>>>> origin/ui-ux
                             Login
                         </button>
                     </div>
 
                     <p class="mt-3 text-sm text-center whitespace-nowrap">
+<<<<<<< HEAD
                         Belum punya akun? <a href="{{ route('auth.register') }}" class="text-[#0B3B9F]">daftar</a>
+=======
+                        Belum punya akun? <a href="{{ route('auth.register') }}" class="text-[#F20E0F] hover:underline">daftar</a>
+>>>>>>> origin/ui-ux
                         disini.
                     </p>
                 </form>
@@ -289,5 +337,9 @@
         </script>
     </main>
 </body>
+<<<<<<< HEAD
 
 </html>
+=======
+</html>
+>>>>>>> origin/ui-ux

@@ -42,7 +42,11 @@ class CategoryTransactionController extends Controller
         }
 
         $chart = (new LarapexChart)->pieChart()
+<<<<<<< HEAD
             ->setTitle('Transaksi per Metode Pembayaran')
+=======
+            ->setTitle('')
+>>>>>>> origin/ui-ux
             ->setLabels($labels)
             ->setDataset($values)
             ->setColors($colors);
@@ -83,11 +87,19 @@ class CategoryTransactionController extends Controller
         }
 
         $chart = (new LarapexChart)->pieChart()
+<<<<<<< HEAD
             ->setTitle('Transaksi per Metode Pembayaran')
+=======
+            ->setTitle('')
+>>>>>>> origin/ui-ux
             ->setLabels($labels)
             ->setDataset($values)
             ->setColors($colors);
         
         return view('transactions.expenditure', compact('category', 'chart', 'recentTransactions'));
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/ui-ux

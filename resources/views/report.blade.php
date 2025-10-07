@@ -13,7 +13,11 @@
 @endsection
 
 @section('content')
+<<<<<<< HEAD
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-16">
+=======
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+>>>>>>> origin/ui-ux
         
         <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
             <h2 class="font-semibold text-lg mb-4">Pemasukan setiap bulan</h2>
@@ -83,9 +87,15 @@
         </div>
     </div>
 
+<<<<<<< HEAD
     <div class="mt-10 pb-10">
         <a href="{{ route('reports.export') }}"
            class="flex items-center gap-2 px-3 py-2 bg-white border-2 border-gray-200 rounded-lg text-sm font-semibold hover:bg-[#0B3B9F] hover:text-white hover:border-[#0B3B9F] transition">
+=======
+    <div class="mt-10">
+        <a href="{{ route('reports.export') }}"
+            class="inline-flex items-center gap-2 px-3 py-2 bg-white border-2 border-gray-200 rounded-lg text-sm font-semibold hover:bg-[#0B3B9F] hover:text-white hover:border-[#0B3B9F] transition">
+>>>>>>> origin/ui-ux
             <img src="{{ asset('assets/picture/download.png') }}" alt="download" class="w-5 h-5 filter invert-0 hover:invert transition">
             Unduh laporan
         </a>
@@ -97,4 +107,8 @@
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     {{ $incomeChart->script() }}
     {{ $expenditureChart->script() }}
+<<<<<<< HEAD
 @endpush
+=======
+@endpush
+>>>>>>> origin/ui-ux
