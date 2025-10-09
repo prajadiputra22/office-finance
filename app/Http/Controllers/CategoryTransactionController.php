@@ -107,7 +107,7 @@ class CategoryTransactionController extends Controller
         $categoryId = $request->query('category_id');
         $category = \App\Models\Category::findOrFail($categoryId);
 
-        $fileName = 'Transaksi - ' . $category->category_name . ' - Kas Keluar.xlsx';
+        $fileName = 'Transaksi - ' . $category->category_name . '.xlsx';
         return Excel::download(new CategoryTransactionsExport($categoryId, 'expenditure'), $fileName);
     }
 }
