@@ -150,8 +150,4 @@ return [
 
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ])->toArray()
-<<<<<<< HEAD
 ];
-=======
-];
->>>>>>> origin/ui-ux

@@ -3,16 +3,11 @@
 @section('title', 'Kas Keluar - ' . $category->category_name)
 
 @section('content')
-<<<<<<< HEAD
-<div class="py-8">
-=======
->>>>>>> origin/ui-ux
     <div class="mb-6">
         <h2 class="text-3xl font-bold text-[#F20E0F]">{{ $category->category_name }}</h2>
+        <p class="text-gray-600 mt-1">Kategori Kas Keluar</p>
     </div>
 
-<<<<<<< HEAD
-=======
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 mb-8">
         <div class="bg-gradient-to-br from-[#F20E0F] to-[#ff3d2f] rounded-lg shadow-md p-6 text-white
         hover:shadow-lg hover:from-[#ff1f1f] hover:to-[#ff5a4f]">
@@ -50,7 +45,6 @@
         </div>
     </div>
 
->>>>>>> origin/ui-ux
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="bg-white rounded-lg shadow-md p-6">
             <h3 class="text-xl font-semibold text-[#F20E0F] mb-4">Transaksi per Metode Pembayaran</h3>
@@ -102,54 +96,13 @@
         </div>
     </div>
 
-<<<<<<< HEAD
     <div class="mt-4">
         <a href="{{ route('categories.expenditure.export', ['category_id' => $category->id]) }}"
            class="inline-flex items-center px-4 py-2 rounded-md bg-[#F20E0F] text-white hover:bg-[#ff1f1f] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F20E0F]">
-            <i class="fas fa-file-excel mr-2"></i> Unduh Laporan
+            <i class="fas fa-file-excel mr-2"></i> Unduh Laporan Excel
         </a>
     </div>
 
-=======
-<<<<<<< HEAD
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-        <div class="bg-gradient-to-br from-[#F20E0F] to-[#ff3d2f] rounded-lg shadow-md p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm opacity-90">Total Transaksi</p>
-                    <p class="text-3xl font-bold mt-2">{{ $recentTransactions->count() }}</p>
-                </div>
-                <i class="fas fa-list text-4xl opacity-30"></i>
-            </div>
-        </div>
-
-        <div class="bg-gradient-to-br from-[#F20E0F] to-[#ff3d2f] rounded-lg shadow-md p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm opacity-90">Total Pengeluaran</p>
-                    <p class="text-2xl font-bold mt-2">Rp {{ number_format($recentTransactions->sum('amount'), 0, ',', '.') }}</p>
-                </div>
-                <i class="fas fa-arrow-down text-4xl opacity-30"></i>
-            </div>
-        </div>
-
-        <div class="bg-gradient-to-br from-[#F20E0F] to-[#ff3d2f] rounded-lg shadow-md p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm opacity-90">Rata-rata</p>
-                    <p class="text-2xl font-bold mt-2">
-                        Rp {{ $recentTransactions->count() > 0 ? number_format($recentTransactions->avg('amount'), 0, ',', '.') : '0' }}
-                    </p>
-                </div>
-                <i class="fas fa-chart-line text-4xl opacity-30"></i>
-            </div>
-        </div>
-    </div>
-</div>
-
-=======
->>>>>>> origin/ui-ux
->>>>>>> ec20dd164183eee536ad22f038ccf38f16635644
 @push('scripts')
 <script src="{{ $chart->cdn() }}"></script>
 {{ $chart->script() }}
