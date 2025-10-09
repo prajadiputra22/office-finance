@@ -22,4 +22,8 @@ class Transfer extends Model
         'date',
         'attachment',
     ];
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/ui-ux

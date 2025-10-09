@@ -26,6 +26,10 @@ class ExpenditureController extends Controller
             'date' => 'required|date',
         ];
 
+<<<<<<< HEAD
+        // Only add file validation if attachment is actually present
+=======
+>>>>>>> origin/ui-ux
         if ($request->hasFile('attachment')) {
             $validationRules['attachment'] = 'file|mimes:jpg,jpeg,png,pdf|max:2048';
         }

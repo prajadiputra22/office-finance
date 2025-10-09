@@ -50,4 +50,8 @@ class Transaction extends Model
     {
         return $query->whereBetween('date', [$startDate, $endDate]);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/ui-ux

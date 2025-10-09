@@ -44,7 +44,11 @@ class CategoryTransactionController extends Controller
         }
 
         $chart = (new LarapexChart)->pieChart()
+<<<<<<< HEAD
+            ->setTitle('Transaksi per Metode Pembayaran')
+=======
             ->setTitle('')
+>>>>>>> origin/ui-ux
             ->setLabels($labels)
             ->setDataset($values)
             ->setColors($colors);
@@ -85,13 +89,18 @@ class CategoryTransactionController extends Controller
         }
 
         $chart = (new LarapexChart)->pieChart()
+<<<<<<< HEAD
+            ->setTitle('Transaksi per Metode Pembayaran')
+=======
             ->setTitle('')
+>>>>>>> origin/ui-ux
             ->setLabels($labels)
             ->setDataset($values)
             ->setColors($colors);
         
         return view('transactions.expenditure', compact('category', 'chart', 'recentTransactions'));
     }
+<<<<<<< HEAD
 
     public function exportIncome(Request $request)
     {
@@ -111,3 +120,10 @@ class CategoryTransactionController extends Controller
         return Excel::download(new CategoryTransactionsExport($categoryId, 'expenditure'), $fileName);
     }
 }
+=======
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> origin/ui-ux
+>>>>>>> ec20dd164183eee536ad22f038ccf38f16635644

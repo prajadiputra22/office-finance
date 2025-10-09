@@ -46,6 +46,10 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                 $attachmentInfo = "➖ Tidak ada lampiran";
             }
 
+<<<<<<< HEAD
+            // Format payment method untuk lebih readable
+=======
+>>>>>>> origin/ui-ux
             $paymentMethod = match($t->payment) {
                 'cash' => 'Tunai',
                 'transfer' => 'Transfer',
@@ -103,7 +107,11 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
     public function styles(Worksheet $sheet)
     {
         return [
+<<<<<<< HEAD
+            // Style header
+=======
 
+>>>>>>> origin/ui-ux
             1 => [
                 'font' => ['bold' => true, 'size' => 11],
                 'alignment' => [
@@ -115,7 +123,11 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                     'startColor' => ['argb' => 'FFE6E6FA']
                 ]
             ],
+<<<<<<< HEAD
+            // Style untuk kolom lampiran
+=======
           
+>>>>>>> origin/ui-ux
             'J:J' => [
                 'alignment' => [
                     'horizontal' => Alignment::HORIZONTAL_LEFT,
@@ -137,6 +149,15 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                     if ($transaction->attachment) {
                         $attachmentPath = storage_path('app/public/' . $transaction->attachment);
                         if (file_exists($attachmentPath)) {
+<<<<<<< HEAD
+                            // Buat URL yang dapat diakses
+                            $fileUrl = asset('storage/' . $transaction->attachment);
+                            
+                            // Tambahkan hyperlink ke cell
+                            $sheet->getCell('J' . $row)->getHyperlink()->setUrl($fileUrl);
+                            
+                            // Style hyperlink
+=======
                             
                             $fileUrl = asset('storage/' . $transaction->attachment);
                             
@@ -144,17 +165,26 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                             $sheet->getCell('J' . $row)->getHyperlink()->setUrl($fileUrl);
                             
                            
+>>>>>>> origin/ui-ux
                             $sheet->getStyle('J' . $row)->getFont()
                                 ->setUnderline(true)
                                 ->getColor()->setARGB('FF0000FF');
                                 
+<<<<<<< HEAD
+                            // Tambahkan tooltip
+=======
                             
+>>>>>>> origin/ui-ux
                             $fileName = basename($transaction->attachment);
                             $sheet->getComment('J' . $row)
                                 ->setAuthor('System')
                                 ->getText()->createTextRun('Klik untuk membuka: ' . $fileName);
                         } else {
+<<<<<<< HEAD
+                            // Style file yang tidak ditemukan
+=======
                             
+>>>>>>> origin/ui-ux
                             $sheet->getStyle('J' . $row)->getFont()
                                 ->getColor()->setARGB('FFFF0000');
                         }
@@ -162,6 +192,18 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                     $row++;
                 }
                 
+<<<<<<< HEAD
+                // Freeze header row
+                $sheet->freezePane('A2');
+                
+                // auto filter
+                $sheet->setAutoFilter('A1:J1');
+                
+                // Set row height
+                $sheet->getDefaultRowDimension()->setRowHeight(18);
+                
+                // Add borders
+=======
                 
                 $sheet->freezePane('A2');
                 
@@ -172,6 +214,7 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                 $sheet->getDefaultRowDimension()->setRowHeight(18);
                 
                
+>>>>>>> origin/ui-ux
                 $highestRow = $sheet->getHighestRow();
                 $sheet->getStyle('A1:J' . $highestRow)->getBorders()->getAllBorders()
                     ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);

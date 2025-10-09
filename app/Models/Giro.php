@@ -22,4 +22,8 @@ class Giro extends Model
         'date',
         'attachment',
     ];
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/ui-ux
