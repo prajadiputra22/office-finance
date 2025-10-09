@@ -88,11 +88,7 @@ class ReportsController extends Controller
             'incomePercentages', 'expenditurePercentages'
         ));
     }
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/ui-ux
     public function export()
     {
         return Excel::download(new TransactionsExport(), 'laporan-transaksi.xlsx');
