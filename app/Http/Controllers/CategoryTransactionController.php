@@ -6,6 +6,8 @@ use App\Models\Transaction;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use ArielMejiaDev\LarapexCharts\LarapexChart;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CategoryTransactionsExport;
 
 class CategoryTransactionController extends Controller
 {
@@ -89,5 +91,23 @@ class CategoryTransactionController extends Controller
             ->setColors($colors);
         
         return view('transactions.expenditure', compact('category', 'chart', 'recentTransactions'));
+    }
+
+    public function exportIncome(Request $request)
+    {
+        $categoryId = $request->query('category_id');
+        $category = \App\Models\Category::findOrFail($categoryId);
+
+        $fileName = 'Transaksi - ' . $category->category_name . '.xlsx';
+        return Excel::download(new CategoryTransactionsExport($categoryId, 'income'), $fileName);
+    }
+
+    public function exportExpenditure(Request $request)
+    {
+        $categoryId = $request->query('category_id');
+        $category = \App\Models\Category::findOrFail($categoryId);
+
+        $fileName = 'Transaksi - ' . $category->category_name . '.xlsx';
+        return Excel::download(new CategoryTransactionsExport($categoryId, 'expenditure'), $fileName);
     }
 }

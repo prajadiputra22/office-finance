@@ -5,7 +5,6 @@
 @section('content')
     <div class="mb-6">
         <h2 class="text-3xl font-bold text-[#0B3B9F]">{{ $category->category_name }}</h2>
-        <p class="text-gray-600 mt-1">Kategori Kas Masuk</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 mb-8">
@@ -96,7 +95,12 @@
         </div>
     </div>
 
-    
+    <div class="mt-4">
+        <a href="{{ route('categories.income.export', ['category_id' => $category->id]) }}"
+           class="inline-flex items-center px-4 py-2 rounded-md bg-[#0B3B9F] text-white hover:bg-[#1048c9] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0B3B9F]">
+            <i class="fas fa-file-excel mr-2"></i> Unduh Laporan
+        </a>
+    </div>
 
 @push('scripts')
 <script src="{{ $chart->cdn() }}"></script>

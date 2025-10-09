@@ -50,6 +50,12 @@ Route::get('/api/category/{type}', [CategoryController::class, 'getByType'])->na
 Route::get('/category/income', [CategoryTransactionController::class, 'income'])->name('category.income');
 Route::get('/category/expenditure', [CategoryTransactionController::class, 'expenditure'])->name('category.expenditure');
 
+Route::get('/categories/income/export', [CategoryTransactionController::class, 'exportIncome'])
+    ->name('categories.income.export');
+
+Route::get('/categories/expenditure/export', [CategoryTransactionController::class, 'exportExpenditure'])
+    ->name('categories.expenditure.export');
+
 Route::get('/report', [ReportsController::class, 'index'])->name('report.index');
 Route::get('/api/chart-data', [ReportsController::class, 'getChartData'])->name('chart.data');
 Route::get('/reports/export', [ReportsController::class, 'export'])->name('reports.export');

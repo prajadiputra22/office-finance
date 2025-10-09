@@ -4,7 +4,7 @@
 
 @section('header')
 <header class="relative text-center mb-10">
-    <h1 class="text-xl font-bold">Transaksi setiap bulan</h1>
+    <h1 class="text-2xl font-bold">Transaksi Per-Bulan</h1>
     <h2 class="absolute right-0 top-0 text-2xl font-bold">
         <span class="text-[#F20E0F]">TigaJaya</span> 
         <span class="text-[#0B3B9F]">Finance</span>

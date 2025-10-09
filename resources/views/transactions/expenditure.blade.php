@@ -5,7 +5,6 @@
 @section('content')
     <div class="mb-6">
         <h2 class="text-3xl font-bold text-[#F20E0F]">{{ $category->category_name }}</h2>
-        <p class="text-gray-600 mt-1">Kategori Kas Keluar</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 mb-8">
@@ -94,6 +93,13 @@
                 @endif
             </div>
         </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ route('categories.expenditure.export', ['category_id' => $category->id]) }}"
+           class="inline-flex items-center px-4 py-2 rounded-md bg-[#F20E0F] text-white hover:bg-[#ff1f1f] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F20E0F]">
+            <i class="fas fa-file-excel mr-2"></i> Unduh Laporan
+        </a>
     </div>
 
 @push('scripts')
