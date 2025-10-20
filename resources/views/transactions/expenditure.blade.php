@@ -5,7 +5,6 @@
 @section('content')
     <div class="mb-6">
         <h2 class="text-3xl font-bold text-[#F20E0F]">{{ $category->category_name }}</h2>
-        <p class="text-gray-600 mt-1">Kategori Kas Keluar</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 mb-8">
