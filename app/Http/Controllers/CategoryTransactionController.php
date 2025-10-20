@@ -19,17 +19,23 @@ class CategoryTransactionController extends Controller
         
         $transactions = Transaction::where('category_id', $categoryId)
             ->where('type', 'income')
+            ->whereMonth('date', now()->month)
+            ->whereYear('date', now()->year)
             ->orderBy('date', 'desc')
             ->get();
         
         $recentTransactions = Transaction::where('category_id', $categoryId)
             ->where('type', 'income')
+            ->whereMonth('date', now()->month)
+            ->whereYear('date', now()->year)
             ->orderBy('date', 'desc')
             ->limit(10)
             ->get();
         
         $paymentData = Transaction::where('category_id', $categoryId)
             ->where('type', 'income')
+            ->whereMonth('date', now()->month)
+            ->whereYear('date', now()->year)
             ->selectRaw('payment, SUM(amount) as total')
             ->groupBy('payment')
             ->get();
@@ -60,17 +66,23 @@ class CategoryTransactionController extends Controller
         
         $transactions = Transaction::where('category_id', $categoryId)
             ->where('type', 'expenditure')
+            ->whereMonth('date', now()->month)
+            ->whereYear('date', now()->year)
             ->orderBy('date', 'desc')
             ->get();
         
         $recentTransactions = Transaction::where('category_id', $categoryId)
             ->where('type', 'expenditure')
+            ->whereMonth('date', now()->month)
+            ->whereYear('date', now()->year)
             ->orderBy('date', 'desc')
             ->limit(10)
             ->get();
         
         $paymentData = Transaction::where('category_id', $categoryId)
             ->where('type', 'expenditure')
+            ->whereMonth('date', now()->month)
+            ->whereYear('date', now()->year)
             ->selectRaw('payment, SUM(amount) as total')
             ->groupBy('payment')
             ->get();

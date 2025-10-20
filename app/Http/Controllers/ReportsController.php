@@ -8,25 +8,41 @@ use App\Models\Transaction;
 use App\Models\Category;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TransactionsExport;
+use Carbon\Carbon;
 
 class ReportsController extends Controller
 {
     public function index()
     {
-        $income = Transaction::where('type', 'income')->sum('amount');
-        $expenditure = Transaction::where('type', 'expenditure')->sum('amount');
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+
+        $income = Transaction::where('type', 'income')
+            ->whereMonth('date', $currentMonth)
+            ->whereYear('date', $currentYear)
+            ->sum('amount');
+        
+        $expenditure = Transaction::where('type', 'expenditure')
+            ->whereMonth('date', $currentMonth)
+            ->whereYear('date', $currentYear)
+            ->sum('amount');
 
         $incomePerCategory = Transaction::join('category', 'transactions.category_id', '=', 'category.id')
             ->where('transactions.type', 'income')
+            ->whereMonth('transactions.date', $currentMonth)
+            ->whereYear('transactions.date', $currentYear)
             ->selectRaw('category.category_name, SUM(transactions.amount) as total')
             ->groupBy('category.id', 'category.category_name')
             ->get();
 
         $expenditurePerCategory = Transaction::join('category', 'transactions.category_id', '=', 'category.id')
             ->where('transactions.type', 'expenditure')
+            ->whereMonth('transactions.date', $currentMonth)
+            ->whereYear('transactions.date', $currentYear)
             ->selectRaw('category.category_name, SUM(transactions.amount) as total')
             ->groupBy('category.id', 'category.category_name')
             ->get();
+
 
         $incomeLabels = $incomePerCategory->pluck('category_name')->toArray();
         $incomeValues = $incomePerCategory->pluck('total')->map(function($value) {

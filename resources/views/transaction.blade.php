@@ -50,7 +50,7 @@
             <div class="flex-1 p-6 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
                 <h3 class="text-blue-600 font-medium">Pemasukan</h3>
                 <p class="text-[25px] font-bold text-[#1f2937]">
-                    {{'IDR'. number_format($income ?? 0, 0,',', '.') }}</p>
+                    {{'IDR '. number_format($income ?? 0, 0,',', '.') }}</p>
             </div>
             <div class="flex-1 p-6 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
                 <h3 class="text-red-600 font-medium">Pengeluaran</h3>
