@@ -12,33 +12,33 @@ use Carbon\Carbon;
 
 class ReportsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $currentMonth = now()->month;
-        $currentYear = now()->year;
+        $month = $request->input('month', now()->month);
+        $year = $request->input('year', now()->year);
 
         $income = Transaction::where('type', 'income')
-            ->whereMonth('date', $currentMonth)
-            ->whereYear('date', $currentYear)
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
             ->sum('amount');
         
         $expenditure = Transaction::where('type', 'expenditure')
-            ->whereMonth('date', $currentMonth)
-            ->whereYear('date', $currentYear)
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
             ->sum('amount');
 
         $incomePerCategory = Transaction::join('category', 'transactions.category_id', '=', 'category.id')
             ->where('transactions.type', 'income')
-            ->whereMonth('transactions.date', $currentMonth)
-            ->whereYear('transactions.date', $currentYear)
+            ->whereMonth('transactions.date', $month)
+            ->whereYear('transactions.date', $year)
             ->selectRaw('category.category_name, SUM(transactions.amount) as total')
             ->groupBy('category.id', 'category.category_name')
             ->get();
 
         $expenditurePerCategory = Transaction::join('category', 'transactions.category_id', '=', 'category.id')
             ->where('transactions.type', 'expenditure')
-            ->whereMonth('transactions.date', $currentMonth)
-            ->whereYear('transactions.date', $currentYear)
+            ->whereMonth('transactions.date', $month)
+            ->whereYear('transactions.date', $year)
             ->selectRaw('category.category_name, SUM(transactions.amount) as total')
             ->groupBy('category.id', 'category.category_name')
             ->get();
@@ -101,7 +101,8 @@ class ReportsController extends Controller
         return view('report', compact(
             'income', 'expenditure',
             'incomeChart', 'expenditureChart',
-            'incomePercentages', 'expenditurePercentages'
+            'incomePercentages', 'expenditurePercentages',
+            'month', 'year'
         ));
     }
     

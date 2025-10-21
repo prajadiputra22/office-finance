@@ -13,6 +13,54 @@
 @endsection
 
 @section('content')
+    {{-- Menambahkan form filter bulan dan tahun --}}
+    <div class="mb-8 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+        <h3 class="font-semibold text-lg mb-4">Filter Laporan</h3>
+        <form method="GET" action="{{ route('reports.index') }}" class="flex flex-col md:flex-row gap-4 items-end">
+            <div class="flex-1">
+                <label for="month" class="block text-sm font-medium text-gray-700 mb-2">Bulan</label>
+                <select name="month" id="month" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]">
+                    @php
+                        $months = [
+                            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+                            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+                            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+                        ];
+                    @endphp
+                    @foreach($months as $monthNum => $monthName)
+                        <option value="{{ $monthNum }}" {{ request('month', now()->month) == $monthNum ? 'selected' : '' }}>
+                            {{ $monthName }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="flex-1">
+                <label for="year" class="block text-sm font-medium text-gray-700 mb-2">Tahun</label>
+                <select name="year" id="year" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]">
+                    @php
+                        $currentYear = now()->year;
+                        $startYear = $currentYear - 5;
+                    @endphp
+                    @for($y = $currentYear; $y >= $startYear; $y--)
+                        <option value="{{ $y }}" {{ request('year', now()->year) == $y ? 'selected' : '' }}>
+                            {{ $y }}
+                        </option>
+                    @endfor
+                </select>
+            </div>
+
+            <div class="flex gap-2">
+                <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-[#0B3B9F] text-white rounded-lg text-sm font-semibold hover:bg-blue-800 transition">
+                    Terapkan Filter
+                </button>
+                <a href="{{ route('reports.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition">
+                    Reset
+                </a>
+            </div>
+        </form>
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">

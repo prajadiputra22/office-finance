@@ -63,5 +63,5 @@ Route::get('/categories/expenditure/export', [CategoryTransactionController::cla
 Route::get('/report', [ReportsController::class, 'index'])->name('report.index');
 Route::get('/api/chart-data', [ReportsController::class, 'getChartData'])->name('chart.data');
 Route::get('/reports/export', [ReportsController::class, 'export'])->name('reports.export');
-
+Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
 
