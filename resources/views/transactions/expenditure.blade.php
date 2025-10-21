@@ -4,7 +4,20 @@
 
 @section('content')
     <div class="mb-6">
-        <h2 class="text-3xl font-bold text-[#F20E0F]">{{ $category->category_name }}</h2>
+        <div class="flex justify-between items-center">
+            <h2 class="text-3xl font-bold text-[#F20E0F]">{{ $category->category_name }}</h2>
+            <!-- Added year filter dropdown -->
+            <div class="flex items-center gap-2">
+                <label for="yearFilter" class="text-sm font-medium text-gray-700">Filter Tahun:</label>
+                <select id="yearFilter" class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#F20E0F]" onchange="filterByYear(this.value)">
+                    @foreach($availableYears as $availableYear)
+                        <option value="{{ $availableYear }}" {{ $availableYear == $year ? 'selected' : '' }}>
+                            {{ $availableYear }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 mb-8">
@@ -96,7 +109,8 @@
     </div>
 
     <div class="mt-4">
-        <a href="{{ route('categories.expenditure.export', ['category_id' => $category->id]) }}"
+        <!-- Updated export link to include year parameter -->
+        <a href="{{ route('categories.expenditure.export', ['category_id' => $category->id, 'year' => $year]) }}"
            class="inline-flex items-center px-4 py-2 rounded-md bg-[#F20E0F] text-white hover:bg-[#ff1f1f] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F20E0F]">
             <i class="fas fa-file-excel mr-2"></i> Unduh Laporan Excel
         </a>
@@ -105,5 +119,19 @@
 @push('scripts')
 <script src="{{ $chart->cdn() }}"></script>
 {{ $chart->script() }}
+
+<!-- Added JavaScript function to filter by year -->
+<script>
+    function filterByYear(selectedYear) {
+        const categoryId = new URLSearchParams(window.location.search).get('category_id');
+        
+        if (!categoryId) {
+            alert('Kategori tidak ditemukan. Silakan pilih kategori terlebih dahulu.');
+            return;
+        }
+        
+        window.location.href = `{{ route('category.expenditure') }}?category_id=${selectedYear}&year=${selectedYear}`;
+    }
+</script>
 @endpush
 @endsection

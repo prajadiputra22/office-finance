@@ -60,6 +60,7 @@ Route::get('/categories/income/export', [CategoryTransactionController::class, '
 Route::get('/categories/expenditure/export', [CategoryTransactionController::class, 'exportExpenditure'])
     ->name('categories.expenditure.export');
 
+//report routes
 Route::get('/report', [ReportsController::class, 'index'])->name('report.index');
 Route::get('/api/chart-data', [ReportsController::class, 'getChartData'])->name('chart.data');
 Route::get('/reports/export', [ReportsController::class, 'export'])->name('reports.export');

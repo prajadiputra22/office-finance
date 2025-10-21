@@ -40,10 +40,10 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                         $attachmentInfo = "📎 " . $fileName; 
                     }
                 } else {
-                    $attachmentInfo = "❌ File tidak ditemukan";
+                    $attachmentInfo = "File tidak ditemukan";
                 }
             } else {
-                $attachmentInfo = "➖ Tidak ada lampiran";
+                $attachmentInfo = "Tidak ada lampiran";
             }
 
             $paymentMethod = match($t->payment) {

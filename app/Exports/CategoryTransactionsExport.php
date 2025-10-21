@@ -12,18 +12,24 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\RichText\RichText;
 
 class CategoryTransactionsExport implements FromCollection, WithHeadings, WithColumnWidths, WithStyles, WithEvents
 {
     private $transactions;
 
-    public function __construct(int $categoryId, string $type)
+    public function __construct(int $categoryId, string $type, ?int $year = null)
     {
-        $this->transactions = Transaction::with('category')
+        $query = Transaction::with('category')
             ->where('category_id', $categoryId)
             ->where('type', $type)
-            ->orderBy('date')
-            ->get();
+            ->orderBy('date');
+        
+        if ($year) {
+            $query->whereYear('date', $year);
+        }
+        
+        $this->transactions = $query->get();
     }
 
     public function collection(): Collection
@@ -146,9 +152,11 @@ class CategoryTransactionsExport implements FromCollection, WithHeadings, WithCo
                                 ->getColor()->setARGB('FF0000FF');
 
                             $fileName = basename($transaction->attachment);
+                            $richText = new RichText();
+                            $richText->createText('Klik untuk membuka: ' . $fileName);
                             $sheet->getComment('J' . $row)
                                 ->setAuthor('System')
-                                ->getText()->createTextRun('Klik untuk membuka: ' . $fileName);
+                                ->setText($richText);
                         } else {
                             $sheet->getStyle('J' . $row)->getFont()
                                 ->getColor()->setARGB('FFFF0000');
