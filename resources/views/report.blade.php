@@ -49,6 +49,7 @@
                 <label for="year" class="block text-sm font-medium text-gray-700 mb-2">Tahun</label>
                 <select name="year" id="year"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]">
+                    @forelse ($availableYears as $y)
                         <option value="{{ $y }}" {{ request('year', now()->year) == $y ? 'selected' : '' }}>
                             {{ $y }}
                         </option>
