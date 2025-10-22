@@ -57,6 +57,7 @@ class TransactionsChart
                     'data' => $expenseData,
                 ],
             ])
-            ->setColors(['#3B82F6', '#EF4444']);
+            ->setColors(['#3B82F6', '#EF4444'])
+            ->setHeight(450);
     }
 }
