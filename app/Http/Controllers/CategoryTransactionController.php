@@ -31,27 +31,36 @@ class CategoryTransactionController extends Controller
             ->limit(10)
             ->get();
         
-        $paymentData = Transaction::where('category_id', $categoryId)
+        $monthlyData = Transaction::where('category_id', $categoryId)
             ->where('type', 'income')
             ->whereYear('date', $year)
-            ->selectRaw('payment, SUM(amount) as total')
-            ->groupBy('payment')
+            ->selectRaw('MONTH(date) as month, SUM(amount) as total')
+            ->groupBy('month')
+            ->orderBy('month', 'asc')
             ->get();
  
         $labels = [];
         $values = [];
-        $colors = ['#0B3B9F', '#4169E1', '#6495ED', '#87CEEB', '#B0E0E6'];
+        $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         
-        foreach ($paymentData as $index => $data) {
-            $labels[] = ucfirst($data->payment ?? 'Tidak Diketahui');
-            $values[] = (float) $data->total;
+        for ($i = 1; $i <= 12; $i++) {
+            $labels[] = $monthNames[$i - 1];
+            $monthData = $monthlyData->firstWhere('month', $i);
+            $values[] = $monthData ? (float) $monthData->total : 0;
         }
 
-        $chart = (new LarapexChart)->pieChart()
+        $chart = (new LarapexChart)->lineChart()
             ->setTitle('')
             ->setLabels($labels)
-            ->setDataset($values)
-            ->setColors($colors);
+            ->setDataset([
+                [
+                    'name' => 'Pemasukan',
+                    'data' => $values
+                ]
+            ])
+            ->setHeight(250)
+            ->setWidth(600)
+            ->setColors(['#0B3B9F']);
         
         $availableYears = Transaction::where('category_id', $categoryId)
             ->where('type', 'income')
@@ -84,27 +93,36 @@ class CategoryTransactionController extends Controller
             ->limit(10)
             ->get();
         
-        $paymentData = Transaction::where('category_id', $categoryId)
+        $monthlyData = Transaction::where('category_id', $categoryId)
             ->where('type', 'expenditure')
             ->whereYear('date', $year)
-            ->selectRaw('payment, SUM(amount) as total')
-            ->groupBy('payment')
+            ->selectRaw('MONTH(date) as month, SUM(amount) as total')
+            ->groupBy('month')
+            ->orderBy('month', 'asc')
             ->get();
 
         $labels = [];
         $values = [];
-        $colors = ['#F20E0F', '#FF4500', '#FF6347', '#FF7F50', '#FFA07A'];
+        $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         
-        foreach ($paymentData as $index => $data) {
-            $labels[] = ucfirst($data->payment ?? 'Tidak Diketahui');
-            $values[] = (float) $data->total;
+        for ($i = 1; $i <= 12; $i++) {
+            $labels[] = $monthNames[$i - 1];
+            $monthData = $monthlyData->firstWhere('month', $i);
+            $values[] = $monthData ? (float) $monthData->total : 0;
         }
 
-        $chart = (new LarapexChart)->pieChart()
+        $chart = (new LarapexChart)->lineChart()
             ->setTitle('')
             ->setLabels($labels)
-            ->setDataset($values)
-            ->setColors($colors);
+            ->setDataset([
+                [
+                    'name' => 'Pengeluaran',
+                    'data' => $values
+                ]
+            ])
+            ->setHeight(250)
+            ->setWidth(600)
+            ->setColors(['#F20E0F']);
         
         $availableYears = Transaction::where('category_id', $categoryId)
             ->where('type', 'expenditure')

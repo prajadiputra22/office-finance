@@ -58,9 +58,10 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Updated chart container with fixed height to maintain consistent sizing -->
         <div class="bg-white rounded-lg shadow-md p-6">
-            <h3 class="text-xl font-semibold text-[#F20E0F] mb-4">Transaksi per Metode Pembayaran</h3>
-            <div class="flex justify-center items-center">
+            <h3 class="text-xl font-semibold text-[#F20E0F] mb-4">Transaksi per Bulan Tahun {{ $year }}</h3>
+            <div class="flex justify-center items-center h-80">
                 {!! $chart->container() !!}
             </div>
         </div>
@@ -130,7 +131,7 @@
             return;
         }
         
-        window.location.href = `{{ route('category.expenditure') }}?category_id=${selectedYear}&year=${selectedYear}`;
+        window.location.href = `{{ route('category.expenditure') }}?category_id=${categoryId}&year=${selectedYear}`;
     }
 </script>
 @endpush

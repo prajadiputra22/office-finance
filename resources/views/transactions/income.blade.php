@@ -58,9 +58,10 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Updated chart container with fixed height to maintain consistent sizing -->
         <div class="bg-white rounded-lg shadow-md p-6">
-            <h3 class="text-xl text-center font-semibold text-[#0B3B9F] mb-4">Transaksi per Metode Pembayaran</h3>
-            <div class="flex justify-center items-center">
+            <h3 class="text-xl text-center font-semibold text-[#0B3B9F] mb-4">Transaksi per Bulan Tahun {{ $year }}</h3>
+            <div class="flex justify-center items-center h-80">
                 {!! $chart->container() !!}
             </div>
         </div>
