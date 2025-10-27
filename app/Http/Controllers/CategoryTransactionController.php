@@ -15,22 +15,22 @@ class CategoryTransactionController extends Controller
     {
         $categoryId = $request->query('category_id');
         $year = $request->query('year', now()->year);
-        
+
         $category = Category::findOrFail($categoryId);
-        
+
         $transactions = Transaction::where('category_id', $categoryId)
             ->where('type', 'income')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
             ->get();
-        
+
         $recentTransactions = Transaction::where('category_id', $categoryId)
             ->where('type', 'income')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
             ->limit(10)
             ->get();
-        
+
         $monthlyData = Transaction::where('category_id', $categoryId)
             ->where('type', 'income')
             ->whereYear('date', $year)
@@ -38,11 +38,11 @@ class CategoryTransactionController extends Controller
             ->groupBy('month')
             ->orderBy('month', 'asc')
             ->get();
- 
+
         $labels = [];
         $values = [];
         $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        
+
         for ($i = 1; $i <= 12; $i++) {
             $labels[] = $monthNames[$i - 1];
             $monthData = $monthlyData->firstWhere('month', $i);
@@ -61,7 +61,7 @@ class CategoryTransactionController extends Controller
             ->setHeight(250)
             ->setWidth(600)
             ->setColors(['#0B3B9F']);
-        
+
         $availableYears = Transaction::where('category_id', $categoryId)
             ->where('type', 'income')
             ->selectRaw('YEAR(date) as year')
@@ -69,30 +69,30 @@ class CategoryTransactionController extends Controller
             ->orderBy('year', 'desc')
             ->pluck('year')
             ->toArray();
-        
+
         return view('transactions.income', compact('category', 'chart', 'recentTransactions', 'year', 'availableYears'));
     }
-    
+
     public function expenditure(Request $request)
     {
         $categoryId = $request->query('category_id');
         $year = $request->query('year', now()->year);
-        
+
         $category = Category::findOrFail($categoryId);
-        
+
         $transactions = Transaction::where('category_id', $categoryId)
             ->where('type', 'expenditure')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
             ->get();
-        
+
         $recentTransactions = Transaction::where('category_id', $categoryId)
             ->where('type', 'expenditure')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
             ->limit(10)
             ->get();
-        
+
         $monthlyData = Transaction::where('category_id', $categoryId)
             ->where('type', 'expenditure')
             ->whereYear('date', $year)
@@ -104,7 +104,7 @@ class CategoryTransactionController extends Controller
         $labels = [];
         $values = [];
         $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        
+
         for ($i = 1; $i <= 12; $i++) {
             $labels[] = $monthNames[$i - 1];
             $monthData = $monthlyData->firstWhere('month', $i);
@@ -123,7 +123,7 @@ class CategoryTransactionController extends Controller
             ->setHeight(250)
             ->setWidth(600)
             ->setColors(['#F20E0F']);
-        
+
         $availableYears = Transaction::where('category_id', $categoryId)
             ->where('type', 'expenditure')
             ->selectRaw('YEAR(date) as year')
@@ -131,7 +131,7 @@ class CategoryTransactionController extends Controller
             ->orderBy('year', 'desc')
             ->pluck('year')
             ->toArray();
-        
+
         return view('transactions.expenditure', compact('category', 'chart', 'recentTransactions', 'year', 'availableYears'));
     }
 
@@ -139,10 +139,18 @@ class CategoryTransactionController extends Controller
     {
         $categoryId = $request->query('category_id');
         $year = $request->query('year', now()->year);
-        
+
+        $categoryName = null;
+        if ($categoryId) {
+            $category = Category::find($categoryId);
+            $categoryName = $category ? $category->category_name : 'semua_kategori';
+        } else {
+            $categoryName = 'semua_kategori';
+        }
+
         return Excel::download(
             new CategoryTransactionsExport($categoryId, 'income', $year),
-            'laporan_kas_masuk_' . $year . '.xlsx'
+            'laporan_'. $categoryName. '_'. $year . '.xlsx'
         );
     }
 
@@ -150,10 +158,18 @@ class CategoryTransactionController extends Controller
     {
         $categoryId = $request->query('category_id');
         $year = $request->query('year', now()->year);
-        
+
+        $categoryName = null;
+        if ($categoryId) {
+            $category = Category::find($categoryId);
+            $categoryName = $category ? $category->category_name : 'semua_kategori';
+        } else {
+            $categoryName = 'semua_kategori';
+        }
+
         return Excel::download(
             new CategoryTransactionsExport($categoryId, 'expenditure', $year),
-            'laporan_kas_keluar_' . $year . '.xlsx'
+            'laporan_'. $categoryName. '_'. $year . '.xlsx'
         );
     }
 }
