@@ -12,20 +12,23 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\RichText\RichText;
 
-class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidths, WithStyles, WithEvents
+class CategoryTransactionsExport implements FromCollection, WithHeadings, WithColumnWidths, WithStyles, WithEvents
 {
-    protected $transactions;
+    private $transactions;
 
-    public function __construct($month = null, $year = null)
+    public function __construct(int $categoryId, string $type, ?int $year = null)
     {
-        $query = Transaction::with('category')->orderBy('date');
-
-        if ($month && $year) {
-            $query->whereMonth('date', $month)
-                ->whereYear('date', $year);
+        $query = Transaction::with('category')
+            ->where('category_id', $categoryId)
+            ->where('type', $type)
+            ->orderBy('date');
+        
+        if ($year) {
+            $query->whereYear('date', $year);
         }
-
+        
         $this->transactions = $query->get();
     }
 
@@ -47,17 +50,17 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                         $attachmentInfo = "📎 " . $fileName;
                     }
                 } else {
-                    $attachmentInfo = "❌ File tidak ditemukan";
+                    $attachmentInfo = " File tidak ditemukan";
                 }
             } else {
-                $attachmentInfo = "➖ Tidak ada lampiran";
+                $attachmentInfo = " Tidak ada lampiran";
             }
 
-            $paymentMethod = match ($t->payment) {
+            $paymentMethod = match($t->payment) {
                 'cash' => 'Tunai',
                 'transfer' => 'Transfer',
                 'giro' => 'Giro',
-                default => ucfirst($t->payment ?? '-'),
+                default => ucfirst($t->payment ?? '-')
             };
 
             return [
@@ -118,8 +121,8 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                 ],
                 'fill' => [
                     'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                    'startColor' => ['argb' => 'FFE6E6FA'],
-                ],
+                    'startColor' => ['argb' => 'FFE6E6FA']
+                ]
             ],
             'J:J' => [
                 'alignment' => [
@@ -134,26 +137,26 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function (AfterSheet $event) {
+            AfterSheet::class => function(AfterSheet $event) {
                 $sheet = $event->sheet->getDelegate();
-                $row = 2;
 
+                $row = 2;
                 foreach ($this->transactions as $transaction) {
                     if ($transaction->attachment) {
                         $attachmentPath = storage_path('app/public/' . $transaction->attachment);
-
                         if (file_exists($attachmentPath)) {
                             $fileUrl = asset('storage/' . $transaction->attachment);
-
                             $sheet->getCell('J' . $row)->getHyperlink()->setUrl($fileUrl);
                             $sheet->getStyle('J' . $row)->getFont()
                                 ->setUnderline(true)
                                 ->getColor()->setARGB('FF0000FF');
 
                             $fileName = basename($transaction->attachment);
+                            $richText = new RichText();
+                            $richText->createText('Klik untuk membuka: ' . $fileName);
                             $sheet->getComment('J' . $row)
                                 ->setAuthor('System')
-                                ->getText()->createTextRun('Klik untuk membuka: ' . $fileName);
+                                ->setText($richText);
                         } else {
                             $sheet->getStyle('J' . $row)->getFont()
                                 ->getColor()->setARGB('FFFF0000');
@@ -163,9 +166,7 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                 }
 
                 $sheet->freezePane('A2');
-
                 $sheet->setAutoFilter('A1:J1');
-
                 $sheet->getDefaultRowDimension()->setRowHeight(18);
 
                 $highestRow = $sheet->getHighestRow();

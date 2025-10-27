@@ -44,7 +44,7 @@ class TransactionsChart
         }
 
         return $this->chart->lineChart()
-            ->setTitle('Transaksi ' . $year)
+            ->setTitle('Grafik Transaksi Tahun  ' . $year)
             ->setSubtitle('Pemasukan vs Pengeluaran per Bulan')
             ->setXAxis($months)
             ->setDataset([
@@ -57,6 +57,7 @@ class TransactionsChart
                     'data' => $expenseData,
                 ],
             ])
-            ->setColors(['#3B82F6', '#EF4444']);
+            ->setColors(['#3B82F6', '#EF4444'])
+            ->setHeight(450);
     }
 }

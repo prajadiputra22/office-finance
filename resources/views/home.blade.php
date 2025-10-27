@@ -54,14 +54,37 @@
         </section>
 
         <section class="mb-8" aria-labelledby="chart-title">
-            <h2 id="chart-title" class="text-xl font-semibold mb-2 text-gray-800">Grafik Transaksi Bulanan</h2>
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200" role="img"
-                aria-label="Grafik Keuangan">
+            <div class="flex items-center justify-between mb-4">
+                <h2 id="chart-title" class="text-xl font-semibold text-gray-800">
+                    Grafik Transaksi Bulanan
+                </h2>
+                
+                <form method="GET" action="{{ route('home') }}" class="flex items-center space-x-2">
+                    <label for="year" class="text-sm text-gray-600">Pilih Tahun :</label>
+                    @php
+                        $currentYear = $year ?? request('year', date('Y'));
+                    @endphp
+
+                    <select name="year" id="year" 
+                        class="flex items-center px-3 py-2 bg-white border-2 border-[#e1e5e9] text-sm rounded-lg focus:ring-blue-500 focus:border-[#0B3B9F] cursor-pointer transition"
+                        onchange="this.form.submit()">
+                        
+                        @foreach ($availableYears as $availableYear)
+                            <option value="{{ $availableYear }}" {{ $currentYear == $availableYear ? 'selected' : '' }}>
+                                {{ $availableYear }}
+                            </option>
+                         @endforeach
+                    </select>
+                </form>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200" role="img" aria-label="Grafik Keuangan">
                 <div class="mb-4">
                     {!! $chart->container() !!}
                 </div>
             </div>
         </section>
+
 
         <section class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm" aria-labelledby="transaksi-title">
             <h2 id="transaksi-title" class="text-xl font-semibold mb-4 text-gray-800">Transaksi Terbaru</h2>

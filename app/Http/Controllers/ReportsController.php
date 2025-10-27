@@ -11,32 +11,52 @@ use App\Exports\TransactionsExport;
 
 class ReportsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $income = Transaction::where('type', 'income')->sum('amount');
-        $expenditure = Transaction::where('type', 'expenditure')->sum('amount');
+        $selectedMonth = $request->input('month', now()->month);
+        $selectedYear = $request->input('year', now()->year);
+
+        $monthNames = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+        ];
+
+        $selectedMonthName = $monthNames[$selectedMonth] ?? '';
+
+        $availableYears = Transaction::selectRaw('YEAR(date) as year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+
+        $query = Transaction::query()
+            ->whereMonth('date', $selectedMonth)
+            ->whereYear('date', $selectedYear);
+
+        $income = (clone $query)->where('type', 'income')->sum('amount');
+        $expenditure = (clone $query)->where('type', 'expenditure')->sum('amount');
 
         $incomePerCategory = Transaction::join('category', 'transactions.category_id', '=', 'category.id')
             ->where('transactions.type', 'income')
+            ->whereMonth('transactions.date', $selectedMonth)
+            ->whereYear('transactions.date', $selectedYear)
             ->selectRaw('category.category_name, SUM(transactions.amount) as total')
             ->groupBy('category.id', 'category.category_name')
             ->get();
 
         $expenditurePerCategory = Transaction::join('category', 'transactions.category_id', '=', 'category.id')
             ->where('transactions.type', 'expenditure')
+            ->whereMonth('transactions.date', $selectedMonth)
+            ->whereYear('transactions.date', $selectedYear)
             ->selectRaw('category.category_name, SUM(transactions.amount) as total')
             ->groupBy('category.id', 'category.category_name')
             ->get();
 
         $incomeLabels = $incomePerCategory->pluck('category_name')->toArray();
-        $incomeValues = $incomePerCategory->pluck('total')->map(function($value) {
-            return (float) $value;
-        })->toArray();
+        $incomeValues = $incomePerCategory->pluck('total')->map(fn($v) => (float)$v)->toArray();
 
         $expenditureLabels = $expenditurePerCategory->pluck('category_name')->toArray();
-        $expenditureValues = $expenditurePerCategory->pluck('total')->map(function($value) {
-            return (float) $value;
-        })->toArray();
+        $expenditureValues = $expenditurePerCategory->pluck('total')->map(fn($v) => (float)$v)->toArray();
 
         $incomeColors = ['#16A34A','#22C55E','#4ADE80','#86EFAC','#BBF7D0','#DCFCE7',
                         '#15803D','#166534','#14532D','#047857','#065F46','#064E3B'];
@@ -85,12 +105,26 @@ class ReportsController extends Controller
         return view('report', compact(
             'income', 'expenditure',
             'incomeChart', 'expenditureChart',
-            'incomePercentages', 'expenditurePercentages'
+            'incomePercentages', 'expenditurePercentages',
+            'selectedMonthName', 'selectedYear','availableYears'
         ));
     }
     
-    public function export()
+    public function export(Request $request)
     {
-        return Excel::download(new TransactionsExport(), 'laporan-transaksi.xlsx');
+        $selectedMonth = $request->input('month', now()->month);
+        $selectedYear = $request->input('year', now()->year);
+
+        $monthNames = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+        ];
+
+        $selectedMonthName = $monthNames[$selectedMonth] ?? now()->format('F');
+
+        $fileName = 'Laporan_Transaksi_' . strtolower($selectedMonthName) . '_' . $selectedYear . '.xlsx';
+
+        return Excel::download(new TransactionsExport($selectedMonth, $selectedYear), $fileName);
     }
 }

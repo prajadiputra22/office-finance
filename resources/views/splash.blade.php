@@ -12,7 +12,6 @@
         <span class="text-[#F20E0F] splash-animation">TigaJaya</span>
         <span class="text-[#0B3B9F] splash-animation">Finance</span>
     </h1>
-
 <script>
 setTimeout(function(){
     window.location.href = "{{ Auth::guard('admin')->check() ? route('home') : route('auth.login') }}";

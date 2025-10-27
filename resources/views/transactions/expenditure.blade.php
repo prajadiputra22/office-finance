@@ -2,10 +2,33 @@
 
 @section('title', 'Kas Keluar - ' . $category->category_name)
 
+@section('header')
+<header class="relative text-left mb-10">
+    <h1 class="text-3xl font-bold text-[#F20E0F]">
+        {{ $category->category_name }}
+    </h1>
+    <h2 class="absolute right-0 top-0 text-2xl font-bold">
+        <span class="text-[#F20E0F]">TigaJaya</span> 
+        <span class="text-[#0B3B9F]">Finance</span>
+    </h2>
+</header>
+@endsection
+
 @section('content')
     <div class="mb-6">
-        <h2 class="text-3xl font-bold text-[#F20E0F]">{{ $category->category_name }}</h2>
-        <p class="text-gray-600 mt-1">Kategori Kas Keluar</p>
+        <div class="flex justify-end items-center">
+            <div class="flex items-center gap-2">
+                <label for="yearFilter" class="text-sm font-medium text-gray-700">Filter Tahun :</label>
+                <select id="yearFilter" class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]" 
+                    onchange="filterByYear(this.value)">
+                    @foreach($availableYears as $availableYear)
+                        <option value="{{ $availableYear }}" {{ $availableYear == $year ? 'selected' : '' }}>
+                            {{ $availableYear }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 mb-8">
@@ -17,7 +40,7 @@
                     <p class="text-3xl font-bold mt-2">{{ $recentTransactions->count() }}</p>
                 </div>
                 <i class="fas fa-list text-4xl opacity-30"></i>
-            </div>
+            </div>  
         </div>
 
         <div class="bg-gradient-to-br from-[#F20E0F] to-[#ff3d2f] rounded-lg shadow-md p-6 text-white
@@ -47,9 +70,11 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="bg-white rounded-lg shadow-md p-6">
-            <h3 class="text-xl font-semibold text-[#F20E0F] mb-4">Transaksi per Metode Pembayaran</h3>
-            <div class="flex justify-center items-center">
-                {!! $chart->container() !!}
+            <h3 class="text-xl text-center font-semibold text-[#F20E0F] mb-4">Transaksi per Bulan Tahun {{ $year }}</h3>
+            <div class="w-full overflow-hidden">
+                <div class="chart-responsive-wrapper">
+                    {!! $chart->container() !!}
+                </div>
             </div>
         </div>
 
@@ -96,8 +121,29 @@
         </div>
     </div>
 
+    <div class="mt-10">
+        <a href="{{ route('categories.expenditure.export', ['category_id' => $category->id, 'year' => $year]) }}"
+            class="inline-flex items-center gap-2 px-3 py-2 bg-white border-2 border-gray-200 rounded-lg text-sm font-semibold hover:bg-[#F20E0F] hover:text-white hover:border-[#F20E0F] transition">
+            <img src="{{ asset('assets/picture/download.png') }}" alt="download" class="w-5 h-5 filter invert-0 hover:invert transition">
+            Unduh laporan
+        </a>
+    </div>
+    
 @push('scripts')
 <script src="{{ $chart->cdn() }}"></script>
 {{ $chart->script() }}
+
+<script>
+    function filterByYear(selectedYear) {
+        const categoryId = new URLSearchParams(window.location.search).get('category_id');
+        
+        if (!categoryId) {
+            alert('Kategori tidak ditemukan. Silakan pilih kategori terlebih dahulu.');
+            return;
+        }
+        
+        window.location.href = `{{ route('category.expenditure') }}?category_id=${selectedYear}&year=${selectedYear}`;
+    }
+</script>
 @endpush
 @endsection

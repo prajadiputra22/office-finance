@@ -50,12 +50,12 @@
             <div class="flex-1 p-6 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
                 <h3 class="text-blue-600 font-medium">Pemasukan</h3>
                 <p class="text-[25px] font-bold text-[#1f2937]">
-                    {{'IDR'. number_format($income ?? 0, 0,',', '.') }}</p>
+                    {{'Rp '. number_format($income ?? 0, 0,',', '.') }}</p>
             </div>
             <div class="flex-1 p-6 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
                 <h3 class="text-red-600 font-medium">Pengeluaran</h3>
                 <p class="text-[25px] font-bold text-[#1f2937]">
-                    {{'IDR'. number_format($expenditure ?? 0, 0,',', '.') }}</p>
+                    {{'Rp '. number_format($expenditure ?? 0, 0,',', '.') }}</p>
             </div>
         </div>
     </div>
@@ -101,111 +101,115 @@
                     return dates;
                 }
             }">
-            <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-x"
-                x-ref="tableContainer" @scroll="onTableScroll">
-                <table class="w-full text-center border border-[#e1e5e9] rounded-lg overflow-hidden text-sm min-w-[800px] whitespace-nowrap">
+            <div x-data="{
+                selectedMonth: '',
+                get uniqueMonths() {
+                    const months = @js($transactions->pluck('date')
+                        ->map(fn($d) => \Carbon\Carbon::parse($d)->format('Y-m'))
+                        ->unique()
+                        ->values());
+                    return months;
+                }
+            }">
+              <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-x"
+                  x-ref="tableContainer" @scroll="onTableScroll">
+                  <table class="w-full text-center border border-[#e1e5e9] rounded-lg overflow-hidden text-sm min-w-[800px] whitespace-nowrap">
                     <thead class="bg-[#f8f9fa]">
-                        <tr>
-                            <th class="p-4 font-semibold text-[#333] text-center">
-                                <input type="checkbox" @change="toggleSelectAll()" :checked="selectAllChecked"
-                                    :indeterminate="selectAllIndeterminate"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                            </th>
-                            <th class="p-4 font-semibold text-[#333] text-center relative">
-                              <div class="inline-block">
-                                <label for="filterDate" class="text-sm font-medium text-gray-600">Tanggal Transaksi</label>
-                                <input 
-                                  type="date" 
-                                  id="filterDate"
-                                  x-model="selectedDate"
-                                  class="mt-1 border border-gray-300 rounded px-[5px] py-[5px] text-xs appearance-none text-transparent w-[28px] h-[28px]">
-                              </div>
-                            </th>
-                            <th class="p-4 font-semibold text-[#333] text-left">Kategori</th>
-                            <th class="p-4 font-semibold text-[#333] text-center">Status</th>
-                            <th class="p-4 font-semibold text-[#333] text-center">Pembayaran</th>
-                            <th class="p-4 font-semibold text-[#333] text-center">Jumlah</th>
-                            <th class="p-4 font-semibold text-[#333] text-center">No. Faktur</th>
-                            <th class="p-4 font-semibold text-[#333] text-center">Tgl. Faktur</th>
-                            <th class="p-4 font-semibold text-[#333] text-center">Lampiran</th>
-                            <th class="p-4 font-semibold text-[#333] text-center">Keterangan</th>
-                        </tr>
+                      <tr>
+                        <th class="p-4 font-semibold text-[#333] text-center">
+                          <input type="checkbox" @change="toggleSelectAll()" :checked="selectAllChecked"
+                              :indeterminate="selectAllIndeterminate"
+                              class="w-4 h-4 mt-2 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                        </th>
+                        <th class="p-4 font-semibold text-[#333] text-center relative">
+                          <div class="inline-block">
+                            <label for="filterMonth" class="text-sm font-large text-gray-600">Tanggal Transaksi</label>
+                            <input 
+                              type="month" 
+                              id="filterMonth"
+                              x-model="selectedMonth"
+                              class="mt-1 border border-gray-300 rounded px-[5px] py-[5px] text-xs appearance-none cursor-pointer w-[27.5px] h-[30px]">
+                          </div>
+                        </th>
+                        <th class="p-4 font-semibold text-[#333] text-left">Kategori</th>
+                        <th class="p-4 font-semibold text-[#333] text-center">Status</th>
+                        <th class="p-4 font-semibold text-[#333] text-center">Pembayaran</th>
+                        <th class="p-4 font-semibold text-[#333] text-center">Jumlah</th>
+                        <th class="p-4 font-semibold text-[#333] text-center">No. Faktur</th>
+                        <th class="p-4 font-semibold text-[#333] text-center">Tgl. Faktur</th>
+                        <th class="p-4 font-semibold text-[#333] text-center">Lampiran</th>
+                        <th class="p-4 font-semibold text-[#333] text-left">Keterangan</th>
+                      </tr>
                     </thead>
                     <tbody x-data="{ hasVisible: false }" 
-                    x-init="$watch('selectedDate', () => { hasVisible = false; })">
-
-                        @forelse ($transactions as $trx)
-                            <tr class="border-b border-[#e1e5e9] hover:bg-[#f8f9fa]"
-                                x-show="selectedDate === '' || selectedDate === '{{ \Carbon\Carbon::parse($trx->date)->format('Y-m-d') }}'"
-                                x-init="$watch('selectedDate', value => {
-                                    if (value === '' || value === '{{ \Carbon\Carbon::parse($trx->date)->format('Y-m-d') }}') {
-                                        hasVisible = true;
-                                   }
-                                })">
-                                <td class="p-4 text-center">
-                                    <input type="checkbox" x-model="selectedTransactions" value="{{ $trx->id }}"
-                                        @change="updateSelectAllState()"
-                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                                </td>
-                                <td class="p-4 text-left">{{ \Carbon\Carbon::parse($trx->date)->format('d/m/Y') }}</td>
-                                <td class="p-4 text-left">
-                                    {{ $trx->category->name ?? ($trx->category->category_name ?? 'Tidak ada kategori') }}
-                                </td>
-                                <td class="p-4 text-center">
-                                    <span
-                                        class="{{ $trx->type == 'income' ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-[#F20E0F]' }} px-3 py-1 rounded-full text-sm font-medium">
-                                        {{ $trx->type == 'income' ? 'Pemasukan' : 'Pengeluaran' }}
-                                    </span>
-                                </td>
-                                 <td class="p-4 text-center">
-                                    <span
-                                        class="{{ $trx->payment == 'cash' ? '' : '' }} px-3 py-1 rounded-full text-sm font-medium">
-                                        {{ $trx->payment == 'cash' ? 'Cash' : ($trx->payment == 'transfer' ? 'Transfer' : 'Giro') }}
-                                    </span>
-                                </td>
-                                <td class="p-4 text-center">
-                                    <span class="font-semibold text-gray-800">
-                                        {{ number_format($trx->amount, 0, ',', '.') }}
-                                    </span>
-                                </td>
-                                <td class="p-4 text-center">{{ $trx->no_factur ?? '-' }}</td>
-                                <td class="p-4 text-center">
-                                    {{ $trx->date_factur ? \Carbon\Carbon::parse($trx->date_factur)->format('d/m/Y') : '-' }}
-                                </td>
-                                <td class="p-4 text-center">
-                                    @if ($trx->attachment)
-                                        <a href="{{ asset('storage/' . $trx->attachment) }}" target="_blank"
-                                            class="inline-flex items-center px-3 py-1 bg-[#0B3B9F] text-white text-xs rounded-md hover:bg-blue-700 transition">
-                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                                </path>
-                                            </svg>
-                                            Download
-                                        </a>
-                                    @else
-                                        <span class="text-sm text-gray-400 italic">-</span>
-                                    @endif
-                                </td>
-                                <td class="p-4 text-center">{{ $trx->description ?? '-' }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="9" class="p-8 text-center text-gray-500 text-sm">
-                                    Tidak ada transaksi
-                                </td>
-                            </tr>
-                        @endforelse
-                        <tr x-show="!hasVisible && selectedDate !== ''" x-cloak>
-                          <td colspan="10" class="p-8 text-center text-gray-500 text-sm">
-                              Belum ada transaksi pada tanggal ini
-                          </td>
+                    x-init="$watch('selectedMonth', () => { hasVisible = false; })">
+                    
+                    @forelse ($transactions as $trx)
+                        <tr class="border-b border-[#e1e5e9] hover:bg-[#f8f9fa]"
+                            x-show="
+                              selectedMonth === '' ||
+                              selectedMonth === '{{ \Carbon\Carbon::parse($trx->date)->format('Y-m') }}'
+                            "
+                            x-init="$watch('selectedMonth', value => {
+                                if (value === '' || value === '{{ \Carbon\Carbon::parse($trx->date)->format('Y-m') }}') {
+                                    hasVisible = true;
+                                }
+                            })">
+                            <td class="p-4 text-center">
+                                <input type="checkbox" x-model="selectedTransactions" value="{{ $trx->id }}"
+                                    @change="updateSelectAllState()"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                            </td>
+                            <td class="p-4 text-left">{{ \Carbon\Carbon::parse($trx->date)->format('d/m/Y') }}</td>
+                            <td class="p-4 text-left">
+                                {{ $trx->category->name ?? ($trx->category->category_name ?? 'Tidak ada kategori') }}
+                            </td>
+                            <td class="p-4 text-center">
+                                <span
+                                    class="{{ $trx->type == 'income' ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-[#F20E0F]' }} px-3 py-1 rounded-full text-sm font-medium">
+                                    {{ $trx->type == 'income' ? 'Pemasukan' : 'Pengeluaran' }}
+                                </span>
+                            </td>
+                            <td class="p-4 text-center">
+                                {{ $trx->payment == 'cash' ? 'Cash' : ($trx->payment == 'transfer' ? 'Transfer' : 'Giro') }}
+                            </td>
+                            <td class="p-4 text-center">
+                                <span class="font-semibold text-gray-800">
+                                    {{'Rp '. number_format($trx->amount, 0, ',', '.') }}
+                                </span>
+                            </td>
+                            <td class="p-4 text-center">{{ $trx->no_factur ?? '-' }}</td>
+                            <td class="p-4 text-center">
+                                {{ $trx->date_factur ? \Carbon\Carbon::parse($trx->date_factur)->format('d/m/Y') : '-' }}
+                            </td>
+                            <td class="p-4 text-center">
+                                @if ($trx->attachment)
+                                    <a href="{{ asset('storage/' . $trx->attachment) }}" target="_blank"
+                                        class="inline-flex items-center px-3 py-1 bg-[#0B3B9F] text-white text-xs rounded-md hover:bg-blue-700 transition">
+                                        Download
+                                    </a>
+                                @else
+                                    <span class="text-sm text-gray-400 italic">-</span>
+                                @endif
+                            </td>
+                            <td class="p-4 text-left">{{ $trx->description ?? '-' }}</td>
                         </tr>
-                    </tbody>
+                    @empty
+                        <tr>
+                            <td colspan="10" class="p-8 text-center text-gray-500 text-sm">
+                                Tidak ada transaksi
+                            </td>
+                        </tr>
+                    @endforelse
+                    <tr x-show="!hasVisible && selectedMonth !== ''" x-cloak>
+                      <td colspan="10" class="p-8 text-center text-gray-500 text-sm">
+                          Belum ada transaksi pada bulan ini
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
+              </div>
             </div>
-          </div>
 
             @if (method_exists($transactions, 'links'))
                 <div class="mt-6">
@@ -225,7 +229,6 @@
                     </button>
                 </div>
 
-                <!-- Validation -->
                 <div x-show="addFormErrors.length > 0" class="mb-3 p-2 bg-red-100 border border-red-300 rounded-md">
                     <ul class="text-xs text-red-600 list-disc list-inside">
                         <template x-for="error in addFormErrors">
@@ -316,7 +319,6 @@
             class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F] resize-none"></textarea>
         </div>
 
-        <!-- Button -->
         <div class="flex justify-end gap-2 pt-2">
           <button type="button" @click="closeAddModal()"
             class="px-3 py-1.5 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition text-xs">
@@ -342,7 +344,6 @@
         </button>
       </div>
 
-      <!-- Validation -->
       <div x-show="editFormErrors.length > 0" class="mb-3 p-2 bg-red-100 border border-red-300 rounded-md">
         <ul class="text-xs text-red-600 list-disc list-inside">
           <template x-for="error in editFormErrors">
@@ -447,7 +448,6 @@
             class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F] resize-none"></textarea>
         </div>
 
-        <!-- Button -->
         <div class="flex justify-end gap-2 pt-2">
           <button type="button" @click="closeEditModal()"
             class="px-3 py-1.5 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition text-xs">
