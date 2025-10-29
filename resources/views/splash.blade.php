@@ -8,14 +8,13 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="h-screen flex items-center justify-center font-poppins bg-white">
-    <h1 class="font-bold text-4xl splash-animation flex space-x-2">
-        <span class="text-[#F20E0F] splash-animation">TigaJaya</span>
-        <span class="text-[#0B3B9F] splash-animation">Finance</span>
-    </h1>
+    <img src="{{ asset('assets/picture/logo.png') }}" 
+        alt="Logo TigaJaya Finance"
+        class="w-40 md:w-56 lg:w-64 h-auto splash-animation object-contain"> 
 <script>
 setTimeout(function(){
     window.location.href = "{{ Auth::guard('admin')->check() ? route('home') : route('auth.login') }}";
 }, 3000);
 </script>
 </body>
-</html>
+</html> 

@@ -7,10 +7,11 @@
     <h1 class="text-xl font-bold">
         Transaksi Bulan {{ $selectedMonthName }} {{ $selectedYear }}
     </h1>
-    <h2 class="absolute right-0 top-0 text-2xl font-bold">
-        <span class="text-[#F20E0F]">TigaJaya</span> 
-        <span class="text-[#0B3B9F]">Finance</span>
-    </h2>
+    <div class="absolute right-0 top-0">
+       <img src="{{ asset('assets/picture/logo.png') }}" 
+        alt="Logo TigaJaya Finance"
+        class="w-20 md:w-28 lg:w-28 h-auto object-contain"> 
+    </div>
 </header>
 @endsection
 

@@ -20,19 +20,17 @@
     }
 </style>
 
-<body class="h-screen flex items-center justify-center font-poppins">
-    <main class="flex w-full h-screen font-poppins">
-        <section class="flex flex-col justify-center items-center flex-1 bg-white fade-in px-6">
-            <div class="mb-3">
-                <h1 class="text-2xl font-bold justify-center">
-                    <span class="text-[#F20E0F]">TigaJaya</span>
-                    <span class="text-[#0B3B9F]">Finance</span>
-                </h1>
+<body class="min-h-screen flex items-center justify-center font-poppins bg-cover bg-center bg-no-repeat bg-fixed" 
+      style="background-image: linear-gradient(rgba(255,255,255,0.9), rgba(251,252,255,0.85)), url('/assets/picture/background.png');">
+    <main class="flex items-center justify-center w-full h-screen">
+        <section class="bg-white/90 backdrop-blur-md p-6 md:p-8 rounded-xl shadow-lg flex flex-col items-center w-[90%] max-w-sm animate-fadeIn">
+            <div class="mb-1 flex flex-col items-center justify-center">
+                <img src="{{ asset('assets/picture/logo.png') }}"  alt="logo TigaJaya Finance" class="w-36 md:w-40 lg:w-40 mb-6 object-contain">
             </div>
 
-            <div class="flex flex-col w-64">
+            <div class="flex flex-col items-center">
                 @if ($errors->any())
-                    <div id="serverErrors" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    <div id="serverErrors" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 w-80 text-left">
                         <ul class="list-disc pl-5">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -41,15 +39,15 @@
                     </div>
                 @endif
 
-                <form id="loginForm" method="POST" action="{{ route('auth.login') }}" class="flex flex-col w-64">
+                <form id="loginForm" method="POST" action="{{ route('auth.login') }}" class="flex flex-col w-80 items-center">
                     @csrf
-                    <div id="username" class="mt-2">
+                    <div id="username" class="w-full mt-2">
                         <label for="usernameInput" class="sr-only">Username</label>
                         <input id="usernameInput" name="username" type="text" placeholder="Username"
                             value="{{ old('username') }}" autofocus
-                            class="w-full px-4 py-2 border border-[#F20E0F] rounded-full mb-4 outline-none focus:border-[#0B3B9F]">
+                            class="w-full px-4 py-3 border-2 border-[#0B3B9F] rounded-lg mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
                         <div id="usernameError" class="hidden mt-1 mb-4">
-                            <p class="text-red-500 text-xs italic">Username is required.</p>
+                            <p class="text-red-500 text-xs italic text-left">Username is required.</p>
                         </div>
 
                         @error('username')
@@ -59,12 +57,12 @@
                         @enderror
                     </div>
 
-                    <div id="password">
+                    <div id="password" class="w-full">
                         <label for="passwordInput" class="sr-only">Password</label>
                         <input id="passwordInput" name="password" type="password" placeholder="Password"
-                            class="w-full px-4 py-2 border border-[#0B3B9F] rounded-full mb-4 outline-none focus:border-[#0B3B9F] focus:shadow-[#0B3B9F]">
+                            class="w-full px-4 py-3 border-2 border-[#0B3B9F] rounded-lg mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
                         <div id="passwordError" class="hidden mt-1 mb-3">
-                            <p class="text-red-500 text-xs italic">Password is required.</p>
+                            <p class="text-red-500 text-xs italic text-left">Password is required.</p>
                         </div>
 
                         @error('password')
@@ -72,41 +70,36 @@
                         @enderror
                     </div>
 
-                    <div id="emptyFieldsError" class="hidden mt-1 mb-4">
+                    <div id="emptyFieldsError" class="hidden mt-1 mb-4 w-full text-left">
                         <p class="text-red-500 text-sm font-medium">Username and password cannot be empty</p>
                     </div>
 
-                    <div class="flex items-center justify-between mt-2 mb-4">
+                    <div class="flex items-center justify-between mt-2 mb-4 w-full">
                         <div class="flex items-center">
                             <input type="checkbox" name="remember" id="remember"
-                                class="w-4 h-4 mr-2 appearance-none rounded border border-gray-400 checked:bg-[#0B3B9F] checked:border-[#B6F500] relative">
+                                class="w-4 h-4 mr-2 appearance-none rounded border border-gray-400 checked:bg-[#0B3B9F] checked:border-[#0B3B9F] relative">
                             <label for="remember" class="text-sm text-gray-700">Remember me</label>
                         </div>
                     </div>
 
-                    <div id="button">
+                    <div id="button" class="mt-2 w-full">
                         <button type="submit"
-                            class="w-64 text-md bg-[#F20E0F] text-white py-2 rounded-full font-bold transition duration-300 hover:bg-[#0B3B9F] hover:text-white active:scale-95">
+                            class="w-full text-md bg-[#F20E0F] text-white py-3 rounded-lg font-bold transition duration-300 hover:bg-[#0B3B9F] hover:text-white active:scale-95">
                             Login
                         </button>
                     </div>
 
-                    <p class="mt-3 text-sm text-center whitespace-nowrap">
+                    <p class="mt-3 text-sm text-center whitespace-nowrap justify-center">
                         Belum punya akun? <a href="{{ route('auth.register') }}" class="text-[#F20E0F] hover:underline">daftar</a>
                         disini.
                     </p>
                 </form>
             </div>
         </section>
-        <aside class="flex-1 bg-[#0B3B9F] hidden md:flex justify-center items-center">
-            <img src="{{ asset('assets/picture/LoginAnimation.png') }}" alt="Finance Illustration"
-                class="w-3/4 max-w-md">
-        </aside>
 
         <script>
             let isFormDisabled = false;
 
-            // Fungsi untuk disable/enable input fields
             function toggleInputs(disabled) {
                 const usernameInput = document.getElementById('usernameInput');
                 const passwordInput = document.getElementById('passwordInput');
@@ -129,7 +122,6 @@
                 isFormDisabled = disabled;
             }
 
-            // Event listener untuk form submission
             document.getElementById('loginForm').addEventListener('submit', function(e) {
                 const username = document.getElementById('usernameInput').value.trim();
                 const password = document.getElementById('passwordInput').value.trim();
@@ -140,41 +132,34 @@
                 const passwordInput = document.getElementById('passwordInput');
                 const serverErrors = document.getElementById('serverErrors');
 
-                // Hide all error messages initially
                 emptyFieldsError.classList.add('hidden');
                 usernameError.classList.add('hidden');
                 passwordError.classList.add('hidden');
 
-                // Hide server errors when client-side validation fails
                 if (serverErrors) {
                     serverErrors.classList.add('hidden');
                 }
 
-                // Remove error styling from inputs
                 usernameInput.classList.remove('border-red-500');
                 passwordInput.classList.remove('border-red-500');
 
                 let hasError = false;
 
-                // Cek Halaman Form Kosong
                 if (username === '' && password === '') {
                     e.preventDefault();
                     emptyFieldsError.classList.remove('hidden');
                     usernameInput.classList.add('border-red-500');
                     passwordInput.classList.add('border-red-500');
 
-                    // Disable inputs setelah error
                     toggleInputs(true);
                     hasError = true;
                 } else {
-                    // Cek username kosong
                     if (username === '') {
                         e.preventDefault();
                         usernameError.classList.remove('hidden');
                         usernameInput.classList.add('border-red-500');
                         hasError = true;
                     }
-                    // Cek password kosong
                     if (password === '') {
                         e.preventDefault();
                         passwordError.classList.remove('hidden');
@@ -182,7 +167,6 @@
                         hasError = true;
                     }
 
-                    // Disable inputs jika ada error
                     if (hasError) {
                         toggleInputs(true);
                     }
@@ -193,13 +177,10 @@
                 }
             });
 
-            // Event listener untuk mengaktifkan kembali form ketika diklik
             document.getElementById('loginForm').addEventListener('click', function(e) {
                 if (isFormDisabled) {
-                    // Reset form state
                     toggleInputs(false);
 
-                    // Hide all error messages
                     document.getElementById('emptyFieldsError').classList.add('hidden');
                     document.getElementById('usernameError').classList.add('hidden');
                     document.getElementById('passwordError').classList.add('hidden');
@@ -209,11 +190,9 @@
                         serverErrors.classList.add('hidden');
                     }
 
-                    // Remove error styling
                     document.getElementById('usernameInput').classList.remove('border-red-500');
                     document.getElementById('passwordInput').classList.remove('border-red-500');
 
-                    // Focus pada input yang pertama kosong
                     const usernameInput = document.getElementById('usernameInput');
                     const passwordInput = document.getElementById('passwordInput');
 
@@ -225,9 +204,8 @@
                 }
             });
 
-            // Event listener untuk username input (tetap berfungsi normal ketika tidak disabled)
             document.getElementById('usernameInput').addEventListener('input', function() {
-                if (isFormDisabled) return; // Tidak berfungsi jika form disabled
+                if (isFormDisabled) return; 
 
                 const usernameError = document.getElementById('usernameError');
                 const emptyFieldsError = document.getElementById('emptyFieldsError');
@@ -249,9 +227,8 @@
                 }
             });
 
-            // Event listener untuk password input (tetap berfungsi normal ketika tidak disabled)
             document.getElementById('passwordInput').addEventListener('input', function() {
-                if (isFormDisabled) return; // Tidak berfungsi jika form disabled
+                if (isFormDisabled) return; 
 
                 const passwordError = document.getElementById('passwordError');
                 const emptyFieldsError = document.getElementById('emptyFieldsError');
@@ -273,7 +250,6 @@
                 }
             });
 
-            // Prevent typing ketika form disabled
             document.getElementById('usernameInput').addEventListener('keydown', function(e) {
                 if (isFormDisabled) {
                     e.preventDefault();

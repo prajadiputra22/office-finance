@@ -7,10 +7,11 @@
     <h1 class="text-3xl font-bold text-[#0B3B9F]">
         {{ $category->category_name }}
     </h1>
-    <h2 class="absolute right-0 top-0 text-2xl font-bold">
-        <span class="text-[#F20E0F]">TigaJaya</span> 
-        <span class="text-[#0B3B9F]">Finance</span>
-    </h2>
+    <div class="absolute right-0 top-0">
+       <img src="{{ asset('assets/picture/logo.png') }}" 
+        alt="Logo TigaJaya Finance"
+        class="w-20 md:w-28 lg:w-28 h-auto object-contain"> 
+    </div>
 </header>
 @endsection
 
@@ -125,7 +126,7 @@
         <a href="{{ route('categories.income.export', ['category_id' => $category->id, 'year' => $year]) }}"
             class="inline-flex items-center gap-2 px-3 py-2 bg-white border-2 border-gray-200 rounded-lg text-sm font-semibold hover:bg-[#0B3B9F] hover:text-white hover:border-[#0B3B9F] transition">
             <img src="{{ asset('assets/picture/download.png') }}" alt="download" class="w-5 h-5 filter invert-0 hover:invert transition">
-            Unduh laporan
+            Unduh laporan {{ $category->category_name }} Tahun {{ $year }}
         </a>
     </div>
 

@@ -28,7 +28,9 @@
     </div>
 </form>
     <div class="ml-5 flex-shrink-0 self-start">
-        <h1 class="text-2xl font-bold text-[#F20E0F]"> TigaJaya <span class="text-[#0B3B9F]">Finance</span></h1>
+      <img src="{{ asset('assets/picture/logo.png') }}" 
+        alt="Logo TigaJaya Finance"
+        class="w-20 md:w-28 lg:w-28 h-auto object-contain"> 
     </div>
 </header>
 </div>
