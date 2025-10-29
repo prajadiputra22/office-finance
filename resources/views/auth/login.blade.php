@@ -107,7 +107,6 @@
         <script>
             let isFormDisabled = false;
 
-            // Fungsi untuk disable/enable input fields
             function toggleInputs(disabled) {
                 const usernameInput = document.getElementById('usernameInput');
                 const passwordInput = document.getElementById('passwordInput');
@@ -130,7 +129,6 @@
                 isFormDisabled = disabled;
             }
 
-            // Event listener untuk form submission
             document.getElementById('loginForm').addEventListener('submit', function(e) {
                 const username = document.getElementById('usernameInput').value.trim();
                 const password = document.getElementById('passwordInput').value.trim();
@@ -141,41 +139,35 @@
                 const passwordInput = document.getElementById('passwordInput');
                 const serverErrors = document.getElementById('serverErrors');
 
-                // Hide all error messages initially
                 emptyFieldsError.classList.add('hidden');
                 usernameError.classList.add('hidden');
                 passwordError.classList.add('hidden');
 
-                // Hide server errors when client-side validation fails
                 if (serverErrors) {
                     serverErrors.classList.add('hidden');
                 }
 
-                // Remove error styling from inputs
                 usernameInput.classList.remove('border-red-500');
                 passwordInput.classList.remove('border-red-500');
 
                 let hasError = false;
 
-                // Cek Halaman Form Kosong
                 if (username === '' && password === '') {
                     e.preventDefault();
                     emptyFieldsError.classList.remove('hidden');
                     usernameInput.classList.add('border-red-500');
                     passwordInput.classList.add('border-red-500');
 
-                    // Disable inputs setelah error
                     toggleInputs(true);
                     hasError = true;
                 } else {
-                    // Cek username kosong
+
                     if (username === '') {
                         e.preventDefault();
                         usernameError.classList.remove('hidden');
                         usernameInput.classList.add('border-red-500');
                         hasError = true;
                     }
-                    // Cek password kosong
                     if (password === '') {
                         e.preventDefault();
                         passwordError.classList.remove('hidden');
@@ -183,7 +175,6 @@
                         hasError = true;
                     }
 
-                    // Disable inputs jika ada error
                     if (hasError) {
                         toggleInputs(true);
                     }
@@ -194,13 +185,10 @@
                 }
             });
 
-            // Event listener untuk mengaktifkan kembali form ketika diklik
             document.getElementById('loginForm').addEventListener('click', function(e) {
                 if (isFormDisabled) {
-                    // Reset form state
-                    toggleInputs(false);
 
-                    // Hide all error messages
+                    toggleInputs(false);
                     document.getElementById('emptyFieldsError').classList.add('hidden');
                     document.getElementById('usernameError').classList.add('hidden');
                     document.getElementById('passwordError').classList.add('hidden');
@@ -210,11 +198,9 @@
                         serverErrors.classList.add('hidden');
                     }
 
-                    // Remove error styling
                     document.getElementById('usernameInput').classList.remove('border-red-500');
                     document.getElementById('passwordInput').classList.remove('border-red-500');
 
-                    // Focus pada input yang pertama kosong
                     const usernameInput = document.getElementById('usernameInput');
                     const passwordInput = document.getElementById('passwordInput');
 
@@ -226,9 +212,8 @@
                 }
             });
 
-            // Event listener untuk username input (tetap berfungsi normal ketika tidak disabled)
             document.getElementById('usernameInput').addEventListener('input', function() {
-                if (isFormDisabled) return; // Tidak berfungsi jika form disabled
+                if (isFormDisabled) return;
 
                 const usernameError = document.getElementById('usernameError');
                 const emptyFieldsError = document.getElementById('emptyFieldsError');
@@ -250,9 +235,8 @@
                 }
             });
 
-            // Event listener untuk password input (tetap berfungsi normal ketika tidak disabled)
             document.getElementById('passwordInput').addEventListener('input', function() {
-                if (isFormDisabled) return; // Tidak berfungsi jika form disabled
+                if (isFormDisabled) return;
 
                 const passwordError = document.getElementById('passwordError');
                 const emptyFieldsError = document.getElementById('emptyFieldsError');
@@ -274,7 +258,6 @@
                 }
             });
 
-            // Prevent typing ketika form disabled
             document.getElementById('usernameInput').addEventListener('keydown', function(e) {
                 if (isFormDisabled) {
                     e.preventDefault();
