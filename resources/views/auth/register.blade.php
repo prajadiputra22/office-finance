@@ -21,17 +21,15 @@
     }
 </style>
 
-<body class="h-screen flex items-center justify-center font-poppins">
-    <main class="flex w-full h-screen">
-        <section class="flex flex-col justify-center items-center flex-1 bg-white fade-in">
-            <div class="mb-4">
-                <h1 class="text-4xl font-bold justify-center">
-                    <span class="text-black font-bold">Office</span>
-                    <span class="text-[#F20E0F] font-bold">Finance</span>
-                </h1>
+<body class="min-h-screen flex items-center justify-center font-poppins bg-cover bg-center bg-no-repeat bg-fixed" 
+      style="background-image: linear-gradient(rgba(255,255,255,0.9), rgba(251,252,255,0.85)), url('/assets/picture/background.png');">
+    <main class="flex items-center justify-center w-full h-screen">
+        <section class="bg-white/90 backdrop-blur-md p-6 md:p-8 rounded-xl shadow-lg flex flex-col items-center w-[90%] max-w-sm animate-fadeIn">
+            <div class="mb-1 flex flex-col items-center justify-center">
+                <img src="{{ asset('assets/picture/logo.png') }}"  alt="logo TigaJaya Finance" class="w-36 md:w-40 lg:w-40 mb-6 object-contain">
             </div>
 
-            <div class="flex flex-col w-64">
+            <div class="flex flex-col items-center">
                 @if ($errors->any())
                     <div id="serverErrors" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                         <ul class="list-disc pl-5">
@@ -42,15 +40,15 @@
                     </div>
                 @endif
 
-                <form id="registerForm" method="POST" action="{{ route('auth.register') }}">
+                <form id="registerForm" method="POST" action="{{ route('auth.register') }}"  class="flex flex-col w-80 items-center">
                     @csrf
-                    <div id="username" class="mt-2">
+                    <div id="username" class="mt-2 w-full">
                         <label for="usernameInput" class="sr-only">Username</label>
                         <input id="usernameInput" name="username" type="text" placeholder="Username"
                             value="{{ old('username') }}" autofocus
-                            class="w-full px-6 py-1 border border-[#0B3B9F] rounded-full mb-2 outline-none focus:border-[#0B3B9F] focus:shadow-[0_0_5px_rgba(180,229,13,0.7)]">
-                        <div id="usernameError" class="hidden mt-1 mb-4">
-                            <p class="text-red-500 text-xs italic">Username is required.</p>
+                            class="w-full px-4 py-3 border-2 border-[#0B3B9F] rounded-lg mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
+                        <div id="usernameError" class="hidden mt-1 mb-3">
+                            <p class="text-red-500 text-xs italic text-left">Username is required.</p>
                         </div>
 
                         @error('username')
@@ -58,12 +56,12 @@
                         @enderror
                     </div>
 
-                    <div id="password" class="mt-4">
+                    <div id="password" class="w-full">
                         <label for="passwordInput" class="sr-only">Password</label>
                         <input id="passwordInput" name="password" type="password" placeholder="Password"
-                            class="w-full px-6 py-1 border border-[#0B3B9F] rounded-full mb-2 outline-none focus:border-[#0B3B9F] focus:shadow-[0_0_5px_rgba(180,229,13,0.7)]">
+                            class="w-full px-4 py-3 border-2 border-[#0B3B9F] rounded-lg mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
                         <div id="passwordError" class="hidden mt-1 mb-3">
-                            <p class="text-red-500 text-xs italic">Password is required.</p>
+                            <p class="text-red-500 text-xs italic text-left">Password is required.</p>
                         </div>
 
                         @error('password')
@@ -71,15 +69,15 @@
                         @enderror
                     </div>
 
-                    <div id="confirmPassword" class="mt-4">
+                    <div id="confirmPassword" class="w-full">
                         <label for="confirmPasswordInput" class="sr-only">Confirm Password</label>
                         <input id="confirmPasswordInput" name="password_confirmation" type="password" placeholder="Confirm Password"
-                            class="w-full px-6 py-1 border border-[#0B3B9F] rounded-full mb-2 outline-none focus:border-[#0B3B9F] focus:shadow-[0_0_5px_rgba(180,229,13,0.7)]">
+                            class="w-full px-4 py-3 border-2 border-[#0B3B9F] rounded-lg mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
                         <div id="confirmPasswordError" class="hidden mt-1 mb-3">
-                            <p class="text-red-500 text-xs italic">Confirm password is required.</p>
+                            <p class="text-red-500 text-xs italic text-left">Confirm password is required.</p>
                         </div>
                         <div id="passwordMismatchError" class="hidden mt-1 mb-3">
-                            <p class="text-red-500 text-xs italic">Passwords do not match.</p>
+                            <p class="text-red-500 text-xs italic text-left">Passwords do not match.</p>
                         </div>
 
                         @error('password_confirmation')
@@ -87,38 +85,34 @@
                         @enderror
                     </div>
 
-                    <div id="emptyFieldsError" class="hidden mt-1 mb-4">
+                    <div id="emptyFieldsError" class="hidden mt-1 mb-4 w-full text-left">
                         <p class="text-red-500 text-sm font-medium">All fields are required</p>
                     </div>
 
-                    <div class="flex items-center justify-between mt-2 mb-4">
+                    <div class="flex items-center justify-between mt-2 mb-4 w-full">
                         <div class="flex items-center">
                             <input type="checkbox" name="terms" id="terms"
-                                class="w-5 h-5 mr-2 appearance-none rounded border border-gray-400 checked:bg-[#0B3B9F] checked:border-[#0B3B9F] relative">
+                                class="w-4 h-4 mr-2 appearance-none rounded border border-gray-400 checked:bg-[#0B3B9F] checked:border-[#0B3B9F] relative">
                             <label for="terms" class="text-sm text-gray-700">Saya setuju dengan syarat & ketentuan</label>
                         </div>
                     </div>
                     <div id="termsError" class="hidden mt-1 mb-4">
-                        <p class="text-red-500 text-xs italic">You must agree to the terms and conditions.</p>
+                        <p class="text-red-500 text-xs italic text-left">You must agree to the terms and conditions.</p>
                     </div>
 
-                    <div id="button">
+                    <div id="button" class="mt-2 w-full">
                         <button type="submit"
-                            class="w-64 text-md bg-black text-white py-1 rounded-full transition duration-300 hover:bg-[#0B3B9F] hover:text-black active:scale-95">
+                            class="w-80 text-md bg-[#F20E0F] text-white py-3 rounded-lg font-bold transition duration-300 hover:bg-[#0B3B9F] hover:text-white active:scale-95">
                             Daftar
                         </button>
                     </div>
 
                     <p class="mt-3 text-sm text-center whitespace-nowrap">
-                        Sudah punya akun? <a href="{{ route('auth.login') }}" class="text-[#0B3B9F]">login</a> disini.
+                        Sudah punya akun? <a href="{{ route('auth.login') }}" class="text-[#0B3B9F] hover:underline">login</a> disini.
                     </p>
                 </form>
             </div>
         </section>
-        <aside class="flex-1 bg-[#0B3B9F] hidden md:flex justify-center items-center">
-            <img src="{{ asset('assets/picture/LoginAnimation.png') }}" alt="Finance Illustration"
-                class="w-3/4 max-w-md">
-        </aside>
 
         <script>
             let isFormDisabled = false;
@@ -396,5 +390,4 @@
         </script>
     </main>
 </body>
-
 </html>

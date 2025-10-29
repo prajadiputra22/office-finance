@@ -15,11 +15,18 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidths, WithStyles, WithEvents
 {
-    private $transactions;
-    
-    public function __construct()
+    protected $transactions;
+
+    public function __construct($month = null, $year = null)
     {
-        $this->transactions = Transaction::with('category')->orderBy('date')->get();
+        $query = Transaction::with('category')->orderBy('date');
+
+        if ($month && $year) {
+            $query->whereMonth('date', $month)
+                ->whereYear('date', $year);
+        }
+
+        $this->transactions = $query->get();
     }
 
     public function collection(): Collection
@@ -31,13 +38,13 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                 if (file_exists($filePath)) {
                     $fileName = basename($t->attachment);
                     $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-                    
+
                     if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'])) {
                         $attachmentInfo = "🖼️ " . $fileName;
                     } elseif ($fileExtension === 'pdf') {
                         $attachmentInfo = "📄 " . $fileName;
                     } else {
-                        $attachmentInfo = "📎 " . $fileName; 
+                        $attachmentInfo = "📎 " . $fileName;
                     }
                 } else {
                     $attachmentInfo = "File tidak ditemukan";
@@ -46,11 +53,11 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                 $attachmentInfo = "Tidak ada lampiran";
             }
 
-            $paymentMethod = match($t->payment) {
+            $paymentMethod = match ($t->payment) {
                 'cash' => 'Tunai',
                 'transfer' => 'Transfer',
                 'giro' => 'Giro',
-                default => ucfirst($t->payment ?? '-')
+                default => ucfirst($t->payment ?? '-'),
             };
 
             return [
@@ -87,23 +94,22 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
     public function columnWidths(): array
     {
         return [
-            'A' => 5,   // No
-            'B' => 12,  // Tanggal
-            'C' => 12,  // Jenis
-            'D' => 20,  // Kategori
-            'E' => 30,  // Keterangan
-            'F' => 15,  // Nominal
-            'G' => 18,  // Metode Pembayaran (new)
-            'H' => 15,  // No Faktur
-            'I' => 12,  // Tanggal Faktur
-            'J' => 25,  // Lampiran
+            'A' => 5,
+            'B' => 12,
+            'C' => 12,
+            'D' => 20,
+            'E' => 30,
+            'F' => 15,
+            'G' => 18,
+            'H' => 15,
+            'I' => 12,
+            'J' => 25,
         ];
     }
 
     public function styles(Worksheet $sheet)
     {
         return [
-            // Style header
             1 => [
                 'font' => ['bold' => true, 'size' => 11],
                 'alignment' => [
@@ -112,10 +118,9 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
                 ],
                 'fill' => [
                     'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                    'startColor' => ['argb' => 'FFE6E6FA']
-                ]
+                    'startColor' => ['argb' => 'FFE6E6FA'],
+                ],
             ],
-          
             'J:J' => [
                 'alignment' => [
                     'horizontal' => Alignment::HORIZONTAL_LEFT,
@@ -129,49 +134,40 @@ class TransactionsExport implements FromCollection, WithHeadings, WithColumnWidt
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function(AfterSheet $event) {
+            AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet->getDelegate();
-                
                 $row = 2;
+
                 foreach ($this->transactions as $transaction) {
                     if ($transaction->attachment) {
                         $attachmentPath = storage_path('app/public/' . $transaction->attachment);
+
                         if (file_exists($attachmentPath)) {
-                            // Buat URL yang dapat diakses
                             $fileUrl = asset('storage/' . $transaction->attachment);
-                            
-                            // Tambahkan hyperlink ke cell
+
                             $sheet->getCell('J' . $row)->getHyperlink()->setUrl($fileUrl);
-                            
-                            // Style hyperlink
                             $sheet->getStyle('J' . $row)->getFont()
                                 ->setUnderline(true)
                                 ->getColor()->setARGB('FF0000FF');
-                                
-                            // Tambahkan tooltip
+
                             $fileName = basename($transaction->attachment);
                             $sheet->getComment('J' . $row)
                                 ->setAuthor('System')
                                 ->getText()->createTextRun('Klik untuk membuka: ' . $fileName);
                         } else {
-                            // Style file yang tidak ditemukan
                             $sheet->getStyle('J' . $row)->getFont()
                                 ->getColor()->setARGB('FFFF0000');
                         }
                     }
                     $row++;
                 }
-                
-                // Freeze header row
+
                 $sheet->freezePane('A2');
-                
-                // auto filter
+
                 $sheet->setAutoFilter('A1:J1');
-                
-                // Set row height
+
                 $sheet->getDefaultRowDimension()->setRowHeight(18);
-                
-                // Add borders
+
                 $highestRow = $sheet->getHighestRow();
                 $sheet->getStyle('A1:J' . $highestRow)->getBorders()->getAllBorders()
                     ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);

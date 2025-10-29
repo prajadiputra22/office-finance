@@ -19,8 +19,10 @@
 
         <main class="flex-1 min-w-0 p-6 bg-[#f5f5f5]">
             @section('header')
-                <header class="flex justify-end mb-8 animate-fadeIn">
-                    <h1 class="text-2xl font-bold text-[#F20E0F]"> TigaJaya <span class="text-[#0B3B9F]">Finance</span></h1>
+                <header class="flex justify-end items-center mb-8 animate-fadeIn">
+                    <img src="{{ asset('assets/picture/logo.png') }}" 
+                        alt="Logo TigaJaya Finance"
+                        class="w-20 md:w-28 lg:w-28 h-auto object-contain"> 
                 </header>
             @show
             @yield('content')

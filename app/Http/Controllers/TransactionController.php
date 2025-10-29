@@ -6,7 +6,6 @@ use App\Models\Transaction;
 use App\Models\Category;
 use App\Models\Income;
 use App\Models\Expenditure;
-use App\Charts\SalesChart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -53,6 +52,7 @@ class TransactionController extends Controller
         $transactions = $query->with('category')
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
+            ->take(15)
             ->get();
         $category = Category::all();
 

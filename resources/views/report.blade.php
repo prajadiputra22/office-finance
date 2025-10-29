@@ -3,19 +3,22 @@
 @section('title', 'Laporan')
 
 @section('header')
-    <header class="relative text-center mb-10">
-        <h1 class="text-xl font-bold">Transaksi setiap bulan</h1>
-        <h2 class="absolute right-0 top-0 text-2xl font-bold">
-            <span class="text-[#F20E0F]">TigaJaya</span>
-            <span class="text-[#0B3B9F]">Finance</span>
-        </h2>
-    </header>
+<header class="relative text-center mb-10">
+    <h1 class="text-xl font-bold">
+        Transaksi Bulan {{ $selectedMonthName }} {{ $selectedYear }}
+    </h1>
+    <div class="absolute right-0 top-0">
+       <img src="{{ asset('assets/picture/logo.png') }}" 
+        alt="Logo TigaJaya Finance"
+        class="w-20 md:w-28 lg:w-28 h-auto object-contain"> 
+    </div>
+</header>
 @endsection
 
 @section('content')
-    <div class="mb-8 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-        <h3 class="font-semibold text-lg mb-4">Filter Laporan</h3>
-        <form method="GET" action="{{ route('reports.index') }}" class="flex flex-col md:flex-row gap-4 items-end">
+ <div class="mb-8">
+        <h3 class="font-semibold text-lg mb-1">Filter Laporan</h3>
+        <form method="GET" action="{{ route('report.index') }}" class="flex flex-col md:flex-row gap-4 items-end">
             <div class="flex-1">
                 <label for="month" class="block text-sm font-medium text-gray-700 mb-2">Bulan</label>
                 <select name="month" id="month"
@@ -44,40 +47,33 @@
                     @endforeach
                 </select>
             </div>
+            <label for="year" class="block text-sm font-medium text-gray-700 mb-2">Tahun</label>
+            <select name="year" id="year"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]">
+                @forelse ($availableYears as $y)
+                    <option value="{{ $y }}" {{ request('year', now()->year) == $y ? 'selected' : '' }}>
+                        {{ $y }}
+                    </option>
+                @empty
+                    <option value="{{ now()->year }}" selected>{{ now()->year }}</option>
+                @endforelse
+            </select>
+        </div>
 
-            <div class="flex-1">
-                <label for="year" class="block text-sm font-medium text-gray-700 mb-2">Tahun</label>
-                <select name="year" id="year"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]">
-                    @forelse ($availableYears as $y)
-                        <option value="{{ $y }}" {{ request('year', now()->year) == $y ? 'selected' : '' }}>
-                            {{ $y }}
-                        </option>
-                    @empty
-                        <option value="{{ now()->year }}" selected>{{ now()->year }}</option>
-                    @endforelse
-                </select>
-            </div>
-
-            <div class="flex gap-2">
-                <button type="submit"
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-[#0B3B9F] text-white rounded-lg text-sm font-semibold hover:bg-blue-800 transition">
-                    Terapkan Filter
-                </button>
-                <a href="{{ route('reports.index') }}"
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition">
-                    Reset
-                </a>
-            </div>
-        </form>
-    </div>
-
+        <div class="flex gap-2">
+            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-[#0B3B9F] text-white rounded-lg text-sm font-semibold hover:bg-blue-800 transition">
+                Terapkan Filter
+            </button>
+            <a href="{{ route('report.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition">
+                Reset
+            </a>
+        </div>
+    </form>
+</div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-        <div
-            class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
-            <h2 class="font-semibold text-lg mb-4">Pemasukan setiap bulan</h2>
+        <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
+            <h2 class="font-semibold text-lg mb-4">Pemasukan Bulan {{ $selectedMonthName }} {{ $selectedYear }} </h2>
             <div class="bg-gray-100 py-3 rounded-lg text-xl font-bold text-blue-600 mb-4">
                 @if ($income == 0)
                     <span class="text-gray-500">Belum ada pemasukan</span>
@@ -110,10 +106,8 @@
                 </div>
             @endif
         </div>
-
-        <div
-            class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
-            <h2 class="font-semibold text-lg mb-4">Pengeluaran Setiap Bulan</h2>
+        <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
+            <h2 class="font-semibold text-lg mb-4">Pengeluaran Bulan {{ $selectedMonthName }} {{ $selectedYear }} </h2>
             <div class="bg-gray-100 py-3 rounded-lg text-xl font-bold text-red-600 mb-4">
                 @if ($expenditure == 0)
                     <span class="text-gray-500">Belum ada pengeluaran</span>
@@ -150,14 +144,12 @@
     </div>
 
     <div class="mt-10">
-        <a href="{{ route('reports.export') }}"
+        <a href="{{ route('reports.export', ['month' => request('month', now()->month), 'year' => request('year', now()->year)]) }}"
             class="inline-flex items-center gap-2 px-3 py-2 bg-white border-2 border-gray-200 rounded-lg text-sm font-semibold hover:bg-[#0B3B9F] hover:text-white hover:border-[#0B3B9F] transition">
-            <img src="{{ asset('assets/picture/download.png') }}" alt="download"
-                class="w-5 h-5 filter invert-0 hover:invert transition">
-            Unduh laporan
+            <img src="{{ asset('assets/picture/download.png') }}" alt="download" class="w-5 h-5 filter invert-0 hover:invert transition">
+            Unduh laporan Bulan {{ $selectedMonthName }} {{ $selectedYear }}
         </a>
     </div>
-
 @endsection
 
 @push('scripts')
