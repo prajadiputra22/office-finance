@@ -21,8 +21,4 @@ class BaseController extends Controller
             return $next($request);
         });
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/ui-ux
