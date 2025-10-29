@@ -179,8 +179,8 @@
 
             document.getElementById('loginForm').addEventListener('click', function(e) {
                 if (isFormDisabled) {
-                    toggleInputs(false);
 
+                    toggleInputs(false);
                     document.getElementById('emptyFieldsError').classList.add('hidden');
                     document.getElementById('usernameError').classList.add('hidden');
                     document.getElementById('passwordError').classList.add('hidden');
@@ -205,8 +205,7 @@
             });
 
             document.getElementById('usernameInput').addEventListener('input', function() {
-                if (isFormDisabled) return; 
-
+                if (isFormDisabled) return;
                 const usernameError = document.getElementById('usernameError');
                 const emptyFieldsError = document.getElementById('emptyFieldsError');
                 const serverErrors = document.getElementById('serverErrors');
@@ -228,7 +227,7 @@
             });
 
             document.getElementById('passwordInput').addEventListener('input', function() {
-                if (isFormDisabled) return; 
+                if (isFormDisabled) return;
 
                 const passwordError = document.getElementById('passwordError');
                 const emptyFieldsError = document.getElementById('emptyFieldsError');
