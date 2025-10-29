@@ -17,19 +17,11 @@
 
 @section('content')
     <div class="mb-6">
-<<<<<<< HEAD
-        <div class="flex justify-between items-center">
-            <h2 class="text-3xl font-bold text-[#F20E0F]">{{ $category->category_name }}</h2>
-            <div class="flex items-center gap-2">
-                <label for="yearFilter" class="text-sm font-medium text-gray-700">Filter Tahun:</label>
-                <select id="yearFilter" class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#F20E0F]" onchange="filterByYear(this.value)">
-=======
         <div class="flex justify-end items-center">
             <div class="flex items-center gap-2">
                 <label for="yearFilter" class="text-sm font-medium text-gray-700">Filter Tahun :</label>
                 <select id="yearFilter" class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]" 
                     onchange="filterByYear(this.value)">
->>>>>>> ui-ux
                     @foreach($availableYears as $availableYear)
                         <option value="{{ $availableYear }}" {{ $availableYear == $year ? 'selected' : '' }}>
                             {{ $availableYear }}
@@ -79,17 +71,11 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="bg-white rounded-lg shadow-md p-6">
-<<<<<<< HEAD
-            <h3 class="text-xl font-semibold text-[#F20E0F] mb-4">Transaksi per Bulan Tahun {{ $year }}</h3>
-            <div class="flex justify-center items-center h-80">
-                {!! $chart->container() !!}
-=======
             <h3 class="text-xl text-center font-semibold text-[#F20E0F] mb-4">Transaksi per Bulan Tahun {{ $year }}</h3>
             <div class="w-full overflow-hidden">
                 <div class="chart-responsive-wrapper">
                     {!! $chart->container() !!}
                 </div>
->>>>>>> ui-ux
             </div>
         </div>
 
@@ -136,15 +122,6 @@
         </div>
     </div>
 
-<<<<<<< HEAD
-    <div class="mt-4">
-        <a href="{{ route('categories.expenditure.export', ['category_id' => $category->id, 'year' => $year]) }}"
-           class="inline-flex items-center px-4 py-2 rounded-md bg-[#F20E0F] text-white hover:bg-[#ff1f1f] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F20E0F]">
-            <i class="fas fa-file-excel mr-2"></i> Unduh Laporan Excel
-        </a>
-    </div>
-
-=======
     <div class="mt-10">
         <a href="{{ route('categories.expenditure.export', ['category_id' => $category->id, 'year' => $year]) }}"
             class="inline-flex items-center gap-2 px-3 py-2 bg-white border-2 border-gray-200 rounded-lg text-sm font-semibold hover:bg-[#F20E0F] hover:text-white hover:border-[#F20E0F] transition">
@@ -153,7 +130,6 @@
         </a>
     </div>
     
->>>>>>> ui-ux
 @push('scripts')
 <script src="{{ $chart->cdn() }}"></script>
 {{ $chart->script() }}
@@ -167,11 +143,7 @@
             return;
         }
         
-<<<<<<< HEAD
-        window.location.href = `{{ route('category.expenditure') }}?category_id=${categoryId}&year=${selectedYear}`;
-=======
         window.location.href = `{{ route('category.expenditure') }}?category_id=${selectedYear}&year=${selectedYear}`;
->>>>>>> ui-ux
     }
 </script>
 @endpush
