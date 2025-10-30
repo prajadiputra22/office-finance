@@ -182,7 +182,6 @@
 
                 let hasError = false;
 
-                // Cek semua field kosong
                 if (username === '' && password === '' && confirmPassword === '') {
                     e.preventDefault();
                     emptyFieldsError.classList.remove('hidden');
@@ -192,7 +191,6 @@
                     toggleInputs(true);
                     hasError = true;
                 } else {
-                    // Cek masing-masing fields
                     if (username === '') {
                         e.preventDefault();
                         usernameError.classList.remove('hidden');
@@ -223,7 +221,6 @@
                     }
                 }
 
-                // Cek terms and conditions
                 if (!termsChecked && !hasError) {
                     e.preventDefault();
                     termsError.classList.remove('hidden');
@@ -240,7 +237,6 @@
                 if (isFormDisabled) {
                     toggleInputs(false);
 
-                    // Menyembunyakan pesan error
                     document.getElementById('emptyFieldsError').classList.add('hidden');
                     document.getElementById('usernameError').classList.add('hidden');
                     document.getElementById('passwordError').classList.add('hidden');
@@ -253,12 +249,10 @@
                         serverErrors.classList.add('hidden');
                     }
 
-                    // Remove error styling
                     document.getElementById('usernameInput').classList.remove('border-red-500');
                     document.getElementById('passwordInput').classList.remove('border-red-500');
                     document.getElementById('confirmPasswordInput').classList.remove('border-red-500');
 
-                    // Focus pada input yang pertama kosong
                     const usernameInput = document.getElementById('usernameInput');
                     const passwordInput = document.getElementById('passwordInput');
                     const confirmPasswordInput = document.getElementById('confirmPasswordInput');
@@ -273,7 +267,6 @@
                 }
             });
 
-            // Event listeners untuk input fields
             document.getElementById('usernameInput').addEventListener('input', function() {
                 if (isFormDisabled) return;
 
@@ -289,7 +282,6 @@
                         serverErrors.classList.add('hidden');
                     }
 
-                    // Check if all fields are filled to hide empty fields error
                     const password = document.getElementById('passwordInput').value.trim();
                     const confirmPassword = document.getElementById('confirmPasswordInput').value.trim();
                     if (password !== '' && confirmPassword !== '') {
@@ -317,7 +309,6 @@
                         serverErrors.classList.add('hidden');
                     }
 
-                    // Check password match
                     const confirmPassword = confirmPasswordInput.value.trim();
                     if (confirmPassword !== '' && this.value !== confirmPassword) {
                         passwordMismatchError.classList.remove('hidden');
@@ -329,7 +320,6 @@
                         confirmPasswordInput.classList.remove('border-red-500');
                     }
 
-                    // Check if all fields are filled to hide empty fields error
                     const username = document.getElementById('usernameInput').value.trim();
                     if (username !== '' && confirmPassword !== '') {
                         emptyFieldsError.classList.add('hidden');
@@ -356,7 +346,6 @@
                         serverErrors.classList.add('hidden');
                     }
 
-                    // Check password match
                     const password = passwordInput.value.trim();
                     if (password !== '' && this.value !== password) {
                         passwordMismatchError.classList.remove('hidden');
@@ -368,7 +357,6 @@
                         passwordInput.classList.remove('border-red-500');
                     }
 
-                    // Check if all fields are filled to hide empty fields error
                     const username = document.getElementById('usernameInput').value.trim();
                     if (username !== '' && password !== '') {
                         emptyFieldsError.classList.add('hidden');
@@ -378,7 +366,6 @@
                 }
             });
 
-            // Prevent typing ketika form disabled
             ['usernameInput', 'passwordInput', 'confirmPasswordInput'].forEach(id => {
                 document.getElementById(id).addEventListener('keydown', function(e) {
                     if (isFormDisabled) {
