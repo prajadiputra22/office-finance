@@ -25,7 +25,7 @@ class ExpenditureController extends Controller
             'no_factur' => 'required|integer',
             'date' => 'required|date',
         ];
-        
+
         if ($request->hasFile('attachment')) {
             $validationRules['attachment'] = 'file|mimes:jpg,jpeg,png,pdf|max:2048';
         }

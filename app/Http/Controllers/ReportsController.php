@@ -102,12 +102,6 @@ class ReportsController extends Controller
             }
         }
 
-        $availableYears = Transaction::selectRaw('YEAR(date) as year')
-            ->distinct()
-            ->orderBy('year', 'desc')
-            ->pluck('year')
-            ->toArray();
-
         return view('report', compact(
             'income', 'expenditure',
             'incomeChart', 'expenditureChart',

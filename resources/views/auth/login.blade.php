@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Office Finance</title>
+    <title>@yield('title', 'TigaJaya Finance')</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -12,7 +11,7 @@
 <style>
     input[type="checkbox"]:checked::after {
         content: "✔";
-        color: black;
+        color: white;
         font-size: 10px;
         position: absolute;
         top: 50%;
@@ -89,6 +88,7 @@
                             Login
                         </button>
                     </div>
+
                     <p class="mt-3 text-sm text-center whitespace-nowrap justify-center">
                         Belum punya akun? <a href="{{ route('auth.register') }}" class="text-[#F20E0F] hover:underline">daftar</a>
                         disini.
@@ -179,8 +179,8 @@
 
             document.getElementById('loginForm').addEventListener('click', function(e) {
                 if (isFormDisabled) {
-
                     toggleInputs(false);
+
                     document.getElementById('emptyFieldsError').classList.add('hidden');
                     document.getElementById('usernameError').classList.add('hidden');
                     document.getElementById('passwordError').classList.add('hidden');
@@ -205,7 +205,8 @@
             });
 
             document.getElementById('usernameInput').addEventListener('input', function() {
-                if (isFormDisabled) return;
+                if (isFormDisabled) return; 
+
                 const usernameError = document.getElementById('usernameError');
                 const emptyFieldsError = document.getElementById('emptyFieldsError');
                 const serverErrors = document.getElementById('serverErrors');
@@ -227,7 +228,7 @@
             });
 
             document.getElementById('passwordInput').addEventListener('input', function() {
-                if (isFormDisabled) return;
+                if (isFormDisabled) return; 
 
                 const passwordError = document.getElementById('passwordError');
                 const emptyFieldsError = document.getElementById('emptyFieldsError');

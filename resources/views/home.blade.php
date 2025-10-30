@@ -3,7 +3,6 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <main class="flex-1 py-20">
         <section class="mb-8" aria-labelledby="saldo-title">
             <h2 id="saldo-title" class="sr-only">Informasi Saldo</h2>
             <div class="grid md:grid-cols-3 gap-6 mb-6">
@@ -81,10 +80,11 @@
             
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200" role="img" aria-label="Grafik Keuangan">
                 <div class="mb-4">
+                    {!! $chart->container() !!}
                 </div>
-                {!! $chart->container() !!}
             </div>
         </section>
+
 
         <section class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm" aria-labelledby="transaksi-title">
             <h2 id="transaksi-title" class="text-xl font-semibold mb-4 text-gray-800">Transaksi Terbaru</h2>
@@ -100,14 +100,14 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Kategori
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Tipe
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Jumlah
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Keterangan
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Deskripsi
                                 </th>
                             </tr>
                         </thead>
@@ -117,10 +117,10 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ \Carbon\Carbon::parse($transaction->date)->format('d/m/Y') }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 ">
                                         {{ $transaction->category->category_name ?? '-' }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <span
                                             class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
                                     {{ $transaction->type == 'income' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800' }}">
@@ -128,12 +128,12 @@
                                         </span>
                                     </td>
                                     <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium 
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center
                                 {{ $transaction->type == 'income' ? 'text-blue-600' : 'text-red-600' }}">
                                         {{ $transaction->type == 'income' ? '+' : '-' }} Rp
                                         {{ number_format($transaction->amount, 0, ',', '.') }}
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate"
+                                    <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate text-center"
                                         title="{{ $transaction->description ?? '-' }}">
                                         {{ $transaction->description ?? '-' }}
                                     </td>
@@ -158,7 +158,6 @@
                 </div>
             @endif
         </section>
-    </main>
 
     @push('scripts')
         <script src="{{ $chart->cdn() }}"></script>
