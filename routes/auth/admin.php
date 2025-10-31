@@ -5,10 +5,10 @@ use App\Http\Controllers\AuthController;
 
 Route::middleware('guest:admin')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('admin.login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-    Route::get('/registrasi', [AuthController::class, 'showRegisterForm'])->name('admin.register');
-    Route::post('/registrasi', [AuthController::class, 'register']);
+    Route::get('/registrasi', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/registrasi', [AuthController::class, 'register'])->name('register');
 });
 
 Route::middleware('auth:admin')->group(function () {

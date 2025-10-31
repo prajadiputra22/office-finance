@@ -10,12 +10,17 @@ use Illuminate\Validation\Rules;
 
 class AuthController extends Controller
 {
+    /**
+     * Show admin login form
+     */
     public function showLoginForm()
     {
         return view('auth.admin.login');
     }
 
-    # Proses login
+    /**
+     * Handle admin login
+     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -33,12 +38,17 @@ class AuthController extends Controller
         ])->onlyInput('username');
     }
 
+    /**
+     * Show admin register form
+     */
     public function showRegisterForm()
     {
         return view('auth.admin.register');
     }
 
-    # Proses register
+    /**
+     * Handle admin registration
+     */
     public function register(Request $request)
     {
         $request->validate([
@@ -54,7 +64,9 @@ class AuthController extends Controller
         return redirect()->route('auth.admin.login')->with('success', 'Registration successful! Please login.');
     }
 
-    # Proses reset
+    /**
+     * Handle admin password reset
+     */
     public function reset(Request $request)
     {
         $request->validate([
@@ -73,6 +85,9 @@ class AuthController extends Controller
         return back()->with('status', 'Password berhasil diubah.');
     }
 
+    /**
+     * Handle admin logout
+     */
     public function logout(Request $request)
     {
         Auth::guard('admin')->logout();
