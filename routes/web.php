@@ -1,11 +1,11 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\CategoryTransactionController;
 
@@ -13,27 +13,10 @@ Route::get('/', function () {
     return view('splash');
 })->name('splash');
 
-Route::get('/login', function () {
-    return redirect()->route('auth.login');
-})->name('login');
+Route::prefix('')->name('')->group(base_path('routes/auth/user.php'));
 
-Route::middleware('guest:admin')->group(function () {
-    Route::get('/auth/login', [AuthController::class, 'showLoginForm'])->name('auth.login');
-    Route::post('/auth/login', [AuthController::class, 'login']);
+Route::prefix('admin')->name('auth.admin.')->group(base_path('routes/auth/admin.php'));
 
-    Route::get('/auth/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
-    Route::post('/auth/register', [AuthController::class, 'register']);
-});
-
-Route::middleware('auth:admin')->group(function () {
-    Route::post('/admin/logout', [AuthController::class, 'logout'])->name('auth.logout');
-});
-
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form');
-Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register.form');
-Route::post('/register', [AuthController::class, 'register'])->name('register');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');

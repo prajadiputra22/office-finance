@@ -13,8 +13,14 @@
         class="w-40 md:w-56 lg:w-64 h-auto splash-animation object-contain"> 
 <script>
 setTimeout(function(){
-    window.location.href = "{{ Auth::guard('admin')->check() ? route('home') : route('auth.login') }}";
+    @if(Auth::guard('admin')->check())
+        window.location.href = "{{ route('home') }}";
+    @elseif(Auth::guard('web')->check())
+        window.location.href = "{{ route('home') }}";
+    @else
+        window.location.href = "{{ route('login') }}";
+    @endif
 }, 3000);
 </script>
 </body>
-</html> 
+</html>

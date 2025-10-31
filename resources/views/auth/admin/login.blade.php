@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login User - TigaJaya Finance</title>
+    <title>@yield('title', 'TigaJaya Finance')</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -29,6 +29,7 @@
             <div class="mb-1 flex flex-col items-center justify-center">
                 <img src="{{ asset('assets/picture/logo.png') }}" alt="logo TigaJaya Finance"
                     class="w-36 md:w-40 lg:w-40 mb-6 object-contain">
+                <h1 class="text-2xl font-bold text-[#0B3B9F] mb-6">Login Admin</h1>
             </div>
 
             <div class="flex flex-col items-center">
@@ -43,7 +44,7 @@
                     </div>
                 @endif
 
-                <form id="loginForm" method="POST" action="{{ route('auth.login') }}"
+                <form id="loginForm" method="POST" action="{{ route('auth.admin.login') }}"
                     class="flex flex-col w-80 items-center">
                     @csrf
                     <div id="username" class="w-full mt-2">
@@ -56,7 +57,9 @@
                         </div>
 
                         @error('username')
-                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @if ($message !== 'Incorrect username or password.')
+                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @endif
                         @enderror
                     </div>
 
@@ -74,14 +77,14 @@
                     </div>
 
                     <div id="emptyFieldsError" class="hidden mt-1 mb-4 w-full text-left">
-                        <p class="text-red-500 text-sm font-medium">Username dan password tidak boleh kosong</p>
+                        <p class="text-red-500 text-sm font-medium">Username and password cannot be empty</p>
                     </div>
 
                     <div class="flex items-center justify-between mt-2 mb-4 w-full">
                         <div class="flex items-center">
                             <input type="checkbox" name="remember" id="remember"
                                 class="w-4 h-4 mr-2 appearance-none rounded border border-gray-400 checked:bg-[#0B3B9F] checked:border-[#0B3B9F] relative">
-                            <label for="remember" class="text-sm text-gray-700">Ingat saya</label>
+                            <label for="remember" class="text-sm text-gray-700">Remember me</label>
                         </div>
                     </div>
 
@@ -93,7 +96,7 @@
                     </div>
 
                     <p class="mt-3 text-sm text-center whitespace-nowrap justify-center">
-                        Belum punya akun? <a href="{{ route('auth.register') }}"
+                        Belum punya akun? <a href="{{ route('auth.admin.register') }}"
                             class="text-[#F20E0F] hover:underline">daftar</a>
                         disini.
                     </p>

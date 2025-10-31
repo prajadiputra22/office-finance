@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('auth.login');
+        return view('auth.admin.login');
     }
 
     # Proses login
@@ -35,7 +35,7 @@ class AuthController extends Controller
 
     public function showRegisterForm()
     {
-        return view('auth.register');
+        return view('auth.admin.register');
     }
 
     # Proses register
@@ -51,7 +51,7 @@ class AuthController extends Controller
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
         ]);
 
-        return redirect()->route('auth.login')->with('success', 'Registration successful! Please login.');
+        return redirect()->route('auth.admin.login')->with('success', 'Registration successful! Please login.');
     }
 
     # Proses reset
@@ -80,6 +80,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('auth.admin.login');
     }
 }
