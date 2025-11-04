@@ -1,4 +1,4 @@
-<aside class="w-[200px] bg-[#0B3B9F] text-white p-5 flex flex-col shadow-md overflow-y-auto">
+<aside class="hidden md:flex w-full md:w-[200px] bg-[#0B3B9F] text-white p-4 md:p-5 flex-col shadow-md overflow-y-auto">
     <nav>
         <ul class="space-y-2">
             <li>
@@ -97,3 +97,40 @@
     </div>
     </nav> 
 </aside>
+
+<nav class="fixed md:hidden bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 py-2 z-40">
+    <ul class="flex justify-around items-center">
+        <li>
+            <a href="{{ route('home') }}" 
+                class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition
+                {{ request()->is('home') ? 'text-blue-600' : 'text-gray-600 hover:text-gray-800' }}">
+                <i class="fas fa-home text-xl mb-1"></i>
+                <span class="text-xs">Home</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('transactions.index') }}" 
+                class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition
+                {{ request()->is('transactions') ? 'text-blue-600' : 'text-gray-600 hover:text-gray-800' }}">
+                <i class="fas fa-exchange-alt text-xl mb-1"></i>
+                <span class="text-xs">Transaksi</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('category.index') }}" 
+                class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition
+                {{ request()->is('category') ? 'text-blue-600' : 'text-gray-600 hover:text-gray-800' }}">
+                <i class="fas fa-th text-xl mb-1"></i>
+                <span class="text-xs">Kategori</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('report.index') }}" 
+                class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition
+                {{ request()->is('report') ? 'text-blue-600' : 'text-gray-600 hover:text-gray-800' }}">
+                <i class="fas fa-file-alt text-xl mb-1"></i>
+                <span class="text-xs">Laporan</span>
+            </a>
+        </li>
+    </ul>
+</nav>
