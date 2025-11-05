@@ -41,7 +41,7 @@
                     </div>
                 @endif
 
-                <form id="registerForm" method="POST" action="{{ route('auth.register') }}"  class="flex flex-col w-80 items-center">
+                <form id="registerForm" method="POST" action="{{ route('register') }}"  class="flex flex-col w-80 items-center">
                     @csrf
                     <!-- Changed from name field to username field -->
                     <div id="username" class="mt-2 w-full">
@@ -112,7 +112,7 @@
                     </div>
 
                     <p class="mt-3 text-sm text-center whitespace-nowrap">
-                        Sudah punya akun? <a href="{{ route('auth.login') }}" class="text-[#0B3B9F] hover:underline">login</a> disini.
+                        Sudah punya akun? <a href="{{ route('login') }}" class="text-[#0B3B9F] hover:underline">login</a> disini.
                     </p>
                 </form>
             </div>

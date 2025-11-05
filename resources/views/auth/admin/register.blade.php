@@ -39,7 +39,7 @@
                     </div>
                 @endif
 
-                <form id="registerForm" method="POST" action="{{ route('auth.admin.register') }}"  class="flex flex-col w-80 items-center">
+                <form id="registerForm" method="POST" action="{{ route('admin.register') }}"  class="flex flex-col w-80 items-center">
                     @csrf
                     <div id="username" class="mt-2 w-full">
                         <label for="usernameInput" class="sr-only">Username</label>
@@ -107,7 +107,7 @@
                     </div>
 
                     <p class="mt-3 text-sm text-center whitespace-nowrap">
-                        Sudah punya akun? <a href="{{ route('auth.admin.login') }}" class="text-[#0B3B9F] hover:underline">login</a> disini.
+                        Sudah punya akun? <a href="{{ route('admin.login') }}" class="text-[#0B3B9F] hover:underline">login</a> disini.
                     </p>
                 </form>
             </div>

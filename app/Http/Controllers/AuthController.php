@@ -61,7 +61,7 @@ class AuthController extends Controller
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
         ]);
 
-        return redirect()->route('auth.admin.login')->with('success', 'Registration successful! Please login.');
+        return redirect()->route('admin.login')->with('success', 'Registration successful! Please login.');
     }
 
     /**
@@ -86,6 +86,14 @@ class AuthController extends Controller
     }
 
     /**
+     * Show admin dashboard
+     */
+    public function dashboard()
+    {
+        return view('home');
+    }
+
+    /**
      * Handle admin logout
      */
     public function logout(Request $request)
@@ -95,6 +103,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('auth.admin.login');
+        return redirect()->route('admin.login');
     }
 }

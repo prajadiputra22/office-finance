@@ -85,7 +85,7 @@
                     <button @click="confirm=false" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">
                         Batal
                     </button>
-                    <form method="POST" action="@if(Auth::guard('admin')->check()){{ route('auth.admin.logout') }}@else{{ route('logout') }}@endif">
+                    <form method="POST" action="@if(Auth::guard('admin')->check()){{ route('admin.logout') }}@else{{ route('logout') }}@endif">
                         @csrf
                         <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
                             Ya, Keluar
