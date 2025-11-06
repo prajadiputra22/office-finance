@@ -20,6 +20,7 @@ class Admin extends Authenticatable
     protected $fillable = [
         'username', 
         'password',
+        'role',
     ];
 
     /**
@@ -39,5 +40,9 @@ class Admin extends Authenticatable
      */
     protected $casts = [
         'password' => 'hashed',
+    ];
+
+    protected $attributes = [
+        'role' => 'admin',
     ];
 }

@@ -59,6 +59,7 @@ class AuthController extends Controller
         $admin = \App\Models\Admin::create([
             'username' => $request->username,
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'role' => 'admin',
         ]);
 
         return redirect()->route('admin.login')->with('success', 'Registration successful! Please login.');

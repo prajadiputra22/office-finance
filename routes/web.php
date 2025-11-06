@@ -17,7 +17,7 @@ Route::prefix('admin')->name('admin.')->group(base_path('routes/auth/admin.php')
 
 require base_path('routes/auth/user.php');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth:web,admin'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');

@@ -44,19 +44,7 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Check if user is admin
-     */
-    public function isAdmin(): bool
-    {
-        return $this->role === 'admin';
-    }
-
-    /**
-     * Check if user is regular user
-     */
-    public function isUser(): bool
-    {
-        return $this->role === 'user';
-    }
+    protected $attributes = [
+        'role' => 'user',
+    ];
 }

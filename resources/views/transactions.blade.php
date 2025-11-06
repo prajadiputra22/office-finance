@@ -40,6 +40,9 @@
 <div x-data="transactionManager()">
     <div class="w-full max-w-screen-xl">
         <div class="flex gap-5 mb-8 flex-wrap animate-fadeIn">
+
+        @auth
+            @if(auth()->user()->role === 'admin')
         <button
         type="button"
         @click="showAddModal = true"
@@ -47,6 +50,8 @@
             <span class="mr-2 font-bold text-xl">+</span>
             Tambah Transaksi
         </button>
+            @endif
+        @endauth
         
         <div class="flex gap-5 flex-1 flex-wrap">
             <div class="flex-1 p-6 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
@@ -72,6 +77,9 @@
                         </span>
                     @endif
                 </h2>
+
+                @auth
+                    @if(auth()->user()->role === 'admin')
                 <div class="flex gap-3">
                     <button @click="editSelected()" :disabled="selectedTransactions.length !== 1"
                         class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition text-sm">
@@ -92,6 +100,8 @@
                         Hapus
                     </button>
                 </div>
+                    @endif
+                @endauth
             </div>
              <div x-data="{
                 selectedDate: '',
@@ -118,11 +128,16 @@
                   <table class="w-full text-center border border-[#e1e5e9] rounded-lg overflow-hidden text-sm min-w-[800px] whitespace-nowrap">
                     <thead class="bg-[#f8f9fa]">
                       <tr>
+                        {{-- Only show checkbox column for admin users --}}
+                        @auth
+                            @if(auth()->user()->role === 'admin')
                         <th class="p-4 font-semibold text-[#333] text-center">
                           <input type="checkbox" @change="toggleSelectAll()" :checked="selectAllChecked"
                               :indeterminate="selectAllIndeterminate"
                               class="w-4 h-4 mt-2 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
                         </th>
+                            @endif
+                        @endauth
                         <th class="p-4 font-semibold text-[#333] text-center relative">
                           <div class="inline-block">
                             <label for="filterMonth" class="text-sm font-large text-gray-600">Tanggal Transaksi</label>
@@ -157,11 +172,16 @@
                                     hasVisible = true;
                                 }
                             })">
+                            {{-- Only show checkbox for admin users --}}
+                            @auth
+                                @if(auth()->user()->role === 'admin')
                             <td class="p-4 text-center">
                                 <input type="checkbox" x-model="selectedTransactions" value="{{ $trx->id }}"
                                     @change="updateSelectAllState()"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
                             </td>
+                                @endif
+                            @endauth
                             <td class="p-4 text-left">{{ \Carbon\Carbon::parse($trx->date)->format('d/m/Y') }}</td>
                             <td class="p-4 text-left">
                                 {{ $trx->category->name ?? ($trx->category->category_name ?? 'Tidak ada kategori') }}
@@ -220,6 +240,9 @@
             @endif
         </div>
 
+       {{-- Only show "Tambah Transaksi" modal for admin users --}}
+       @auth
+           @if(auth()->user()->role === 'admin')
        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-show="showAddModal"
             x-transition.opacity style="display: none;">
             <div class="bg-white p-4 rounded-xl w-full max-w-sm shadow-lg max-h-[90vh] overflow-y-auto"
@@ -334,7 +357,12 @@
       </form>
     </div>
   </div>
+       @endif
+       @endauth
 
+  {{-- Only show "Edit Transaksi" modal for admin users --}}
+  @auth
+      @if(auth()->user()->role === 'admin')
   <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-show="showEditModal"
     x-transition.opacity style="display: none;">
     <div class="bg-white p-4 rounded-xl w-full max-w-sm shadow-lg max-h-[90vh] overflow-y-auto"
@@ -463,6 +491,8 @@
       </form>
     </div>
   </div>
+      @endif
+  @endauth
   
    <script>
     function transactionManager() {
@@ -727,5 +757,6 @@
       }
     }
   </script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
