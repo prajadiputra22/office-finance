@@ -20,7 +20,6 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                // Redirect berdasarkan guard yang digunakan
                 if ($guard === 'admin') {
                     return redirect()->route('home');
                 }

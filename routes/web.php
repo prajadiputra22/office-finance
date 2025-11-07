@@ -6,8 +6,6 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\CategoryTransactionController;
-use App\Http\Controllers\UserAuthController;
-use App\Http\Controllers\AdminAuthController;
 
 Route::get('/', function () {
     return view('splash');
@@ -25,12 +23,13 @@ Route::middleware(['auth:web,admin'])->group(function () {
 
     Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
     Route::get('/api/category/{type}', [CategoryController::class, 'getByType'])->name('api.category.byType');
-    Route::get('/category/income', [CategoryTransactionController::class, 'income'])->name('category.income');
-    Route::get('/category/expenditure', [CategoryTransactionController::class, 'expenditure'])->name('category.expenditure');
+    
+    Route::get('/category/income/{slug}', [CategoryTransactionController::class, 'income'])->name('category.income');
+    Route::get('/category/expenditure/{slug}', [CategoryTransactionController::class, 'expenditure'])->name('category.expenditure');
 
-    Route::get('/categories/income/export', [CategoryTransactionController::class, 'exportIncome'])
+    Route::get('/categories/income/{slug}/export', [CategoryTransactionController::class, 'exportIncome'])
         ->name('categories.income.export');
-    Route::get('/categories/expenditure/export', [CategoryTransactionController::class, 'exportExpenditure'])
+    Route::get('/categories/expenditure/{slug}/export', [CategoryTransactionController::class, 'exportExpenditure'])
         ->name('categories.expenditure.export');
 
     Route::get('/report', [ReportsController::class, 'index'])->name('report.index');
@@ -38,13 +37,11 @@ Route::middleware(['auth:web,admin'])->group(function () {
     Route::get('/reports/export', [ReportsController::class, 'export'])->name('reports.export');
 
     Route::middleware('admin')->group(function () {
-        // Transaction CRUD
         Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
         Route::put('/transactions/{id}', [TransactionController::class, 'update']);
         Route::delete('/transactions/{id}', [TransactionController::class, 'destroy']);
         Route::post('/transactions/bulk-delete', [TransactionController::class, 'bulkDelete']);
 
-        // Category CRUD
         Route::post('/category', [CategoryController::class, 'store'])->name('category.store');
         Route::delete('/category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
     });

@@ -42,7 +42,7 @@
                 <ul x-show="open"  x-transition class="ml-6 mt-2 space-y-1 text-sm">
                     @if(isset($sidebarIncomeCategories) && $sidebarIncomeCategories->count() > 0)
                         @foreach($sidebarIncomeCategories as $category)
-                            <a href="{{ route('category.income', ['category_id' => $category->id]) }}" 
+                            <a href="{{ route('category.income', ['slug' => $category->slug]) }}" 
                                 class="block px-3 py-1 text-sm hover:text-[#F20E0F] cursor-pointer transition group hover:bg-white/20 transition transform hover:translate-x-1 rounded-lg">
                                 {{ $category->category_name }}
                             </a>
@@ -60,7 +60,8 @@
                 <ul x-show="open" x-transition class="ml-6 mt-2 space-y-1 text-sm">
                     @if(isset($sidebarExpenditureCategories) && $sidebarExpenditureCategories->count() > 0)
                         @foreach($sidebarExpenditureCategories as $category)
-                            <a href="{{ route('category.expenditure', ['category_id' => $category->id]) }}" 
+                            {{-- Updated to use slug instead of category_id query parameter --}}
+                            <a href="{{ route('category.expenditure', ['slug' => $category->slug]) }}" 
                                 class="block px-3 py-1 text-sm hover:text-[#F20E0F] cursor-pointer transition group hover:bg-white/20 transition transform hover:translate-x-1 rounded-lg">
                                 {{ $category->category_name }}
                             </a>

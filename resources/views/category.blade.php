@@ -27,7 +27,7 @@
                         <th class="px-6 py-4 text-left font-semibold text-gray-900 w-16">No</th>
                         <th class="px-6 py-4 text-left font-semibold text-gray-900 w-1/4">Status</th>
                         <th class="px-6 py-4 text-left font-semibold text-gray-900 w-1/2">Kategori</th>
-                        {{-- Tampilkan kolom action hanya untuk admin --}}
+
                         @auth
                             @if(auth()->user()->role === 'admin')
                         <th class="px-6 py-4 text-center font-semibold text-gray-900 w-1/4 relative">Action</th>
@@ -47,7 +47,7 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-gray-900">{{ $category->category_name }}</td>
-                            {{-- Tampilkan tombol delete hanya untuk admin --}}
+
                             @auth
                                 @if(auth()->user()->role === 'admin')
                             <td class="px-6 py-4 text-center">
@@ -111,8 +111,6 @@
         </div>
     </section>
 
-
-    {{-- Modal tambah kategori hanya untuk admin --}}
     @auth
         @if(auth()->user()->role === 'admin')
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"

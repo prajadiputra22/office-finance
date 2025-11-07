@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,8 +12,8 @@
 <style>
     input[type="checkbox"]:checked::after {
         content: "✓";
-        color: white;             
-        font-size: 10px;         
+        color: white;
+        font-size: 10px;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -20,15 +21,18 @@
     }
 </style>
 
-<body class="min-h-screen flex items-center justify-center font-poppins bg-cover bg-center bg-no-repeat bg-fixed" 
-      style="background-image: linear-gradient(rgba(255,255,255,0.9), rgba(251,252,255,0.85)), url('/assets/picture/background.png');">
+<body class="min-h-screen flex items-center justify-center font-poppins bg-cover bg-center bg-no-repeat bg-fixed"
+    style="background-image: linear-gradient(rgba(255,255,255,0.9), rgba(251,252,255,0.85)), url('/assets/picture/background.png');">
     <main class="flex items-center justify-center w-full h-screen">
-        <section class="bg-white/90 backdrop-blur-md p-6 md:p-8 rounded-xl shadow-lg flex flex-col items-center w-[90%] max-w-sm animate-fadeIn">
+        <section
+            class="bg-white/90 backdrop-blur-md p-6 md:p-8 rounded-xl shadow-lg flex flex-col items-center w-[90%] max-w-sm animate-fadeIn">
             <div class="mb-1 flex flex-col items-center justify-center">
-                <img src="{{ asset('assets/picture/logo.png') }}"  alt="logo TigaJaya Finance" class="w-36 md:w-40 lg:w-40 mb-6 object-contain">
+                <img src="{{ asset('assets/picture/logo.png') }}" alt="logo TigaJaya Finance"
+                    class="w-36 md:w-40 lg:w-40 mb-6 object-contain">
             </div>
 
             <div class="flex flex-col items-center">
+                <h1 class="text-2xl font-bold text-[#0B3B9F] mb-6">Daftar Admin</h1>
                 @if ($errors->any())
                     <div id="serverErrors" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                         <ul class="list-disc pl-5">
@@ -39,7 +43,8 @@
                     </div>
                 @endif
 
-                <form id="registerForm" method="POST" action="{{ route('admin.register') }}"  class="flex flex-col w-80 items-center">
+                <form id="registerForm" method="POST" action="{{ route('admin.register') }}"
+                    class="flex flex-col w-80 items-center">
                     @csrf
                     <div id="username" class="mt-2 w-full">
                         <label for="usernameInput" class="sr-only">Username</label>
@@ -70,7 +75,8 @@
 
                     <div id="confirmPassword" class="w-full">
                         <label for="confirmPasswordInput" class="sr-only">Confirm Password</label>
-                        <input id="confirmPasswordInput" name="password_confirmation" type="password" placeholder="Confirm Password"
+                        <input id="confirmPasswordInput" name="password_confirmation" type="password"
+                            placeholder="Confirm Password"
                             class="w-full px-4 py-3 border-2 border-[#0B3B9F] rounded-lg mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
                         <div id="confirmPasswordError" class="hidden mt-1 mb-3">
                             <p class="text-red-500 text-xs italic text-left">Confirm password is required.</p>
@@ -92,7 +98,8 @@
                         <div class="flex items-center">
                             <input type="checkbox" name="terms" id="terms"
                                 class="w-4 h-4 mr-2 appearance-none rounded border border-gray-400 checked:bg-[#0B3B9F] checked:border-[#0B3B9F] relative">
-                            <label for="terms" class="text-sm text-gray-700">Saya setuju dengan syarat & ketentuan</label>
+                            <label for="terms" class="text-sm text-gray-700">Saya setuju dengan syarat &
+                                ketentuan</label>
                         </div>
                     </div>
                     <div id="termsError" class="hidden mt-1 mb-4">
@@ -107,7 +114,8 @@
                     </div>
 
                     <p class="mt-3 text-sm text-center whitespace-nowrap">
-                        Sudah punya akun? <a href="{{ route('admin.login') }}" class="text-[#0B3B9F] hover:underline">login</a> disini.
+                        Sudah punya akun? <a href="{{ route('admin.login') }}"
+                            class="text-[#0B3B9F] hover:underline">login</a> disini.
                     </p>
                 </form>
             </div>

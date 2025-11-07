@@ -10,28 +10,26 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CategoryTransactionsExport;
 
 class CategoryTransactionController extends Controller
-{
-    public function income(Request $request)
+{   
+    public function income(Request $request, $slug)
     {
-        $categoryId = $request->query('category_id');
+        $category = Category::where('slug', $slug)->firstOrFail();
         $year = $request->query('year', now()->year);
         
-        $category = Category::findOrFail($categoryId);
-        
-        $transactions = Transaction::where('category_id', $categoryId)
+        $transactions = Transaction::where('category_id', $category->id)
             ->where('type', 'income')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
             ->get();
         
-        $recentTransactions = Transaction::where('category_id', $categoryId)
+        $recentTransactions = Transaction::where('category_id', $category->id)
             ->where('type', 'income')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
             ->limit(10)
             ->get();
         
-        $monthlyData = Transaction::where('category_id', $categoryId)
+        $monthlyData = Transaction::where('category_id', $category->id)
             ->where('type', 'income')
             ->whereYear('date', $year)
             ->selectRaw('MONTH(date) as month, SUM(amount) as total')
@@ -61,7 +59,7 @@ class CategoryTransactionController extends Controller
             ->setHeight(250)
             ->setColors(['#0B3B9F']);
         
-        $availableYears = Transaction::where('category_id', $categoryId)
+        $availableYears = Transaction::where('category_id', $category->id)
             ->where('type', 'income')
             ->selectRaw('YEAR(date) as year')
             ->distinct()
@@ -72,27 +70,25 @@ class CategoryTransactionController extends Controller
         return view('transactions.income', compact('category', 'chart', 'recentTransactions', 'year', 'availableYears'));
     }
     
-    public function expenditure(Request $request)
+    public function expenditure(Request $request, $slug)
     {
-        $categoryId = $request->query('category_id');
+        $category = Category::where('slug', $slug)->firstOrFail();
         $year = $request->query('year', now()->year);
         
-        $category = Category::findOrFail($categoryId);
-        
-        $transactions = Transaction::where('category_id', $categoryId)
+        $transactions = Transaction::where('category_id', $category->id)
             ->where('type', 'expenditure')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
             ->get();
         
-        $recentTransactions = Transaction::where('category_id', $categoryId)
+        $recentTransactions = Transaction::where('category_id', $category->id)
             ->where('type', 'expenditure')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
             ->limit(10)
             ->get();
         
-        $monthlyData = Transaction::where('category_id', $categoryId)
+        $monthlyData = Transaction::where('category_id', $category->id)
             ->where('type', 'expenditure')
             ->whereYear('date', $year)
             ->selectRaw('MONTH(date) as month, SUM(amount) as total')
@@ -123,7 +119,7 @@ class CategoryTransactionController extends Controller
             ->setColors(['#F20E0F']);
             
         
-        $availableYears = Transaction::where('category_id', $categoryId)
+        $availableYears = Transaction::where('category_id', $category->id)
             ->where('type', 'expenditure')
             ->selectRaw('YEAR(date) as year')
             ->distinct()
@@ -134,18 +130,13 @@ class CategoryTransactionController extends Controller
         return view('transactions.expenditure', compact('category', 'chart', 'recentTransactions', 'year', 'availableYears'));
     }
 
-    public function exportIncome(Request $request)
+    public function exportIncome(Request $request, $slug)
     {
-        $categoryId = $request->query('category_id');
+        $category = Category::where('slug', $slug)->firstOrFail();
+        $categoryId = $category->id;
         $year = $request->query('year', now()->year);
 
-        $categoryName = null;
-        if ($categoryId) {
-            $category = Category::find($categoryId);
-            $categoryName = $category ? $category->category_name : 'semua_kategori';
-        } else {
-            $categoryName = 'semua_kategori';
-        }
+        $categoryName = $category->category_name;
         
         return Excel::download(
             new CategoryTransactionsExport($categoryId, 'income', $year),
@@ -153,18 +144,13 @@ class CategoryTransactionController extends Controller
         );
     }
 
-    public function exportExpenditure(Request $request)
+    public function exportExpenditure(Request $request, $slug)
     {
-        $categoryId = $request->query('category_id');
+        $category = Category::where('slug', $slug)->firstOrFail();
+        $categoryId = $category->id;
         $year = $request->query('year', now()->year);
 
-        $categoryName = null;
-        if ($categoryId) {
-            $category = Category::find($categoryId);
-            $categoryName = $category ? $category->category_name : 'semua_kategori';
-        } else {
-            $categoryName = 'semua_kategori';
-        }
+        $categoryName = $category->category_name;
         
         return Excel::download(
             new CategoryTransactionsExport($categoryId, 'expenditure', $year),

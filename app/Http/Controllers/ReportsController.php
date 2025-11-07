@@ -65,14 +65,12 @@ class ReportsController extends Controller
                              '#B91C1C','#991B1B','#7F1D1D','#9F1239','#BE123C','#E11D48'];
 
         $incomeChart = (new LarapexChart)->pieChart()
-            ->setTitle('Pemasukan per Kategori')
             ->setDataset($incomeValues)
             ->setLabels($incomeLabels)
             ->setHeight(300)
             ->setColors($incomeColors);
 
         $expenditureChart = (new LarapexChart)->pieChart()
-            ->setTitle('Pengeluaran per Kategori')
             ->setDataset($expenditureValues)
             ->setLabels($expenditureLabels)
             ->setHeight(300)

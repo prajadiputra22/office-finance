@@ -29,8 +29,6 @@
             </div>
 
             <div class="flex flex-col items-center">
-                <h1 class="text-2xl font-bold text-[#0B3B9F] mb-6">Daftar User</h1>
-
                 @if ($errors->any())
                     <div id="serverErrors" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                         <ul class="list-disc pl-5">
@@ -43,7 +41,6 @@
 
                 <form id="registerForm" method="POST" action="{{ route('register') }}"  class="flex flex-col w-80 items-center">
                     @csrf
-                    <!-- Changed from name field to username field -->
                     <div id="username" class="mt-2 w-full">
                         <label for="usernameInput" class="sr-only">Username</label>
                         <input id="usernameInput" name="username" type="text" placeholder="Username"
@@ -57,8 +54,6 @@
                             <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    <!-- Removed email field -->
 
                     <div id="password" class="w-full">
                         <label for="passwordInput" class="sr-only">Password</label>

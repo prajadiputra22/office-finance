@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -27,7 +28,10 @@ class CategoryController extends Controller
             'type' => 'required|in:income,expenditure',
         ]);
 
-        Category::create($request->only('category_name', 'type'));
+        $data = $request->only('category_name', 'type');
+        $data['slug'] = Str::slug($request->input('category_name'));
+
+        Category::create($data);
 
         return redirect()->route('category.index')->with('success', 'Kategori berhasil ditambahkan.');
     }

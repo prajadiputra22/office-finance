@@ -7,17 +7,13 @@ use Illuminate\Support\Facades\Auth;
 
 class Authenticate extends Middleware
 {
-    /**
-     * Get the path the user should be redirected to when they are not authenticated.
-     */
     protected function redirectTo($request): ?string
     {
         if (! $request->expectsJson()) {
-            // Jika route admin, redirect ke admin login
             if ($request->is('admin/*')) {
                 return route('admin.login');
             }
-            // Jika route biasa, redirect ke user login
+
             return route('login');
         }
         
