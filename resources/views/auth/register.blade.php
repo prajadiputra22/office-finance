@@ -273,6 +273,21 @@
                 if (this.value.trim() !== '') {
                     usernameError.classList.add('hidden');
                     this.classList.remove('border-red-500');
+<<<<<<< HEAD
+=======
+
+                    if (serverErrors) {
+                        serverErrors.classList.add('hidden');
+                    }
+
+                    const password = document.getElementById('passwordInput').value.trim();
+                    const confirmPassword = document.getElementById('confirmPasswordInput').value.trim();
+                    if (password !== '' && confirmPassword !== '') {
+                        emptyFieldsError.classList.add('hidden');
+                        document.getElementById('passwordInput').classList.remove('border-red-500');
+                        document.getElementById('confirmPasswordInput').classList.remove('border-red-500');
+                    }
+>>>>>>> cc3dba01def76847a7320572e3dc4f0ce5ce5940
                 }
             });
 
@@ -287,6 +302,13 @@
                     passwordError.classList.add('hidden');
                     this.classList.remove('border-red-500');
 
+<<<<<<< HEAD
+=======
+                    if (serverErrors) {
+                        serverErrors.classList.add('hidden');
+                    }
+
+>>>>>>> cc3dba01def76847a7320572e3dc4f0ce5ce5940
                     const confirmPassword = confirmPasswordInput.value.trim();
                     if (confirmPassword !== '' && this.value !== confirmPassword) {
                         passwordMismatchError.classList.remove('hidden');
@@ -297,6 +319,16 @@
                         this.classList.remove('border-red-500');
                         confirmPasswordInput.classList.remove('border-red-500');
                     }
+<<<<<<< HEAD
+=======
+
+                    const username = document.getElementById('usernameInput').value.trim();
+                    if (username !== '' && confirmPassword !== '') {
+                        emptyFieldsError.classList.add('hidden');
+                        document.getElementById('usernameInput').classList.remove('border-red-500');
+                        confirmPasswordInput.classList.remove('border-red-500');
+                    }
+>>>>>>> cc3dba01def76847a7320572e3dc4f0ce5ce5940
                 }
             });
 
@@ -311,6 +343,13 @@
                     confirmPasswordError.classList.add('hidden');
                     this.classList.remove('border-red-500');
 
+<<<<<<< HEAD
+=======
+                    if (serverErrors) {
+                        serverErrors.classList.add('hidden');
+                    }
+
+>>>>>>> cc3dba01def76847a7320572e3dc4f0ce5ce5940
                     const password = passwordInput.value.trim();
                     if (password !== '' && this.value !== password) {
                         passwordMismatchError.classList.remove('hidden');
@@ -321,6 +360,16 @@
                         this.classList.remove('border-red-500');
                         passwordInput.classList.remove('border-red-500');
                     }
+<<<<<<< HEAD
+=======
+
+                    const username = document.getElementById('usernameInput').value.trim();
+                    if (username !== '' && password !== '') {
+                        emptyFieldsError.classList.add('hidden');
+                        document.getElementById('usernameInput').classList.remove('border-red-500');
+                        passwordInput.classList.remove('border-red-500');
+                    }
+>>>>>>> cc3dba01def76847a7320572e3dc4f0ce5ce5940
                 }
             });
 

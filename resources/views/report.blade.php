@@ -47,7 +47,6 @@
                     @endforeach
                 </select>
             </div>
-
         <div class="flex-1">
             <label for="year" class="block text-sm font-medium text-gray-700 mb-2">Tahun</label>
             <select name="year" id="year"
@@ -86,20 +85,22 @@
             <div style="min-height: 300px;">
                 {!! $incomeChart->container() !!}
             </div>
-            
-            @if(isset($incomePercentages) && count($incomePercentages) > 0)
+
+            @if (isset($incomePercentages) && count($incomePercentages) > 0)
                 <div class="mt-4 text-left">
                     <h3 class="font-semibold text-sm mb-2">Detail per Kategori:</h3>
-                    @foreach($incomePercentages as $item)
-                         <div class="flex justify-between items-center py-2 text-sm border-b border-gray-100 last:border-b-0">
+                    @foreach ($incomePercentages as $item)
+                        <div
+                            class="flex justify-between items-center py-2 text-sm border-b border-gray-100 last:border-b-0">
                             <div class="flex items-center gap-2">
-                                <div class="w-4 h-4 rounded-full border-2 border-white shadow-sm" 
-                                     style="background-color: {{ $item['color'] }}"></div>
+                                <div class="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                                    style="background-color: {{ $item['color'] }}"></div>
                                 <span class="font-medium">{{ $item['category'] }}</span>
                             </div>
                             <div class="text-right">
                                 <div class="font-semibold text-green-600">{{ $item['percentage'] }}%</div>
-                                <div class="text-xs text-gray-600">Rp {{ number_format($item['amount'], 0, ',', '.') }}</div>
+                                <div class="text-xs text-gray-600">Rp {{ number_format($item['amount'], 0, ',', '.') }}
+                                </div>
                             </div>
                         </div>
                     @endforeach
@@ -116,19 +117,19 @@
                     -Rp {{ number_format($expenditure, 0, ',', '.') }}
                 @endif
             </div>
-            
+
             <div style="min-height: 300px;">
                 {!! $expenditureChart->container() !!}
             </div>
-            
-            @if(isset($expenditurePercentages) && count($expenditurePercentages) > 0)
+
+            @if (isset($expenditurePercentages) && count($expenditurePercentages) > 0)
                 <div class="mt-4 text-left">
                     <h3 class="font-semibold text-sm mb-2">Detail per Kategori:</h3>
-                    @foreach($expenditurePercentages as $item)
+                    @foreach ($expenditurePercentages as $item)
                         <div class="flex justify-between items-center py-2 text-sm border-b border-gray-100 last:border-b-0">
                             <div class="flex items-center gap-2">
-                                <div class="w-4 h-4 rounded-full border-2 border-white shadow-sm" 
-                                     style="background-color: {{ $item['color'] }}"></div>
+                                <div class="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                                    style="background-color: {{ $item['color'] }}"></div>
                                 <span class="font-medium">{{ $item['category'] }}</span>
                             </div>
                             <div class="text-right">
@@ -152,7 +153,7 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     {{ $incomeChart->script() }}
     {{ $expenditureChart->script() }}
 @endpush

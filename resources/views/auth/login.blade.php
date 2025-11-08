@@ -12,7 +12,7 @@
 <style>
     input[type="checkbox"]:checked::after {
         content: "✔";
-        color: rgb(255, 254, 254);
+        color: white;
         font-size: 10px;
         position: absolute;
         top: 50%;
