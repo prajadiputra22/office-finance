@@ -33,16 +33,12 @@
             </div>
 
             <div class="flex flex-col items-center">
-                @if ($errors->any())
-                    <div id="serverErrors"
-                        class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 w-80 text-left">
-                        <ul class="list-disc pl-5">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+                <!-- Unified error box for server and validation errors -->
+                <div id="errorBox"
+                    class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 w-80 text-left">
+                    <ul id="errorList" class="list-disc pl-5">
+                    </ul>
+                </div>
 
                 <form id="loginForm" method="POST" action="{{ route('admin.login') }}"
                     class="flex flex-col w-80 items-center">
@@ -52,32 +48,12 @@
                         <input id="usernameInput" name="username" type="text" placeholder="Username"
                             value="{{ old('username') }}" autofocus
                             class="w-full px-4 py-3 border-2 border-[#0B3B9F] rounded-lg mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
-                        <div id="usernameError" class="hidden mt-1 mb-4">
-                            <p class="text-red-500 text-xs italic text-left">Username is required.</p>
-                        </div>
-
-                        @error('username')
-                            @if ($message !== 'Incorrect username or password.')
-                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
-                            @endif
-                        @enderror
                     </div>
 
                     <div id="password" class="w-full">
                         <label for="passwordInput" class="sr-only">Password</label>
                         <input id="passwordInput" name="password" type="password" placeholder="Password"
                             class="w-full px-4 py-3 border-2 border-[#0B3B9F] rounded-lg mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
-                        <div id="passwordError" class="hidden mt-1 mb-3">
-                            <p class="text-red-500 text-xs italic text-left">Password is required.</p>
-                        </div>
-
-                        @error('password')
-                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div id="emptyFieldsError" class="hidden mt-1 mb-4 w-full text-left">
-                        <p class="text-red-500 text-sm font-medium">Username and password cannot be empty</p>
                     </div>
 
                     <div class="flex items-center justify-between mt-2 mb-4 w-full">
@@ -107,6 +83,22 @@
         <script>
             let isFormDisabled = false;
 
+            function displayServerErrors() {
+                const errorBox = document.getElementById('errorBox');
+                const errorList = document.getElementById('errorList');
+                const errors = @json($errors->all());
+
+                if (errors.length > 0) {
+                    errorList.innerHTML = '';
+                    errors.forEach(error => {
+                        const li = document.createElement('li');
+                        li.textContent = error;
+                        errorList.appendChild(li);
+                    });
+                    errorBox.classList.remove('hidden');
+                }
+            }
+
             function toggleInputs(disabled) {
                 const usernameInput = document.getElementById('usernameInput');
                 const passwordInput = document.getElementById('passwordInput');
@@ -129,72 +121,78 @@
                 isFormDisabled = disabled;
             }
 
-            function startLockoutCountdown() {
-                const serverErrors = document.getElementById('serverErrors');
-                if (!serverErrors) return;
-
-                const errorText = serverErrors.textContent;
-                if (!errorText.includes('terkunci') && !errorText.includes('percobaan')) return;
-
-                let seconds = 60;
-                const updateMessage = () => {
-                    const updatedText = errorText.replace(/\d+ detik/, `${seconds} detik`);
-                    const listItems = serverErrors.querySelectorAll('li');
-                    if (listItems.length > 0) {
-                        listItems[0].textContent = updatedText;
-                    }
-                    
-                    if (seconds > 0) {
-                        seconds--;
-                        setTimeout(updateMessage, 1000);
-                    }
-                };
-                setTimeout(updateMessage, 1000);
+            function showValidationError(message) {
+                const errorBox = document.getElementById('errorBox');
+                const errorList = document.getElementById('errorList');
+                
+                errorList.innerHTML = '<li>' + message + '</li>';
+                errorBox.classList.remove('hidden');
             }
 
-            window.addEventListener('DOMContentLoaded', startLockoutCountdown);
+            function hideValidationError() {
+                const errorBox = document.getElementById('errorBox');
+                errorBox.classList.add('hidden');
+            }
+
+            function startLockoutCountdown() {
+                const errorBox = document.getElementById('errorBox');
+                const errorList = document.getElementById('errorList');
+                if (!errorBox.classList.contains('hidden')) {
+                    const errorText = errorBox.textContent;
+                    if (!errorText.includes('terkunci') && !errorText.includes('percobaan')) return;
+
+                    let seconds = 60;
+                    const updateMessage = () => {
+                        const listItems = errorList.querySelectorAll('li');
+                        if (listItems.length > 0) {
+                            const originalText = listItems[0].textContent;
+                            const updatedText = originalText.replace(/\d+ detik/, `${seconds} detik`);
+                            listItems[0].textContent = updatedText;
+                        }
+                        
+                        if (seconds > 0) {
+                            seconds--;
+                            setTimeout(updateMessage, 1000);
+                        }
+                    };
+                    setTimeout(updateMessage, 1000);
+                }
+            }
+
+            window.addEventListener('DOMContentLoaded', function() {
+                displayServerErrors();
+                startLockoutCountdown();
+            });
 
             document.getElementById('loginForm').addEventListener('submit', function(e) {
                 const username = document.getElementById('usernameInput').value.trim();
                 const password = document.getElementById('passwordInput').value.trim();
-                const emptyFieldsError = document.getElementById('emptyFieldsError');
-                const usernameError = document.getElementById('usernameError');
-                const passwordError = document.getElementById('passwordError');
                 const usernameInput = document.getElementById('usernameInput');
                 const passwordInput = document.getElementById('passwordInput');
-                const serverErrors = document.getElementById('serverErrors');
-
-                emptyFieldsError.classList.add('hidden');
-                usernameError.classList.add('hidden');
-                passwordError.classList.add('hidden');
-
-                if (serverErrors) {
-                    serverErrors.classList.add('hidden');
-                }
-
-                usernameInput.classList.remove('border-red-500');
-                passwordInput.classList.remove('border-red-500');
 
                 let hasError = false;
 
+                usernameInput.classList.remove('border-red-500');
+                passwordInput.classList.remove('border-red-500');
+                hideValidationError();
+
                 if (username === '' && password === '') {
                     e.preventDefault();
-                    emptyFieldsError.classList.remove('hidden');
+                    showValidationError('Please enter your username and password.');
                     usernameInput.classList.add('border-red-500');
                     passwordInput.classList.add('border-red-500');
-
                     toggleInputs(true);
                     hasError = true;
                 } else {
                     if (username === '') {
                         e.preventDefault();
-                        usernameError.classList.remove('hidden');
+                        showValidationError('Please enter your username and password.');
                         usernameInput.classList.add('border-red-500');
                         hasError = true;
                     }
                     if (password === '') {
                         e.preventDefault();
-                        passwordError.classList.remove('hidden');
+                        showValidationError('Please enter your username and password.');
                         passwordInput.classList.add('border-red-500');
                         hasError = true;
                     }
@@ -203,24 +201,12 @@
                         toggleInputs(true);
                     }
                 }
-
-                if (hasError) {
-                    return false;
-                }
             });
 
             document.getElementById('loginForm').addEventListener('click', function(e) {
                 if (isFormDisabled) {
                     toggleInputs(false);
-
-                    document.getElementById('emptyFieldsError').classList.add('hidden');
-                    document.getElementById('usernameError').classList.add('hidden');
-                    document.getElementById('passwordError').classList.add('hidden');
-
-                    const serverErrors = document.getElementById('serverErrors');
-                    if (serverErrors) {
-                        serverErrors.classList.add('hidden');
-                    }
+                    hideValidationError();
 
                     document.getElementById('usernameInput').classList.remove('border-red-500');
                     document.getElementById('passwordInput').classList.remove('border-red-500');
@@ -239,46 +225,26 @@
             document.getElementById('usernameInput').addEventListener('input', function() {
                 if (isFormDisabled) return;
 
-                const usernameError = document.getElementById('usernameError');
-                const emptyFieldsError = document.getElementById('emptyFieldsError');
-                const serverErrors = document.getElementById('serverErrors');
+                const username = document.getElementById('usernameInput').value.trim();
+                const password = document.getElementById('passwordInput').value.trim();
 
-                if (this.value.trim() !== '') {
-                    usernameError.classList.add('hidden');
-                    this.classList.remove('border-red-500');
-
-                    if (serverErrors) {
-                        serverErrors.classList.add('hidden');
-                    }
-
-                    const password = document.getElementById('passwordInput').value.trim();
-                    if (password !== '') {
-                        emptyFieldsError.classList.add('hidden');
-                        document.getElementById('passwordInput').classList.remove('border-red-500');
-                    }
+                if (username !== '' && password !== '') {
+                    hideValidationError();
+                    document.getElementById('usernameInput').classList.remove('border-red-500');
+                    document.getElementById('passwordInput').classList.remove('border-red-500');
                 }
             });
 
             document.getElementById('passwordInput').addEventListener('input', function() {
                 if (isFormDisabled) return;
 
-                const passwordError = document.getElementById('passwordError');
-                const emptyFieldsError = document.getElementById('emptyFieldsError');
-                const serverErrors = document.getElementById('serverErrors');
+                const username = document.getElementById('usernameInput').value.trim();
+                const password = document.getElementById('passwordInput').value.trim();
 
-                if (this.value.trim() !== '') {
-                    passwordError.classList.add('hidden');
-                    this.classList.remove('border-red-500');
-
-                    if (serverErrors) {
-                        serverErrors.classList.add('hidden');
-                    }
-
-                    const username = document.getElementById('usernameInput').value.trim();
-                    if (username !== '') {
-                        emptyFieldsError.classList.add('hidden');
-                        document.getElementById('usernameInput').classList.remove('border-red-500');
-                    }
+                if (username !== '' && password !== '') {
+                    hideValidationError();
+                    document.getElementById('usernameInput').classList.remove('border-red-500');
+                    document.getElementById('passwordInput').classList.remove('border-red-500');
                 }
             });
 

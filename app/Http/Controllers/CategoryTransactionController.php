@@ -10,25 +10,25 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CategoryTransactionsExport;
 
 class CategoryTransactionController extends Controller
-{   
+{
     public function income(Request $request, $slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
         $year = $request->query('year', now()->year);
-        
+
         $transactions = Transaction::where('category_id', $category->id)
             ->where('type', 'income')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
             ->get();
-        
+
         $recentTransactions = Transaction::where('category_id', $category->id)
             ->where('type', 'income')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
             ->limit(10)
             ->get();
-        
+
         $monthlyData = Transaction::where('category_id', $category->id)
             ->where('type', 'income')
             ->whereYear('date', $year)
@@ -36,11 +36,11 @@ class CategoryTransactionController extends Controller
             ->groupBy('month')
             ->orderBy('month', 'asc')
             ->get();
- 
+
         $labels = [];
         $values = [];
         $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        
+
         for ($i = 1; $i <= 12; $i++) {
             $labels[] = $monthNames[$i - 1];
             $monthData = $monthlyData->firstWhere('month', $i);
@@ -58,7 +58,7 @@ class CategoryTransactionController extends Controller
             ])
             ->setHeight(250)
             ->setColors(['#0B3B9F']);
-        
+
         $availableYears = Transaction::where('category_id', $category->id)
             ->where('type', 'income')
             ->selectRaw('YEAR(date) as year')
@@ -66,28 +66,28 @@ class CategoryTransactionController extends Controller
             ->orderBy('year', 'desc')
             ->pluck('year')
             ->toArray();
-        
+
         return view('transactions.income', compact('category', 'chart', 'recentTransactions', 'year', 'availableYears'));
     }
-    
+
     public function expenditure(Request $request, $slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
         $year = $request->query('year', now()->year);
-        
+
         $transactions = Transaction::where('category_id', $category->id)
             ->where('type', 'expenditure')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
             ->get();
-        
+
         $recentTransactions = Transaction::where('category_id', $category->id)
             ->where('type', 'expenditure')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
             ->limit(10)
             ->get();
-        
+
         $monthlyData = Transaction::where('category_id', $category->id)
             ->where('type', 'expenditure')
             ->whereYear('date', $year)
@@ -99,7 +99,7 @@ class CategoryTransactionController extends Controller
         $labels = [];
         $values = [];
         $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        
+
         for ($i = 1; $i <= 12; $i++) {
             $labels[] = $monthNames[$i - 1];
             $monthData = $monthlyData->firstWhere('month', $i);
@@ -117,8 +117,8 @@ class CategoryTransactionController extends Controller
             ])
             ->setHeight(250)
             ->setColors(['#F20E0F']);
-            
-        
+
+
         $availableYears = Transaction::where('category_id', $category->id)
             ->where('type', 'expenditure')
             ->selectRaw('YEAR(date) as year')
@@ -126,35 +126,31 @@ class CategoryTransactionController extends Controller
             ->orderBy('year', 'desc')
             ->pluck('year')
             ->toArray();
-        
+
         return view('transactions.expenditure', compact('category', 'chart', 'recentTransactions', 'year', 'availableYears'));
     }
 
     public function exportIncome(Request $request, $slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
-        $categoryId = $category->id;
         $year = $request->query('year', now()->year);
-
         $categoryName = $category->category_name;
-        
+
         return Excel::download(
-            new CategoryTransactionsExport($categoryId, 'income', $year),
-            'laporan_'. $categoryName. '_'. $year . '.xlsx'
+            new CategoryTransactionsExport($category->id, 'income', $year),
+            'laporan_' . $categoryName . '_' . $year . '.xlsx'
         );
     }
 
     public function exportExpenditure(Request $request, $slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
-        $categoryId = $category->id;
         $year = $request->query('year', now()->year);
-
         $categoryName = $category->category_name;
-        
+
         return Excel::download(
-            new CategoryTransactionsExport($categoryId, 'expenditure', $year),
-            'laporan_'. $categoryName. '_'. $year . '.xlsx'
+            new CategoryTransactionsExport($category->id, 'expenditure', $year),
+            'laporan_' . $categoryName . '_' . $year . '.xlsx'
         );
     }
 }

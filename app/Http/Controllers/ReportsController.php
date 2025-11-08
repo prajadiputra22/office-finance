@@ -109,20 +109,11 @@ class ReportsController extends Controller
     }
     
     public function export(Request $request)
-    {
-        $selectedMonth = $request->input('month', now()->month);
-        $selectedYear = $request->input('year', now()->year);
-
-        $monthNames = [
-            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
-        ];
-
-        $selectedMonthName = $monthNames[$selectedMonth] ?? now()->format('F');
-
-        $fileName = 'Laporan_Transaksi_' . strtolower($selectedMonthName) . '_' . $selectedYear . '.xlsx';
-
-        return Excel::download(new TransactionsExport($selectedMonth, $selectedYear), $fileName);
-    }
+{
+    $selectedYear = $request->input('year', now()->year);
+    
+    $fileName = 'Laporan_Transaksi_' . $selectedYear . '.xlsx';
+    
+    return Excel::download(new TransactionsExport($selectedYear), $fileName);
+}
 }
