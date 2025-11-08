@@ -22,14 +22,16 @@
 </head>
 
 <body class="bg-[#f5f5f5] font-poppins">
-    <div class="flex min-h-screen">
+    <div class="flex flex-col-reverse md:flex-row min-h-screen">
         @include('layouts.sidebar')
 
-        <main class="flex-1 min-w-0 p-6 bg-[#f5f5f5]">
+        <main class="flex-1 min-w-0 p-4 md:p-6 bg-[#f5f5f5] pb-24 md:pb-6 md:ml-[200px]">
             @section('header')
-                <header class="flex justify-end items-center mb-8 animate-fadeIn">
-                    <img src="{{ asset('assets/picture/logo.png') }}" alt="Logo TigaJaya Finance"
-                        class="w-20 md:w-28 lg:w-28 h-auto object-contain">
+                <header class="flex justify-end items-center mb-6 md:mb-8 animate-fadeIn">
+                    <div class="md:ml-auto">
+                        <img src="{{ asset('assets/picture/logo.png') }}" alt="Logo TigaJaya Finance"
+                            class="w-16 md:w-24 lg:w-28 h-auto object-contain">
+                    </div>
                 </header>
             @show
             @yield('content')
