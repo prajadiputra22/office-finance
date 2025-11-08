@@ -41,7 +41,6 @@ class UserAuthController extends Controller
             ])->onlyInput('username');
         }
 
-        // Add role check to credentials
         $credentials['role'] = 'user';
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
