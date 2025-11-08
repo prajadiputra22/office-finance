@@ -48,7 +48,7 @@
                 
                 <div class="p-2">
                     <div class="px-3 py-2 text-sm font-semibold text-gray-700 border-b border-gray-200">
-                        Filter berdasarkan Status
+                        Status
                     </div>
                     
                     <a href="{{ route('category.index') }}" 
@@ -79,11 +79,11 @@
         </div>
     </section>
 
-    {{-- Badge untuk menampilkan filter aktif --}}
+    {{-- Badge Filter Aktif --}}
     @if(request('type'))
     <section class="mb-4">
         <div class="flex items-center gap-2">
-            <span class="text-sm text-gray-600">Filter aktif:</span>
+            <span class="text-sm text-gray-600">Status:</span>
             <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
                 {{ request('type') === 'income' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800' }}">
                 {{ request('type') === 'income' ? 'Pemasukan' : 'Pengeluaran' }}
@@ -236,10 +236,6 @@
             </form>
         </div>
     </div>
-<<<<<<< HEAD
         @endif
     @endauth
-=======
-</div>
->>>>>>> cc3dba01def76847a7320572e3dc4f0ce5ce5940
 @endsection

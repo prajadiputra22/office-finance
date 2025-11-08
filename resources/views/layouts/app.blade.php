@@ -55,9 +55,5 @@
         }
     </script>
 </body>
-<<<<<<< HEAD
 
 </html>
-=======
-</html>
->>>>>>> cc3dba01def76847a7320572e3dc4f0ce5ce5940
