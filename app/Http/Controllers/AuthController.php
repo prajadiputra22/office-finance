@@ -6,10 +6,14 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rules;
 
 class AuthController extends Controller
 {
+    private const MAX_ATTEMPTS = 3;
+    private const LOCKOUT_MINUTES = 1;
+
     /**
      * Show admin login form
      */
@@ -28,14 +32,94 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
+        $username = $credentials['username'];
+        
+        if ($this->isLockedOut($username)) {
+            $lockoutTime = Cache::get($this->getLockoutKey($username));
+            return back()->withErrors([
+                'username' => "Akun terkunci. Silakan coba lagi dalam {$lockoutTime} detik.",
+            ])->onlyInput('username');
+        }
+
         if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
+            $this->resetAttempts($username);
             $request->session()->regenerate();
             return redirect()->intended(route('home'));
         }
 
+        $this->incrementAttempts($username);
+        $attempts = $this->getAttempts($username);
+        
+        if ($attempts >= self::MAX_ATTEMPTS) {
+            $this->lockoutAccount($username);
+            return back()->withErrors([
+                'username' => 'Akun terkunci karena terlalu banyak percobaan login gagal. Coba lagi dalam 1 menit.',
+            ])->onlyInput('username');
+        }
+
+        $remainingAttempts = self::MAX_ATTEMPTS - $attempts;
         return back()->withErrors([
-            'username' => 'Incorrect username or password.',
+            'username' => "Username atau password salah. Sisa percobaan: {$remainingAttempts}",
         ])->onlyInput('username');
+    }
+
+    /**
+     * Get the cache key for login attempts
+     */
+    private function getAttemptsKey($username)
+    {
+        return "login_attempts_{$username}";
+    }
+
+    /**
+     * Get the cache key for lockout
+     */
+    private function getLockoutKey($username)
+    {
+        return "login_lockout_{$username}";
+    }
+
+    /**
+     * Get current number of failed attempts
+     */
+    private function getAttempts($username)
+    {
+        return Cache::get($this->getAttemptsKey($username), 0);
+    }
+
+    /**
+     * Increment failed login attempts
+     */
+    private function incrementAttempts($username)
+    {
+        $attemptsKey = $this->getAttemptsKey($username);
+        Cache::put($attemptsKey, $this->getAttempts($username) + 1, now()->addMinutes(self::LOCKOUT_MINUTES));
+    }
+
+    /**
+     * Reset login attempts
+     */
+    private function resetAttempts($username)
+    {
+        Cache::forget($this->getAttemptsKey($username));
+        Cache::forget($this->getLockoutKey($username));
+    }
+
+    /**
+     * Lock out the account temporarily
+     */
+    private function lockoutAccount($username)
+    {
+        $lockoutKey = $this->getLockoutKey($username);
+        Cache::put($lockoutKey, self::LOCKOUT_MINUTES * 60, now()->addMinutes(self::LOCKOUT_MINUTES));
+    }
+
+    /**
+     * Check if account is currently locked out
+     */
+    private function isLockedOut($username)
+    {
+        return Cache::has($this->getLockoutKey($username));
     }
 
     /**

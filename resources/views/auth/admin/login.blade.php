@@ -129,6 +129,31 @@
                 isFormDisabled = disabled;
             }
 
+            function startLockoutCountdown() {
+                const serverErrors = document.getElementById('serverErrors');
+                if (!serverErrors) return;
+
+                const errorText = serverErrors.textContent;
+                if (!errorText.includes('terkunci') && !errorText.includes('percobaan')) return;
+
+                let seconds = 60;
+                const updateMessage = () => {
+                    const updatedText = errorText.replace(/\d+ detik/, `${seconds} detik`);
+                    const listItems = serverErrors.querySelectorAll('li');
+                    if (listItems.length > 0) {
+                        listItems[0].textContent = updatedText;
+                    }
+                    
+                    if (seconds > 0) {
+                        seconds--;
+                        setTimeout(updateMessage, 1000);
+                    }
+                };
+                setTimeout(updateMessage, 1000);
+            }
+
+            window.addEventListener('DOMContentLoaded', startLockoutCountdown);
+
             document.getElementById('loginForm').addEventListener('submit', function(e) {
                 const username = document.getElementById('usernameInput').value.trim();
                 const password = document.getElementById('passwordInput').value.trim();
