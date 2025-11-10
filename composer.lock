@@ -4,15 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
     "content-hash": "79589bd344142225bcd097c0b3b92ff0",
-=======
-<<<<<<< HEAD
-    "content-hash": "8409bd2668abb7b3728dd6b0fa9e8da2",
-=======
-    "content-hash": "525fd74a6139019393d96162f0e36796",
->>>>>>> origin/ui-ux
->>>>>>> cc3dba01def76847a7320572e3dc4f0ce5ce5940
     "packages": [
         {
             "name": "arielmejiadev/larapex-charts",
@@ -3387,8 +3379,6 @@
                 }
             ],
             "time": "2025-08-21T11:53:16+00:00"
-<<<<<<< HEAD
-=======
         },
         {
             "name": "psr/cache",
@@ -3438,7 +3428,6 @@
                 "source": "https://github.com/php-fig/cache/tree/3.0.0"
             },
             "time": "2021-02-03T23:26:27+00:00"
->>>>>>> origin/ui-ux
         },
         {
             "name": "psr/clock",
