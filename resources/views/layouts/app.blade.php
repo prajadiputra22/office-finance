@@ -13,7 +13,7 @@
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="bg-[#f5f5f5] font-poppins">
+<body x-data="{ confirmLogout: false }" class="bg-[#f5f5f5] font-poppins">
     <div class="flex flex-col-reverse md:flex-row min-h-screen">
         @include('layouts.sidebar')
 
@@ -29,6 +29,23 @@
             @show
             @yield('content')
         </main>
+    </div>
+    <div x-show="confirmLogout" x-cloak x-transition class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
+        <div class="bg-white p-6 rounded-lg shadow-2xl w-80">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">Konfirmasi Logout</h2>
+            <p class="text-gray-600 mb-6">Apakah Anda yakin ingin keluar?</p>
+            <div class="flex justify-end space-x-3">
+                <button @click="confirmLogout = false" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 font-medium transition">
+                    Batal
+                </button>
+                <form method="POST" action="{{ route('auth.logout') }}">
+                    @csrf
+                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition">
+                        Ya, Keluar
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 
     @vite('resources/js/app.js')
