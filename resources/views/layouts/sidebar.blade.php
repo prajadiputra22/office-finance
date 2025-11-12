@@ -5,7 +5,7 @@
             <li>
                 <a href="{{ route('home') }}"
                     class="flex items-center p-3 mb-2 rounded-lg hover:text-[#F20E0F] cursor-pointer transition group
-                {{ request()->is('home') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
+                   {{ request()->is('home') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
                     <img src="{{ asset('assets/picture/home.png') }}" alt="Home Icon"
                         class="w-5 h-5 mr-3 filter invert brightness-0">
                     <span class="font-bold">Beranda</span>
@@ -14,16 +14,16 @@
             <li>
                 <a href="{{ route('transactions.index') }}"
                     class="flex items-center p-3 mb-2 rounded-lg hover:text-[#F20E0F] cursor-pointer transition group
-                {{ request()->is('transactions') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
+                   {{ request()->is('transactions') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
                     <img src="{{ asset('assets/picture/transaction.png') }}" alt="Transaction Icon"
-                        class="w-5 h-5 mr-3 filter invert brightness-0 ">
+                        class="w-5 h-5 mr-3 filter invert brightness-0">
                     <span class="font-bold">Transaksi</span>
                 </a>
             </li>
             <li>
                 <a href="{{ route('category.index') }}"
                     class="flex items-center p-3 mb-2 rounded-lg hover:text-[#F20E0F] cursor-pointer transition group
-                {{ request()->is('category') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
+                   {{ request()->is('category') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
                     <img src="{{ asset('assets/picture/category.png') }}" alt="Category Icon"
                         class="w-5 h-5 mr-3 filter invert brightness-0">
                     <span class="font-bold">Kategori</span>
@@ -32,15 +32,16 @@
             <li>
                 <a href="{{ route('report.index') }}"
                     class="flex items-center p-3 mb-2 rounded-lg hover:text-[#F20E0F] cursor-pointer transition group
-                {{ request()->is('report') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
+                   {{ request()->is('report') ? 'bg-white/30 font-bold' : 'hover:bg-white/20 transition transform hover:translate-x-1' }}">
                     <img src="{{ asset('assets/picture/report.png') }}" alt="Report Icon"
                         class="w-5 h-5 mr-3 filter invert brightness-0">
                     <span class="font-bold">Laporan</span>
                 </a>
             </li>
         </ul>
+
         <div x-data="{ open: false }" x-cloak class="mt-4">
-            <button @click="open=!open"
+            <button @click="open = !open"
                 class="flex justify-between w-full items-center px-4 py-2 font-semibold text-left hover:text-[#F20E0F] cursor-pointer transition group hover:bg-white/20 transition transform hover:translate-x-1 rounded-lg">
                 Kas Masuk
                 <img src="{{ asset('assets/picture/arrow.png') }}" :class="{ 'rotate-180': open }"
@@ -59,8 +60,9 @@
                 @endif
             </ul>
         </div>
+
         <div x-data="{ open: false }" x-cloak class="mt-4">
-            <button @click="open=!open"
+            <button @click="open = !open"
                 class="flex justify-between w-full items-center px-4 py-2 font-semibold text-left hover:text-[#F20E0F] cursor-pointer transition group hover:bg-white/20 transition transform hover:translate-x-1 rounded-lg">
                 Kas Keluar
                 <img src="{{ asset('assets/picture/arrow.png') }}" :class="{ 'rotate-180': open }"
@@ -79,31 +81,14 @@
                 @endif
             </ul>
         </div>
-        </ul>
-        <div x-data="{ confirm: false }" x-cloak class="mt-auto">
-            <button @click="confirm=true"
+
+        <div class="mt-auto">
+            <button @click="confirmLogout = true"
                 class="flex items-center w-full px-4 py-2 mt-6 bg-red-600 hover:bg-red-700 rounded-lg font-semibold text-white transition">
                 <img src="{{ asset('assets/picture/logout.png') }}" alt="Logout Icon"
                     class="w-5 h-5 mr-3 filter invert">
                 Logout
             </button>
-            <div x-show="confirm" x-cloak class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                <div class="bg-white p-6 rounded-lg shadow-lg w-80">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4">Konfirmasi Logout</h2>
-                    <p class="text-gray-600 mb-6">Apakah Anda yakin ingin keluar?</p>
-                    <div class="flex justify-end space-x-3">
-                        <button @click="confirm=false" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">
-                            Batal
-                        </button>
-                         <form method="POST" action="@if(Auth::guard('admin')->check()){{ route('admin.logout') }}@else{{ route('logout') }}@endif">
-                            @csrf
-                            <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                                Ya, Keluar
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
         </div>
     </nav>
 </aside>
@@ -149,7 +134,7 @@
                 <span class="text-[10px] font-medium text-gray-600">Logout</span>
             </button>
             <div x-show="confirmLogout" x-transition
-                class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+                class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-[9999]">
                 <div class="bg-white rounded-xl p-5 w-72 shadow-lg text-center">
                     <h2 class="text-sm font-semibold mb-4">Yakin ingin logout?</h2>
                     <div class="flex justify-between gap-3">
@@ -157,7 +142,8 @@
                             class="flex-1 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition">
                             Batal
                         </button>
-                         <form method="POST" action="@if(Auth::guard('admin')->check()){{ route('admin.logout') }}@else{{ route('logout') }}@endif">
+                        <form method="POST"
+                            action="@if (Auth::guard('admin')->check()) {{ route('admin.logout') }}@else{{ route('logout') }} @endif">
                             @csrf
                             <button type="submit"
                                 class="w-full py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">

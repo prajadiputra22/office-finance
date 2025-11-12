@@ -20,6 +20,8 @@ Route::middleware(['auth:web,admin'])->group(function () {
     
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
     Route::get('/transactions/{id}', [TransactionController::class, 'show']);
+    Route::get('/transactions/{id}/download', [TransactionController::class, 'downloadAttachment'])
+    ->name('transactions.download');
 
     Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
     Route::get('/api/category/{type}', [CategoryController::class, 'getByType'])->name('api.category.byType');
