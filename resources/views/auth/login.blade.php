@@ -22,16 +22,16 @@
 
 <body class="min-h-screen flex items-center justify-center font-poppins bg-cover bg-center bg-no-repeat bg-fixed" 
       style="background-image: linear-gradient(rgba(255,255,255,0.9), rgba(251,252,255,0.85)), url('/assets/picture/background.png');">
-    <main class="flex items-center justify-center w-full h-screen">
-        <section class="bg-white/90 backdrop-blur-md p-6 md:p-8 rounded-xl shadow-lg flex flex-col items-center w-[90%] max-w-sm animate-fadeIn">
+    <main class="flex items-center justify-center w-full min-h-screen px-4 py-6">
+        <section class="bg-white/90 backdrop-blur-md p-4 sm:p-6 md:p-8 rounded-xl shadow-lg flex flex-col items-center w-full max-w-xs sm:max-w-sm md:max-w-md animate-fadeIn">
             <div class="mb-1 flex flex-col items-center justify-center">
-                <img src="{{ asset('assets/picture/logo.png') }}"  alt="logo TigaJaya Finance" class="w-36 md:w-40 lg:w-40 mb-6 object-contain">
+                <img src="{{ asset('assets/picture/logo.png') }}"  alt="logo TigaJaya Finance" class="w-24 sm:w-32 md:w-40 lg:w-48 mb-4 sm:mb-6 object-contain">
             </div>
 
-            <div class="flex flex-col items-center">
+            <div class="flex flex-col items-center w-full">
                 @if ($errors->any())
-                    <div id="serverErrors" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 w-80 text-left">
-                        <ul class="list-disc pl-5">
+                    <div id="serverErrors" class="bg-red-100 border border-red-400 text-red-700 px-3 sm:px-4 py-2 sm:py-3 rounded mb-4 w-full text-left text-xs sm:text-sm">
+                        <ul class="list-disc pl-4 sm:pl-5">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
@@ -39,14 +39,14 @@
                     </div>
                 @endif
 
-                <form id="loginForm" method="POST" action="{{ route('auth.login') }}" class="flex flex-col w-80 items-center">
+                <form id="loginForm" method="POST" action="{{ route('auth.login') }}" class="flex flex-col w-full items-center">
                     @csrf
                     <div id="username" class="w-full mt-2">
                         <label for="usernameInput" class="sr-only">Username</label>
                         <input id="usernameInput" name="username" type="text" placeholder="Username"
                             value="{{ old('username') }}" autofocus
-                            class="w-full px-4 py-3 border-2 border-[#0B3B9F] rounded-lg mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
-                        <div id="usernameError" class="hidden mt-1 mb-4">
+                            class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border-2 border-[#0B3B9F] rounded-lg mb-3 sm:mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
+                        <div id="usernameError" class="hidden mt-1 mb-3 sm:mb-4">
                             <p class="text-red-500 text-xs italic text-left">Username is required.</p>
                         </div>
 
@@ -60,7 +60,7 @@
                     <div id="password" class="w-full">
                         <label for="passwordInput" class="sr-only">Password</label>
                         <input id="passwordInput" name="password" type="password" placeholder="Password"
-                            class="w-full px-4 py-3 border-2 border-[#0B3B9F] rounded-lg mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
+                            class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border-2 border-[#0B3B9F] rounded-lg mb-3 sm:mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
                         <div id="passwordError" class="hidden mt-1 mb-3">
                             <p class="text-red-500 text-xs italic text-left">Password is required.</p>
                         </div>
@@ -74,22 +74,22 @@
                         <p class="text-red-500 text-sm font-medium">Username and password cannot be empty</p>
                     </div>
 
-                    <div class="flex items-center justify-between mt-2 mb-4 w-full">
+                    <div class="flex items-center justify-between mt-2 mb-3 sm:mb-4 w-full">
                         <div class="flex items-center">
                             <input type="checkbox" name="remember" id="remember"
                                 class="w-4 h-4 mr-2 appearance-none rounded border border-gray-400 checked:bg-[#0B3B9F] checked:border-[#0B3B9F] relative">
-                            <label for="remember" class="text-sm text-gray-700">Remember me</label>
+                            <label for="remember" class="text-xs sm:text-sm text-gray-700">Remember me</label>
                         </div>
                     </div>
 
                     <div id="button" class="mt-2 w-full">
                         <button type="submit"
-                            class="w-full text-md bg-[#F20E0F] text-white py-3 rounded-lg font-bold transition duration-300 hover:bg-[#0B3B9F] hover:text-white active:scale-95">
+                            class="w-full text-sm sm:text-base md:text-lg bg-[#F20E0F] text-white py-2 sm:py-3 rounded-lg font-bold transition duration-300 hover:bg-[#0B3B9F] hover:text-white active:scale-95">
                             Login
                         </button>
                     </div>
 
-                    <p class="mt-3 text-sm text-center whitespace-nowrap justify-center">
+                    <p class="mt-3 text-xs sm:text-sm text-center whitespace-nowrap justify-center">
                         Belum punya akun? <a href="{{ route('auth.register') }}" class="text-[#F20E0F] hover:underline">daftar</a>
                         disini.
                     </p>

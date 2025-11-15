@@ -68,14 +68,14 @@ class ReportsController extends Controller
             ->setTitle('Pemasukan per Kategori')
             ->setDataset($incomeValues)
             ->setLabels($incomeLabels)
-            ->setHeight(300)
+            ->setHeight(400)
             ->setColors($incomeColors);
 
         $expenditureChart = (new LarapexChart)->pieChart()
             ->setTitle('Pengeluaran per Kategori')
             ->setDataset($expenditureValues)
             ->setLabels($expenditureLabels)
-            ->setHeight(300)
+            ->setHeight(400)
             ->setColors($expenditureColors);
 
         $incomePercentages = [];
