@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Giro extends Model
+class Transaction extends Model
 {
-    use HasFactory;
-    
     protected $table = 'transactions';
 
     protected $fillable = [
@@ -21,5 +19,19 @@ class Giro extends Model
         'no_factur',
         'date',
         'attachment',
+        'payment',
+        'date_maturity',
     ];
+
+    protected $casts = [
+        'date' => 'date',
+        'date_entry' => 'date',
+        'date_factur' => 'date',
+        'date_maturity' => 'date',
+    ];
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 }

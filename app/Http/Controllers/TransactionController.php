@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class TransactionController extends Controller
 {
@@ -28,7 +29,7 @@ class TransactionController extends Controller
         if ($request->has('search') && !empty($request->search)) {
             $searchTerm = strtolower($request->search);
 
-             $map = [
+            $map = [
                 'pemasukan'   => 'income',
                 'pengeluaran' => 'expenditure',
             ];
@@ -56,10 +57,45 @@ class TransactionController extends Controller
             ->get();
         $category = Category::all();
 
-        $income = Transaction::where('type', 'income')->sum('amount');
-        $expenditure = Transaction::where('type', 'expenditure')->sum('amount');
+        // Hitung saldo regular (non-giro atau giro yang sudah cair)
+        $income = Transaction::where('type', 'income')
+            ->where(function($q) {
+                $q->where('payment', '!=', 'giro')
+                  ->orWhere(function($q2) {
+                      $q2->where('payment', 'giro')
+                         ->where('date_maturity', '<=', Carbon::now());
+                  });
+            })
+            ->sum('amount');
 
-        return view('transactions', compact('transactions', 'category', 'income', 'expenditure'));
+        $expenditure = Transaction::where('type', 'expenditure')
+            ->where(function($q) {
+                $q->where('payment', '!=', 'giro')
+                  ->orWhere(function($q2) {
+                      $q2->where('payment', 'giro')
+                         ->where('date_maturity', '<=', Carbon::now());
+                  });
+            })
+            ->sum('amount');
+
+        // Hitung saldo giro yang belum cair
+        $giroIncome = Transaction::where('type', 'income')
+            ->where('payment', 'giro')
+            ->where(function($q) {
+                $q->whereNull('date_maturity')
+                  ->orWhere('date_maturity', '>', Carbon::now());
+            })
+            ->sum('amount');
+
+        $giroExpenditure = Transaction::where('type', 'expenditure')
+            ->where('payment', 'giro')
+            ->where(function($q) {
+                $q->whereNull('date_maturity')
+                  ->orWhere('date_maturity', '>', Carbon::now());
+            })
+            ->sum('amount');
+
+        return view('transactions', compact('transactions', 'category', 'income', 'expenditure', 'giroIncome', 'giroExpenditure'));
     }
 
     public function show($id)
@@ -88,7 +124,7 @@ class TransactionController extends Controller
                 'payment' => strtolower(trim((string) $request->input('payment'))),
             ]);
             
-            $request->validate([
+            $validationRules = [
                 'type' => 'required|in:income,expenditure',
                 'category_id' => 'required|exists:category,id',
                 'amount' => 'required|numeric|min:0',
@@ -96,7 +132,15 @@ class TransactionController extends Controller
                 'description' => 'nullable|string|max:255',
                 'date_factur' => 'nullable|date',
                 'no_factur' => 'nullable|string',
-            ]);
+                'payment' => 'required|in:cash,transfer,giro',
+            ];
+
+            // Jika payment adalah giro, date_maturity wajib diisi
+            if ($request->payment === 'giro') {
+                $validationRules['date_maturity'] = 'required|date';
+            }
+
+            $request->validate($validationRules);
 
             DB::beginTransaction();
 
@@ -114,6 +158,7 @@ class TransactionController extends Controller
                 'description' => $request->description,
                 'date_factur' => $request->date_factur,
                 'no_factur' => $request->no_factur,
+                'date_maturity' => $request->payment === 'giro' ? $request->date_maturity : null,
                 'attachment' => $attachmentPath,
                 'date_entry' => now()->toDateString(),
             ]);
@@ -137,7 +182,7 @@ class TransactionController extends Controller
                 'payment' => strtolower(trim((string) $request->input('payment'))),
             ]);
 
-            $request->validate([
+            $validationRules = [
                 'type' => 'required|in:income,expenditure',
                 'category_id' => 'required|exists:category,id',
                 'amount' => 'required|numeric|min:0',
@@ -146,7 +191,14 @@ class TransactionController extends Controller
                 'description' => 'nullable|string|max:255',
                 'date_factur' => 'nullable|date',
                 'no_factur' => 'nullable|string',
-            ]);
+            ];
+
+            // Jika payment adalah giro, date_maturity wajib diisi
+            if ($request->payment === 'giro') {
+                $validationRules['date_maturity'] = 'required|date';
+            }
+
+            $request->validate($validationRules);
 
             DB::beginTransaction();
             
@@ -167,6 +219,7 @@ class TransactionController extends Controller
                 'description' => $request->description,
                 'date_factur' => $request->date_factur,
                 'no_factur' => $request->no_factur,
+                'date_maturity' => $request->payment === 'giro' ? $request->date_maturity : null,
                 'attachment' => $attachmentPath,
                 'date_entry' => now()->toDateString(),
             ]);

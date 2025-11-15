@@ -50,6 +50,7 @@
                 @endauth
 
                 <div class="flex gap-5 flex-1 flex-wrap">
+                    {{-- Saldo Regular --}}
                     <div
                         class="flex-1 p-6 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
                         <h3 class="text-blue-600 font-medium">Pemasukan</h3>
@@ -61,6 +62,20 @@
                         <h3 class="text-red-600 font-medium">Pengeluaran</h3>
                         <p class="text-[25px] font-bold text-[#1f2937]">
                             {{ 'Rp ' . number_format($expenditure ?? 0, 0, ',', '.') }}</p>
+                    </div>
+                    
+                    {{-- Saldo Giro --}}
+                    <div
+                        class="flex-1 p-6 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
+                        <h3 class="text-green-400 font-medium">Giro Masuk</h3>
+                        <p class="text-[25px] font-bold text-[#1f2937]">
+                            {{ 'Rp ' . number_format($giroIncome ?? 0, 0, ',', '.') }}</p>
+                    </div>
+                    <div
+                        class="flex-1 p-6 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
+                        <h3 class="text-orange-600 font-medium">Giro Keluar</h3>
+                        <p class="text-[25px] font-bold text-[#1f2937]">
+                            {{ 'Rp ' . number_format($giroExpenditure ?? 0, 0, ',', '.') }}</p>
                     </div>
                 </div>
             </div>
@@ -121,7 +136,6 @@
                                 class="w-full text-center border border-[#e1e5e9] rounded-lg overflow-hidden text-sm min-w-[800px] whitespace-nowrap">
                                 <thead class="bg-[#f8f9fa]">
                                     <tr>
-                                        {{-- Only show checkbox column for admin users --}}
                                         @auth
                                             @if (auth()->user()->role === 'admin')
                                                 <th class="p-4 font-semibold text-[#333] text-center">
@@ -145,6 +159,7 @@
                                         <th class="p-4 font-semibold text-[#333] text-center">Jumlah</th>
                                         <th class="p-4 font-semibold text-[#333] text-center">No. Faktur</th>
                                         <th class="p-4 font-semibold text-[#333] text-center">Tgl. Faktur</th>
+                                        <th class="p-4 font-semibold text-[#333] text-center">Tgl. Cair</th>
                                         <th class="p-4 font-semibold text-[#333] text-center">Lampiran</th>
                                         <th class="p-4 font-semibold text-[#333] text-left">Keterangan</th>
                                     </tr>
@@ -162,7 +177,6 @@
                                                     hasVisible = true;
                                                 }
                                             })">
-                                            {{-- Only show checkbox for admin users --}}
                                             @auth
                                                 @if (auth()->user()->role === 'admin')
                                                     <td class="p-4 text-center">
@@ -184,7 +198,18 @@
                                                 </span>
                                             </td>
                                             <td class="p-4 text-center">
-                                                {{ $trx->payment == 'cash' ? 'Cash' : ($trx->payment == 'transfer' ? 'Transfer' : 'Giro') }}
+                                                @if($trx->payment == 'giro')
+                                                    <span class="inline-flex items-center">
+                                                        Giro
+                                                        @if($trx->date_maturity && \Carbon\Carbon::parse($trx->date_maturity)->lte(\Carbon\Carbon::now()))
+                                                            <span class="ml-2 px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">Cair</span>
+                                                        @else
+                                                            <span class="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full">Pending</span>
+                                                        @endif
+                                                    </span>
+                                                @else
+                                                    {{ $trx->payment == 'cash' ? 'Cash' : 'Transfer' }}
+                                                @endif
                                             </td>
                                             <td class="p-4 text-center">
                                                 <span class="font-semibold text-gray-800">
@@ -194,6 +219,13 @@
                                             <td class="p-4 text-center">{{ $trx->no_factur ?? '-' }}</td>
                                             <td class="p-4 text-center">
                                                 {{ $trx->date_factur ? \Carbon\Carbon::parse($trx->date_factur)->format('d/m/Y') : '-' }}
+                                            </td>
+                                            <td class="p-4 text-center">
+                                                @if($trx->payment == 'giro' && $trx->date_maturity)
+                                                    {{ \Carbon\Carbon::parse($trx->date_maturity)->format('d/m/Y') }}
+                                                @else
+                                                    -
+                                                @endif
                                             </td>
                                             <td class="p-4 text-center">
                                                 @if ($trx->attachment)
@@ -210,13 +242,13 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="10" class="p-8 text-center text-gray-500 text-sm">
+                                            <td colspan="11" class="p-8 text-center text-gray-500 text-sm">
                                                 Tidak ada transaksi
                                             </td>
                                         </tr>
                                     @endforelse
                                     <tr x-show="!hasVisible && selectedMonth !== ''" x-cloak>
-                                        <td colspan="10" class="p-8 text-center text-gray-500 text-sm">
+                                        <td colspan="11" class="p-8 text-center text-gray-500 text-sm">
                                             Belum ada transaksi pada bulan ini
                                         </td>
                                     </tr>
@@ -232,7 +264,7 @@
                     @endif
                 </div>
 
-                {{-- Only show "Tambah Transaksi" modal for admin users --}}
+                {{-- Modal Tambah Transaksi --}}
                 @auth
                     @if (auth()->user()->role === 'admin')
                         <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -293,6 +325,16 @@
                                             <option value="giro">Giro</option>
                                         </select>
                                     </div>
+
+                                    {{-- Input Tanggal Cair untuk Giro --}}
+                                    <div x-show="addForm.payment === 'giro'">
+                                        <label class="block text-xs font-medium mb-1">Tanggal Cair <span
+                                                class="text-red-500">*</span></label>
+                                        <input type="date" x-model="addForm.date_maturity"
+                                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                                        <p class="text-[10px] text-gray-500 mt-1">Tanggal ketika giro akan dicairkan</p>
+                                    </div>
+
                                     <div>
                                         <label class="block text-xs font-medium mb-1">
                                             Jumlah: <span class="font-bold text-[#0B3B9F] text-xs"
@@ -356,7 +398,7 @@
                     @endif
                 @endauth
 
-                {{-- Only show "Edit Transaksi" modal for admin users --}}
+                {{-- Modal Edit Transaksi --}}
                 @auth
                     @if (auth()->user()->role === 'admin')
                         <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -419,6 +461,15 @@
                                             <option value="transfer">Transfer</option>
                                             <option value="giro">Giro</option>
                                         </select>
+                                    </div>
+
+                                    {{-- Input Tanggal Cair untuk Giro --}}
+                                    <div x-show="editForm.payment === 'giro'">
+                                        <label class="block text-xs font-medium mb-1">Tanggal Cair <span
+                                                class="text-red-500">*</span></label>
+                                        <input type="date" x-model="editForm.date_maturity"
+                                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                                        <p class="text-[10px] text-gray-500 mt-1">Tanggal ketika giro akan dicairkan</p>
                                     </div>
 
                                     <div>
@@ -512,6 +563,7 @@
                                 description: '',
                                 date_factur: '',
                                 no_factur: '',
+                                date_maturity: '',
                                 attachment: null
                             },
                             editForm: {
@@ -524,6 +576,7 @@
                                 description: '',
                                 date_factur: '',
                                 no_factur: '',
+                                date_maturity: '',
                                 attachment: null,
                                 current_attachment: ''
                             },
@@ -662,6 +715,7 @@
                                     description: '',
                                     date_factur: '',
                                     no_factur: '',
+                                    date_maturity: '',
                                     attachment: null
                                 };
                                 this.addCategories = [];
@@ -673,6 +727,9 @@
                                 if (!this.addForm.type) errors.push('Tipe transaksi harus dipilih');
                                 if (!this.addForm.category_id) errors.push('Kategori harus dipilih');
                                 if (!this.addForm.payment) errors.push('Metode pembayaran harus dipilih');
+                                if (this.addForm.payment === 'giro' && !this.addForm.date_maturity) {
+                                    errors.push('Tanggal cair harus diisi untuk pembayaran Giro');
+                                }
                                 if (!this.addForm.amount || this.addForm.amount <= 0) errors.push(
                                     'Jumlah harus diisi dan lebih dari 0');
                                 this.addFormErrors = errors;
@@ -682,6 +739,10 @@
                                 const errors = [];
                                 if (!this.editForm.type) errors.push('Tipe transaksi harus dipilih');
                                 if (!this.editForm.category_id) errors.push('Kategori harus dipilih');
+                                if (!this.editForm.payment) errors.push('Metode pembayaran harus dipilih');
+                                if (this.editForm.payment === 'giro' && !this.editForm.date_maturity) {
+                                    errors.push('Tanggal cair harus diisi untuk pembayaran Giro');
+                                }
                                 if (!this.editForm.amount || this.editForm.amount <= 0) errors.push(
                                     'Jumlah harus diisi dan lebih dari 0');
                                 this.editFormErrors = errors;
@@ -699,6 +760,9 @@
                                 formData.append('description', this.addForm.description);
                                 formData.append('date_factur', this.addForm.date_factur);
                                 formData.append('no_factur', this.addForm.no_factur);
+                                if (this.addForm.payment === 'giro' && this.addForm.date_maturity) {
+                                    formData.append('date_maturity', this.addForm.date_maturity);
+                                }
                                 if (this.addForm.attachment) formData.append('attachment', this.addForm.attachment);
                                 const response = await fetch('{{ route('transactions.store') }}', {
                                     method: 'POST',
@@ -719,6 +783,9 @@
                                 formData.append('description', this.editForm.description);
                                 formData.append('date_factur', this.editForm.date_factur);
                                 formData.append('no_factur', this.editForm.no_factur);
+                                if (this.editForm.payment === 'giro' && this.editForm.date_maturity) {
+                                    formData.append('date_maturity', this.editForm.date_maturity);
+                                }
                                 if (this.editForm.attachment) formData.append('attachment', this.editForm.attachment);
                                 const response = await fetch(`/transactions/${this.editForm.id}`, {
                                     method: 'POST',
@@ -744,6 +811,7 @@
                                         description: transaction.description || '',
                                         date_factur: transaction.date_factur || '',
                                         no_factur: transaction.no_factur || '',
+                                        date_maturity: transaction.date_maturity || '',
                                         attachment: null,
                                         current_attachment: transaction.attachment || ''
                                     };
@@ -804,4 +872,7 @@
                 </script>
 
                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-            @endsection
+            </div>
+        </div>
+    </div>
+@endsection
