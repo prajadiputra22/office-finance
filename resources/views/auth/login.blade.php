@@ -32,7 +32,6 @@
             </div>
 
             <div class="flex flex-col items-center">
-                <!-- Unified error box for both server errors and validation errors -->
                 <div id="errorBox"
                     class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 w-80 text-left">
                     <ul id="errorList" class="list-disc pl-5">
@@ -65,7 +64,7 @@
 
                     <div id="button" class="mt-2 w-full">
                         <button type="submit"
-                            class="w-full text-md bg-[#F20E0F] text-white py-3 rounded-lg font-bold transition duration-300 hover:bg-[#0B3B9F] hover:text-white active:scale-95">
+                            class="w-full text-md bg-[#0B3B9F] text-white py-3 rounded-lg font-bold transition duration-300 hover:bg-[#F20E0F] hover:text-white active:scale-95">
                             Login
                         </button>
                     </div>

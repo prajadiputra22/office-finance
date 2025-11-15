@@ -273,6 +273,18 @@
                 if (this.value.trim() !== '') {
                     usernameError.classList.add('hidden');
                     this.classList.remove('border-red-500');
+
+                    if (serverErrors) {
+                        serverErrors.classList.add('hidden');
+                    }
+
+                    const password = document.getElementById('passwordInput').value.trim();
+                    const confirmPassword = document.getElementById('confirmPasswordInput').value.trim();
+                    if (password !== '' && confirmPassword !== '') {
+                        emptyFieldsError.classList.add('hidden');
+                        document.getElementById('passwordInput').classList.remove('border-red-500');
+                        document.getElementById('confirmPasswordInput').classList.remove('border-red-500');
+                    }
                 }
             });
 
@@ -287,6 +299,10 @@
                     passwordError.classList.add('hidden');
                     this.classList.remove('border-red-500');
 
+                    if (serverErrors) {
+                        serverErrors.classList.add('hidden');
+                    }
+
                     const confirmPassword = confirmPasswordInput.value.trim();
                     if (confirmPassword !== '' && this.value !== confirmPassword) {
                         passwordMismatchError.classList.remove('hidden');
@@ -295,6 +311,13 @@
                     } else if (confirmPassword !== '' && this.value === confirmPassword) {
                         passwordMismatchError.classList.add('hidden');
                         this.classList.remove('border-red-500');
+                        confirmPasswordInput.classList.remove('border-red-500');
+                    }
+
+                    const username = document.getElementById('usernameInput').value.trim();
+                    if (username !== '' && confirmPassword !== '') {
+                        emptyFieldsError.classList.add('hidden');
+                        document.getElementById('usernameInput').classList.remove('border-red-500');
                         confirmPasswordInput.classList.remove('border-red-500');
                     }
                 }
@@ -311,6 +334,10 @@
                     confirmPasswordError.classList.add('hidden');
                     this.classList.remove('border-red-500');
 
+                    if (serverErrors) {
+                        serverErrors.classList.add('hidden');
+                    }
+
                     const password = passwordInput.value.trim();
                     if (password !== '' && this.value !== password) {
                         passwordMismatchError.classList.remove('hidden');
@@ -319,6 +346,13 @@
                     } else if (password !== '' && this.value === password) {
                         passwordMismatchError.classList.add('hidden');
                         this.classList.remove('border-red-500');
+                        passwordInput.classList.remove('border-red-500');
+                    }
+
+                    const username = document.getElementById('usernameInput').value.trim();
+                    if (username !== '' && password !== '') {
+                        emptyFieldsError.classList.add('hidden');
+                        document.getElementById('usernameInput').classList.remove('border-red-500');
                         passwordInput.classList.remove('border-red-500');
                     }
                 }
