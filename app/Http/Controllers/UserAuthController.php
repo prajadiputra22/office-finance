@@ -2,28 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rules;
 
-class AuthController extends Controller
+class UserAuthController extends Controller
 {
     private const MAX_ATTEMPTS = 3;
     private const LOCKOUT_MINUTES = 1;
 
     /**
-     * Show admin login form
+     * Show user login form
      */
     public function showLoginForm()
     {
-        return view('auth.admin.login');
+        return view('auth.login');
     }
 
     /**
-     * Handle admin login
+     * Handle user login
      */
     public function login(Request $request)
     {
@@ -41,7 +41,9 @@ class AuthController extends Controller
             ])->onlyInput('username');
         }
 
-        if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
+        $credentials['role'] = 'user';
+
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $this->resetAttempts($username);
             $request->session()->regenerate();
             return redirect()->intended(route('home'));
@@ -61,6 +63,48 @@ class AuthController extends Controller
         return back()->withErrors([
             'username' => "Username atau password salah. Sisa percobaan: {$remainingAttempts}",
         ])->onlyInput('username');
+    }
+
+    /**
+     * Show user register form
+     */
+    public function showRegisterForm()
+    {
+        return view('auth.register');
+    }
+
+    /**
+     * Handle user registration
+     */
+    public function register(Request $request)
+    {
+        $request->validate([
+            'username' => ['required', 'string', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user = User::create([
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+            'role' => 'user',
+        ]);
+
+        Auth::login($user);
+
+        return redirect()->route('home')->with('success', 'Registrasi berhasil!');
+    }
+
+    /**
+     * Handle user logout
+     */
+    public function logout(Request $request)
+    {
+        Auth::guard('')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
     }
 
     /**
@@ -120,74 +164,5 @@ class AuthController extends Controller
     private function isLockedOut($username)
     {
         return Cache::has($this->getLockoutKey($username));
-    }
-
-    /**
-     * Show admin register form
-     */
-    public function showRegisterForm()
-    {
-        return view('auth.admin.register');
-    }
-
-    /**
-     * Handle admin registration
-     */
-    public function register(Request $request)
-    {
-        $request->validate([
-            'username' => ['required', 'string', 'max:255', 'unique:admin'],
-            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
-        ]);
-
-        $admin = \App\Models\Admin::create([
-            'username' => $request->username,
-            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
-            'role' => 'admin',
-        ]);
-
-        return redirect()->route('admin.login')->with('success', 'Registration successful! Please login.');
-    }
-
-    /**
-     * Handle admin password reset
-     */
-    public function reset(Request $request)
-    {
-        $request->validate([
-            'current_password' => ['required'],
-            'new_password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
-        $admin = Auth::guard('admin')->user();
-
-        if ($admin instanceof Admin) {
-            $admin->update([
-                'password' => Hash::make($request->new_password),
-            ]);
-        }
-
-        return back()->with('status', 'Password berhasil diubah.');
-    }
-
-    /**
-     * Show admin dashboard
-     */
-    public function dashboard()
-    {
-        return view('home');
-    }
-
-    /**
-     * Handle admin logout
-     */
-    public function logout(Request $request)
-    {
-        Auth::guard('admin')->logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect()->route('admin.login');
     }
 }

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar User - TigaJaya Finance</title>
+    <title>@yield('title', 'TigaJaya Finance')</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -11,8 +12,8 @@
 <style>
     input[type="checkbox"]:checked::after {
         content: "✓";
-        color: white;             
-        font-size: 10px;         
+        color: white;
+        font-size: 10px;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -20,15 +21,18 @@
     }
 </style>
 
-<body class="min-h-screen flex items-center justify-center font-poppins bg-cover bg-center bg-no-repeat bg-fixed" 
-      style="background-image: linear-gradient(rgba(255,255,255,0.9), rgba(251,252,255,0.85)), url('/assets/picture/background.png');">
+<body class="min-h-screen flex items-center justify-center font-poppins bg-cover bg-center bg-no-repeat bg-fixed"
+    style="background-image: linear-gradient(rgba(255,255,255,0.9), rgba(251,252,255,0.85)), url('/assets/picture/background.png');">
     <main class="flex items-center justify-center w-full h-screen">
-        <section class="bg-white/90 backdrop-blur-md p-6 md:p-8 rounded-xl shadow-lg flex flex-col items-center w-[90%] max-w-sm animate-fadeIn">
+        <section
+            class="bg-white/90 backdrop-blur-md p-6 md:p-8 rounded-xl shadow-lg flex flex-col items-center w-[90%] max-w-sm animate-fadeIn">
             <div class="mb-1 flex flex-col items-center justify-center">
-                <img src="{{ asset('assets/picture/logo.png') }}"  alt="logo TigaJaya Finance" class="w-36 md:w-40 lg:w-40 mb-6 object-contain">
+                <img src="{{ asset('assets/picture/logo.png') }}" alt="logo TigaJaya Finance"
+                    class="w-36 md:w-40 lg:w-40 mb-6 object-contain">
             </div>
 
             <div class="flex flex-col items-center">
+                <h1 class="text-2xl font-bold text-[#0B3B9F] mb-6">Daftar Admin</h1>
                 @if ($errors->any())
                     <div id="serverErrors" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                         <ul class="list-disc pl-5">
@@ -39,7 +43,8 @@
                     </div>
                 @endif
 
-                <form id="registerForm" method="POST" action="{{ route('register') }}"  class="flex flex-col w-80 items-center">
+                <form id="registerForm" method="POST" action="{{ route('admin.register') }}"
+                    class="flex flex-col w-80 items-center">
                     @csrf
                     <div id="username" class="mt-2 w-full">
                         <label for="usernameInput" class="sr-only">Username</label>
@@ -70,7 +75,8 @@
 
                     <div id="confirmPassword" class="w-full">
                         <label for="confirmPasswordInput" class="sr-only">Confirm Password</label>
-                        <input id="confirmPasswordInput" name="password_confirmation" type="password" placeholder="Confirm Password"
+                        <input id="confirmPasswordInput" name="password_confirmation" type="password"
+                            placeholder="Confirm Password"
                             class="w-full px-4 py-3 border-2 border-[#0B3B9F] rounded-lg mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
                         <div id="confirmPasswordError" class="hidden mt-1 mb-3">
                             <p class="text-red-500 text-xs italic text-left">Confirm password is required.</p>
@@ -85,14 +91,15 @@
                     </div>
 
                     <div id="emptyFieldsError" class="hidden mt-1 mb-4 w-full text-left">
-                        <p class="text-red-500 text-sm font-medium">Semua field harus diisi</p>
+                        <p class="text-red-500 text-sm font-medium">All fields are required</p>
                     </div>
 
                     <div class="flex items-center justify-between mt-2 mb-4 w-full">
                         <div class="flex items-center">
                             <input type="checkbox" name="terms" id="terms"
                                 class="w-4 h-4 mr-2 appearance-none rounded border border-gray-400 checked:bg-[#0B3B9F] checked:border-[#0B3B9F] relative">
-                            <label for="terms" class="text-sm text-gray-700">Saya setuju dengan syarat & ketentuan</label>
+                            <label for="terms" class="text-sm text-gray-700">Saya setuju dengan syarat &
+                                ketentuan</label>
                         </div>
                     </div>
                     <div id="termsError" class="hidden mt-1 mb-4">
@@ -107,7 +114,8 @@
                     </div>
 
                     <p class="mt-3 text-sm text-center whitespace-nowrap">
-                        Sudah punya akun? <a href="{{ route('login') }}" class="text-[#0B3B9F] hover:underline">login</a> disini.
+                        Sudah punya akun? <a href="{{ route('admin.login') }}"
+                            class="text-[#0B3B9F] hover:underline">login</a> disini.
                     </p>
                 </form>
             </div>
@@ -182,6 +190,7 @@
 
                 let hasError = false;
 
+                // Cek semua field kosong
                 if (username === '' && password === '' && confirmPassword === '') {
                     e.preventDefault();
                     emptyFieldsError.classList.remove('hidden');
@@ -191,6 +200,7 @@
                     toggleInputs(true);
                     hasError = true;
                 } else {
+                    // Cek masing-masing fields
                     if (username === '') {
                         e.preventDefault();
                         usernameError.classList.remove('hidden');
@@ -221,6 +231,7 @@
                     }
                 }
 
+                // Cek terms and conditions
                 if (!termsChecked && !hasError) {
                     e.preventDefault();
                     termsError.classList.remove('hidden');
@@ -237,6 +248,7 @@
                 if (isFormDisabled) {
                     toggleInputs(false);
 
+                    // Menyembunyakan pesan error
                     document.getElementById('emptyFieldsError').classList.add('hidden');
                     document.getElementById('usernameError').classList.add('hidden');
                     document.getElementById('passwordError').classList.add('hidden');
@@ -249,10 +261,12 @@
                         serverErrors.classList.add('hidden');
                     }
 
+                    // Remove error styling
                     document.getElementById('usernameInput').classList.remove('border-red-500');
                     document.getElementById('passwordInput').classList.remove('border-red-500');
                     document.getElementById('confirmPasswordInput').classList.remove('border-red-500');
 
+                    // Focus pada input yang pertama kosong
                     const usernameInput = document.getElementById('usernameInput');
                     const passwordInput = document.getElementById('passwordInput');
                     const confirmPasswordInput = document.getElementById('confirmPasswordInput');
@@ -267,12 +281,30 @@
                 }
             });
 
+            // Event listeners untuk input fields
             document.getElementById('usernameInput').addEventListener('input', function() {
                 if (isFormDisabled) return;
+
                 const usernameError = document.getElementById('usernameError');
+                const emptyFieldsError = document.getElementById('emptyFieldsError');
+                const serverErrors = document.getElementById('serverErrors');
+
                 if (this.value.trim() !== '') {
                     usernameError.classList.add('hidden');
                     this.classList.remove('border-red-500');
+
+                    if (serverErrors) {
+                        serverErrors.classList.add('hidden');
+                    }
+
+                    // Check if all fields are filled to hide empty fields error
+                    const password = document.getElementById('passwordInput').value.trim();
+                    const confirmPassword = document.getElementById('confirmPasswordInput').value.trim();
+                    if (password !== '' && confirmPassword !== '') {
+                        emptyFieldsError.classList.add('hidden');
+                        document.getElementById('passwordInput').classList.remove('border-red-500');
+                        document.getElementById('confirmPasswordInput').classList.remove('border-red-500');
+                    }
                 }
             });
 
@@ -281,12 +313,19 @@
 
                 const passwordError = document.getElementById('passwordError');
                 const passwordMismatchError = document.getElementById('passwordMismatchError');
+                const emptyFieldsError = document.getElementById('emptyFieldsError');
+                const serverErrors = document.getElementById('serverErrors');
                 const confirmPasswordInput = document.getElementById('confirmPasswordInput');
 
                 if (this.value.trim() !== '') {
                     passwordError.classList.add('hidden');
                     this.classList.remove('border-red-500');
 
+                    if (serverErrors) {
+                        serverErrors.classList.add('hidden');
+                    }
+
+                    // Check password match
                     const confirmPassword = confirmPasswordInput.value.trim();
                     if (confirmPassword !== '' && this.value !== confirmPassword) {
                         passwordMismatchError.classList.remove('hidden');
@@ -297,6 +336,14 @@
                         this.classList.remove('border-red-500');
                         confirmPasswordInput.classList.remove('border-red-500');
                     }
+
+                    // Check if all fields are filled to hide empty fields error
+                    const username = document.getElementById('usernameInput').value.trim();
+                    if (username !== '' && confirmPassword !== '') {
+                        emptyFieldsError.classList.add('hidden');
+                        document.getElementById('usernameInput').classList.remove('border-red-500');
+                        confirmPasswordInput.classList.remove('border-red-500');
+                    }
                 }
             });
 
@@ -305,12 +352,19 @@
 
                 const confirmPasswordError = document.getElementById('confirmPasswordError');
                 const passwordMismatchError = document.getElementById('passwordMismatchError');
+                const emptyFieldsError = document.getElementById('emptyFieldsError');
+                const serverErrors = document.getElementById('serverErrors');
                 const passwordInput = document.getElementById('passwordInput');
 
                 if (this.value.trim() !== '') {
                     confirmPasswordError.classList.add('hidden');
                     this.classList.remove('border-red-500');
 
+                    if (serverErrors) {
+                        serverErrors.classList.add('hidden');
+                    }
+
+                    // Check password match
                     const password = passwordInput.value.trim();
                     if (password !== '' && this.value !== password) {
                         passwordMismatchError.classList.remove('hidden');
@@ -321,9 +375,18 @@
                         this.classList.remove('border-red-500');
                         passwordInput.classList.remove('border-red-500');
                     }
+
+                    // Check if all fields are filled to hide empty fields error
+                    const username = document.getElementById('usernameInput').value.trim();
+                    if (username !== '' && password !== '') {
+                        emptyFieldsError.classList.add('hidden');
+                        document.getElementById('usernameInput').classList.remove('border-red-500');
+                        passwordInput.classList.remove('border-red-500');
+                    }
                 }
             });
 
+            // Prevent typing ketika form disabled
             ['usernameInput', 'passwordInput', 'confirmPasswordInput'].forEach(id => {
                 document.getElementById(id).addEventListener('keydown', function(e) {
                     if (isFormDisabled) {

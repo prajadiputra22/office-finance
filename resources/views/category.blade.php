@@ -6,36 +6,72 @@
 <div x-data="{ openAddCategory: false, filterDropdown: false }">
 
     <section class="flex justify-between items-center gap-4 mb-8 flex-wrap">
-        <button type="button" @click="openAddCategory = true"
-            class="flex items-center px-6 py-4 bg-white border-2 border-[#e1e5e9] rounded-xl font-semibold text-gray-700 hover:bg-[#0B3B9F] hover:border-[#0B3B9F] hover:text-white shadow">
-            <span class="mr-2 font-bold text-xl">+</span>
-            Tambah Kategori
-        </button>
+        <div class="flex gap-4">
+            {{-- Tampilkan tombol tambah kategori hanya untuk admin --}}
+            @auth
+                @if(auth()->user()->role === 'admin')
+            <button type="button" @click="openAddCategory = true"
+                class="flex items-center px-6 py-4 bg-white border-2 border-[#e1e5e9] rounded-xl font-semibold text-gray-700 hover:bg-[#0B3B9F] hover:border-[#0B3B9F] hover:text-white shadow">
+                <span class="mr-2 font-bold text-xl">+</span>
+                Tambah Kategori
+            </button>
+                @endif
+            @endauth
+        </div>
 
-        <div class="flex gap-2 relative">
-            <button @click="filterDropdown = !filterDropdown"
-                class="flex items-center px-3 py-2 bg-white border-2 border-[#e1e5e9] text-sm rounded-lg hover:bg-[#0B3B9F] hover:text-white cursor-pointer transition">
-                <span class="mr-1">Filter</span>
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        {{-- Filter Dropdown --}}
+        <div class="relative" x-data="{ filterDropdown: false }">
+            <button @click="filterDropdown = !filterDropdown" 
+                class="flex items-center px-6 py-4 bg-white border-2 border-[#e1e5e9] rounded-xl font-semibold text-gray-700 hover:bg-gray-50 shadow">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z">
+                    </path>
                 </svg>
+                Filter
+                @if(request('type'))
+                    <span class="ml-2 px-2 py-1 bg-[#0B3B9F] text-white text-xs rounded-full">1</span>
+                @endif
             </button>
 
-            <div x-show="filterDropdown" @click.outside="filterDropdown = false"
-                x-transition
-                class="absolute right-0 mt-1 w-32 bg-white rounded-md shadow-lg border border-gray-200 z-10"
+            {{-- Dropdown Menu --}}
+            <div x-show="filterDropdown" 
+                @click.outside="filterDropdown = false"
+                x-transition:enter="transition ease-out duration-100"
+                x-transition:enter-start="transform opacity-0 scale-95"
+                x-transition:enter-end="transform opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-75"
+                x-transition:leave-start="transform opacity-100 scale-100"
+                x-transition:leave-end="transform opacity-0 scale-95"
+                class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-10"
                 style="display: none;">
-                <div class="py-1">
-                    <a href="{{ route('category.index') }}"
-                        class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ !request('type') ? 'bg-green-50 text-green-700 font-medium' : '' }}">
-                        Semua
+                
+                <div class="p-2">
+                    <div class="px-3 py-2 text-sm font-semibold text-gray-700 border-b border-gray-200">
+                        Filter berdasarkan Status
+                    </div>
+                    
+                    <a href="{{ route('category.index') }}" 
+                        class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md mt-1 {{ !request('type') ? 'bg-gray-100 font-semibold' : '' }}">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                        Semua Kategori
                     </a>
-                    <a href="{{ route('category.index', ['type' => 'income']) }}"
-                        class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('type') === 'income' ? 'bg-blue-50 text-blue-800 font-medium' : '' }}">
+                    
+                    <a href="{{ route('category.index', ['type' => 'income']) }}" 
+                        class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md {{ request('type') === 'income' ? 'bg-blue-50 font-semibold text-blue-600' : '' }}">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
+                        </svg>
                         Pemasukan
                     </a>
-                    <a href="{{ route('category.index', ['type' => 'expenditure']) }}"
-                        class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('type') === 'expenditure' ? 'bg-red-50 text-red-700 font-medium' : '' }}">
+                    
+                    <a href="{{ route('category.index', ['type' => 'expenditure']) }}" 
+                        class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md {{ request('type') === 'expenditure' ? 'bg-red-50 font-semibold text-red-600' : '' }}">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
+                        </svg>
                         Pengeluaran
                     </a>
                 </div>
@@ -43,16 +79,25 @@
         </div>
     </section>
 
-    <section>
-        <h1 class="text-2xl font-bold text-center mt-12 mb-8 animate-fade-in">
-            Daftar Kategori
-            @if (request('type') === 'income')
-                - Pemasukan
-            @elseif(request('type') === 'expenditure')
-                - Pengeluaran
-            @endif
-        </h1>
+    {{-- Badge untuk menampilkan filter aktif --}}
+    @if(request('type'))
+    <section class="mb-4">
+        <div class="flex items-center gap-2">
+            <span class="text-sm text-gray-600">Filter aktif:</span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                {{ request('type') === 'income' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800' }}">
+                {{ request('type') === 'income' ? 'Pemasukan' : 'Pengeluaran' }}
+                <a href="{{ route('category.index') }}" class="ml-2 hover:text-gray-600">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </a>
+            </span>
+        </div>
+    </section>
+    @endif
 
+    <section>
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             <table class="w-full">
                 <thead class="bg-gray-100 border-b border-gray-200">
@@ -60,7 +105,12 @@
                         <th class="px-6 py-4 text-left font-semibold text-gray-900 w-16">No</th>
                         <th class="px-6 py-4 text-left font-semibold text-gray-900 w-1/4">Status</th>
                         <th class="px-6 py-4 text-left font-semibold text-gray-900 w-1/2">Kategori</th>
+
+                        @auth
+                            @if(auth()->user()->role === 'admin')
                         <th class="px-6 py-4 text-center font-semibold text-gray-900 w-1/4 relative">Action</th>
+                            @endif
+                        @endauth
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -75,6 +125,9 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-gray-900">{{ $category->category_name }}</td>
+
+                            @auth
+                                @if(auth()->user()->role === 'admin')
                             <td class="px-6 py-4 text-center">
                                
                                 <div x-data="{ open: false }" class="inline-block">
@@ -115,6 +168,8 @@
                                     </div>
                                 </div>
                             </td>
+                                @endif
+                            @endauth
                         </tr>
                     @empty
                         <tr>
@@ -134,24 +189,8 @@
         </div>
     </section>
 
-    @if (session('success'))
-        <div class="fixed top-4 right-4 bg-[#0B3B9F] text-white px-6 py-3 rounded-lg shadow-lg z-50"
-            x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if ($errors->any())
-        <div class="fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50"
-            x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
+    @auth
+        @if(auth()->user()->role === 'admin')
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
         x-show="openAddCategory" x-transition.opacity style="display: none;">
         <div class="bg-white rounded-lg w-full max-w-md mx-4 shadow-xl" @click.outside="openAddCategory = false">
@@ -197,5 +236,10 @@
             </form>
         </div>
     </div>
+<<<<<<< HEAD
 </div>
+=======
+        @endif
+    @endauth
+>>>>>>> fcf07a5f25c282b785b5f2a30f31c673e44591ef
 @endsection

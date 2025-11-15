@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('category_name');
             $table->enum('type', ['income', 'expenditure']);
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }

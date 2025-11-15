@@ -45,7 +45,6 @@ class TransactionsChart
 
         return $this->chart->lineChart()
             ->setTitle('Grafik Transaksi Tahun  ' . $year)
-            ->setSubtitle('Pemasukan vs Pengeluaran per Bulan')
             ->setXAxis($months)
             ->setDataset([
                 [

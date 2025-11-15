@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TigaJaya Finance</title>
+    <title>@yield('title', 'TigaJaya Finance')</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -12,7 +12,7 @@
 <style>
     input[type="checkbox"]:checked::after {
         content: "✔";
-        color: white;
+        color: rgb(255, 254, 254);
         font-size: 10px;
         position: absolute;
         top: 50%;
@@ -29,17 +29,18 @@
             <div class="mb-1 flex flex-col items-center justify-center">
                 <img src="{{ asset('assets/picture/logo.png') }}" alt="logo TigaJaya Finance"
                     class="w-36 md:w-40 lg:w-40 mb-6 object-contain">
+                <h1 class="text-2xl font-bold text-[#0B3B9F] mb-6">Login Admin</h1>
             </div>
 
             <div class="flex flex-col items-center">
-                <!-- Unified error box for both server errors and validation errors -->
+                <!-- Unified error box for server and validation errors -->
                 <div id="errorBox"
                     class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 w-80 text-left">
                     <ul id="errorList" class="list-disc pl-5">
                     </ul>
                 </div>
 
-                <form id="loginForm" method="POST" action="{{ route('login') }}"
+                <form id="loginForm" method="POST" action="{{ route('admin.login') }}"
                     class="flex flex-col w-80 items-center">
                     @csrf
                     <div id="username" class="w-full mt-2">
@@ -59,7 +60,7 @@
                         <div class="flex items-center">
                             <input type="checkbox" name="remember" id="remember"
                                 class="w-4 h-4 mr-2 appearance-none rounded border border-gray-400 checked:bg-[#0B3B9F] checked:border-[#0B3B9F] relative">
-                            <label for="remember" class="text-sm text-gray-700">Ingat saya</label>
+                            <label for="remember" class="text-sm text-gray-700">Remember me</label>
                         </div>
                     </div>
 
@@ -71,7 +72,7 @@
                     </div>
 
                     <p class="mt-3 text-sm text-center whitespace-nowrap justify-center">
-                        Belum punya akun? <a href="{{ route('register') }}"
+                        Belum punya akun? <a href="{{ route('admin.register') }}"
                             class="text-[#F20E0F] hover:underline">daftar</a>
                         disini.
                     </p>
@@ -133,34 +134,33 @@
                 errorBox.classList.add('hidden');
             }
 
+            function startLockoutCountdown() {
+                const errorBox = document.getElementById('errorBox');
+                const errorList = document.getElementById('errorList');
+                if (!errorBox.classList.contains('hidden')) {
+                    const errorText = errorBox.textContent;
+                    if (!errorText.includes('terkunci') && !errorText.includes('percobaan')) return;
+
+                    let seconds = 60;
+                    const updateMessage = () => {
+                        const listItems = errorList.querySelectorAll('li');
+                        if (listItems.length > 0) {
+                            const originalText = listItems[0].textContent;
+                            const updatedText = originalText.replace(/\d+ detik/, `${seconds} detik`);
+                            listItems[0].textContent = updatedText;
+                        }
+                        
+                        if (seconds > 0) {
+                            seconds--;
+                            setTimeout(updateMessage, 1000);
+                        }
+                    };
+                    setTimeout(updateMessage, 1000);
+                }
+            }
+
             window.addEventListener('DOMContentLoaded', function() {
                 displayServerErrors();
-
-                function startLockoutCountdown() {
-                    const errorBox = document.getElementById('errorBox');
-                    const errorList = document.getElementById('errorList');
-                    if (!errorBox.classList.contains('hidden')) {
-                        const errorText = errorBox.textContent;
-                        if (!errorText.includes('terkunci') && !errorText.includes('percobaan')) return;
-
-                        let seconds = 60;
-                        const updateMessage = () => {
-                            const listItems = errorList.querySelectorAll('li');
-                            if (listItems.length > 0) {
-                                const originalText = listItems[0].textContent;
-                                const updatedText = originalText.replace(/\d+ detik/, `${seconds} detik`);
-                                listItems[0].textContent = updatedText;
-                            }
-                            
-                            if (seconds > 0) {
-                                seconds--;
-                                setTimeout(updateMessage, 1000);
-                            }
-                        };
-                        setTimeout(updateMessage, 1000);
-                    }
-                }
-
                 startLockoutCountdown();
             });
 
@@ -262,5 +262,4 @@
         </script>
     </main>
 </body>
-
 </html>
