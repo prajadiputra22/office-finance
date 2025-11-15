@@ -57,7 +57,6 @@ class TransactionController extends Controller
             ->get();
         $category = Category::all();
 
-        // Hitung saldo regular (non-giro atau giro yang sudah cair)
         $income = Transaction::where('type', 'income')
             ->where(function($q) {
                 $q->where('payment', '!=', 'giro')
@@ -78,7 +77,6 @@ class TransactionController extends Controller
             })
             ->sum('amount');
 
-        // Hitung saldo giro yang belum cair
         $giroIncome = Transaction::where('type', 'income')
             ->where('payment', 'giro')
             ->where(function($q) {
@@ -135,7 +133,6 @@ class TransactionController extends Controller
                 'payment' => 'required|in:cash,transfer,giro',
             ];
 
-            // Jika payment adalah giro, date_maturity wajib diisi
             if ($request->payment === 'giro') {
                 $validationRules['date_maturity'] = 'required|date';
             }
@@ -193,7 +190,6 @@ class TransactionController extends Controller
                 'no_factur' => 'nullable|string',
             ];
 
-            // Jika payment adalah giro, date_maturity wajib diisi
             if ($request->payment === 'giro') {
                 $validationRules['date_maturity'] = 'required|date';
             }

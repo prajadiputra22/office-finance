@@ -326,7 +326,6 @@
                                         </select>
                                     </div>
 
-                                    {{-- Input Tanggal Cair untuk Giro --}}
                                     <div x-show="addForm.payment === 'giro'">
                                         <label class="block text-xs font-medium mb-1">Tanggal Cair <span
                                                 class="text-red-500">*</span></label>
@@ -463,7 +462,6 @@
                                         </select>
                                     </div>
 
-                                    {{-- Input Tanggal Cair untuk Giro --}}
                                     <div x-show="editForm.payment === 'giro'">
                                         <label class="block text-xs font-medium mb-1">Tanggal Cair <span
                                                 class="text-red-500">*</span></label>

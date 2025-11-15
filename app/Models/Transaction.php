@@ -54,7 +54,6 @@ class Transaction extends Model
         return $query->whereBetween('date', [$startDate, $endDate]);
     }
 
-    // Scope untuk giro yang belum cair
     public function scopeGiroPending($query)
     {
         return $query->where('payment', 'giro')
@@ -64,14 +63,12 @@ class Transaction extends Model
                     });
     }
 
-    // Scope untuk giro yang sudah cair
     public function scopeGiroCleared($query)
     {
         return $query->where('payment', 'giro')
                     ->where('date_maturity', '<=', Carbon::now());
     }
 
-    // Check apakah giro sudah cair
     public function isGiroCleared()
     {
         if ($this->payment !== 'giro' || !$this->date_maturity) {
