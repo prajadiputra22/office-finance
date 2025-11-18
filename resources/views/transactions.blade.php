@@ -271,19 +271,19 @@
             @endif
         </div>
 
-       <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-show="showAddModal"
+       <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 sm:p-6" x-show="showAddModal"
             x-transition.opacity style="display: none;">
-            <div class="bg-white p-4 rounded-xl w-full max-w-sm shadow-lg max-h-[90vh] overflow-y-auto"
+            <div class="bg-white p-4 sm:p-6 rounded-xl w-full max-w-sm shadow-lg max-h-[90vh] overflow-y-auto"
                 @click.outside="closeAddModal()">
-                <div class="flex justify-between items-center mb-3">
-                    <h2 class="text-base font-semibold">Tambah Transaksi</h2>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-base sm:text-lg font-semibold">Tambah Transaksi</h2>
                     <button type="button" class="text-gray-500 hover:text-gray-800" @click="closeAddModal()">
                         ✕
                     </button>
                 </div>
 
-                <div x-show="addFormErrors.length > 0" class="mb-3 p-2 bg-red-100 border border-red-300 rounded-md">
-                    <ul class="text-xs text-red-600 list-disc list-inside">
+                <div x-show="addFormErrors.length > 0" class="mb-4 p-3 bg-red-100 border border-red-300 rounded-md">
+                    <ul class="text-xs text-red-600 list-disc list-inside space-y-1">
                         <template x-for="error in addFormErrors">
                             <li x-text="error"></li>
                         </template>
@@ -372,13 +372,13 @@
             class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F] resize-none"></textarea>
         </div>
 
-        <div class="flex justify-end gap-2 pt-2">
+        <div class="flex gap-2 pt-2">
           <button type="button" @click="closeAddModal()"
-            class="px-3 py-1.5 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition text-xs">
+            class="flex-1 px-3 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition text-xs font-medium">
             Batal
           </button>
           <button type="submit"
-            class="px-3 py-1.5 bg-blue-500 text-white rounded-md hover:bg-blue-900 transition text-xs">
+            class="flex-1 px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition text-xs font-medium">
             Simpan
           </button>
         </div>
@@ -386,19 +386,19 @@
     </div>
   </div>
 
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-show="showEditModal"
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 sm:p-6" x-show="showEditModal"
     x-transition.opacity style="display: none;">
-    <div class="bg-white p-4 rounded-xl w-full max-w-sm shadow-lg max-h-[90vh] overflow-y-auto"
+    <div class="bg-white p-4 sm:p-6 rounded-xl w-full max-w-sm shadow-lg max-h-[90vh] overflow-y-auto"
       @click.outside="closeEditModal()">
-      <div class="flex justify-between items-center mb-3">
-        <h2 class="text-base font-semibold">Edit Transaksi</h2>
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-base sm:text-lg font-semibold">Edit Transaksi</h2>
         <button type="button" class="text-gray-500 hover:text-gray-800" @click="closeEditModal()">
           ✕
         </button>
       </div>
 
-      <div x-show="editFormErrors.length > 0" class="mb-3 p-2 bg-red-100 border border-red-300 rounded-md">
-        <ul class="text-xs text-red-600 list-disc list-inside">
+      <div x-show="editFormErrors.length > 0" class="mb-4 p-3 bg-red-100 border border-red-300 rounded-md">
+        <ul class="text-xs text-red-600 list-disc list-inside space-y-1">
           <template x-for="error in editFormErrors">
             <li x-text="error"></li>
           </template>
@@ -501,13 +501,13 @@
             class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F] resize-none"></textarea>
         </div>
 
-        <div class="flex justify-end gap-2 pt-2">
+        <div class="flex gap-2 pt-2">
           <button type="button" @click="closeEditModal()"
-            class="px-3 py-1.5 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition text-xs">
+            class="flex-1 px-3 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition text-xs font-medium">
             Batal
           </button>
           <button type="submit"
-            class="px-3 py-1.5 bg-green-500 text-white rounded-md hover:bg-green-600 transition text-xs">
+            class="flex-1 px-3 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition text-xs font-medium">
             Update
           </button>
         </div>
