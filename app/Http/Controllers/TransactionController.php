@@ -53,7 +53,8 @@ class TransactionController extends Controller
         $transactions = $query->with('category')
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
-            ->SimplePaginate(15);
+            ->SimplePaginate(15)
+            ->appends(request()->query());
 
         $category = Category::all();
 
