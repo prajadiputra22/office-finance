@@ -51,7 +51,7 @@
                     action="@if (Auth::guard('admin')->check()) {{ route('admin.logout') }}@else{{ route('logout') }} @endif">
                     @csrf
                     <button type="submit"
-                        class="w-full py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
+                        class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
                         Logout
                     </button>
                 </form>

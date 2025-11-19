@@ -137,16 +137,16 @@
                 class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-[9999]">
                 <div class="bg-white rounded-xl p-5 w-72 shadow-lg text-center">
                     <h2 class="text-sm font-semibold mb-4">Yakin ingin logout?</h2>
-                    <div class="flex justify-between gap-3">
-                        <button @click="confirmLogout = false"
-                            class="flex-1 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition">
+                    <div class="flex gap-2 pt-2">
+                        <button type="button" @click="confirmLogout = false"
+                            class="flex-1 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition">
                             Batal
                         </button>
-                        <form method="POST"
+                        <form method="POST" class="flex-1"
                             action="@if (Auth::guard('admin')->check()) {{ route('admin.logout') }}@else{{ route('logout') }} @endif">
                             @csrf
                             <button type="submit"
-                                class="w-full py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
+                                class="w-full px-3 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
                                 Logout
                             </button>
                         </form>

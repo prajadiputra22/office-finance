@@ -53,8 +53,8 @@ class TransactionController extends Controller
         $transactions = $query->with('category')
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
-            ->take(15)
-            ->get();
+            ->paginate(15);
+
         $category = Category::all();
 
         $income = Transaction::where('type', 'income')
