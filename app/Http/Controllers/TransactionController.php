@@ -58,7 +58,12 @@ class TransactionController extends Controller
 
         $category = Category::all();
 
+        // Tambahkan filter tahun (default tahun ini)
+        $year = $request->get('year', date('Y'));
+
+        // Perhitungan income dengan filter tahun
         $income = Transaction::where('type', 'income')
+            ->whereYear('date', $year)  // TAMBAHAN FILTER TAHUN
             ->where(function($q) {
                 $q->where('payment', '!=', 'giro')
                   ->orWhere(function($q2) {
@@ -68,7 +73,9 @@ class TransactionController extends Controller
             })
             ->sum('amount');
 
+        // Perhitungan expenditure dengan filter tahun
         $expenditure = Transaction::where('type', 'expenditure')
+            ->whereYear('date', $year)  // TAMBAHAN FILTER TAHUN
             ->where(function($q) {
                 $q->where('payment', '!=', 'giro')
                   ->orWhere(function($q2) {
@@ -78,7 +85,9 @@ class TransactionController extends Controller
             })
             ->sum('amount');
 
+        // Perhitungan giro income dengan filter tahun
         $giroIncome = Transaction::where('type', 'income')
+            ->whereYear('date', $year)  // TAMBAHAN FILTER TAHUN
             ->where('payment', 'giro')
             ->where(function($q) {
                 $q->whereNull('date_maturity')
@@ -86,7 +95,9 @@ class TransactionController extends Controller
             })
             ->sum('amount');
 
+        // Perhitungan giro expenditure dengan filter tahun
         $giroExpenditure = Transaction::where('type', 'expenditure')
+            ->whereYear('date', $year)  // TAMBAHAN FILTER TAHUN
             ->where('payment', 'giro')
             ->where(function($q) {
                 $q->whereNull('date_maturity')
