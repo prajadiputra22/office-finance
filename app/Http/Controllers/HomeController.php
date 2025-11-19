@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Charts\TransactionsChart;
 use App\Models\Transaction;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -28,13 +29,27 @@ class HomeController extends Controller
         }
 
         $chart = $transactionsChart->build((int) $year);
-        
+    
         $totalIncome = Transaction::where('type', 'income')
             ->whereYear('date', $year)
+            ->where(function($q) {
+                $q->where('payment', '!=', 'giro')
+                  ->orWhere(function($q2) {
+                      $q2->where('payment', 'giro')
+                         ->where('date_maturity', '<=', Carbon::now());
+                  });
+            })
             ->sum('amount');
 
         $totalExpenditure = Transaction::where('type', 'expenditure')
             ->whereYear('date', $year)
+            ->where(function($q) {
+                $q->where('payment', '!=', 'giro')
+                  ->orWhere(function($q2) {
+                      $q2->where('payment', 'giro')
+                         ->where('date_maturity', '<=', Carbon::now());
+                  });
+            })
             ->sum('amount');
 
         $balance = $totalIncome - $totalExpenditure;
@@ -46,6 +61,14 @@ class HomeController extends Controller
             ->limit(5)
             ->get();
 
-        return view('home', compact('chart', 'balance', 'totalIncome', 'totalExpenditure', 'recentTransactions', 'year', 'availableYears'));
+        return view('home', compact(
+            'chart', 
+            'balance', 
+            'totalIncome', 
+            'totalExpenditure', 
+            'recentTransactions', 
+            'year', 
+            'availableYears'
+        ));
     }
 }
