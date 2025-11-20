@@ -105,10 +105,6 @@
                             Daftar
                         </button>
                     </div>
-
-                    <p class="mt-3 text-sm text-center whitespace-nowrap">
-                        Sudah punya akun? <a href="{{ route('login') }}" class="text-[#0B3B9F] hover:underline">login</a> disini.
-                    </p>
                 </form>
             </div>
         </section>

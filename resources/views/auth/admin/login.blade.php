@@ -33,7 +33,6 @@
             </div>
 
             <div class="flex flex-col items-center">
-                <!-- Unified error box for server and validation errors -->
                 <div id="errorBox"
                     class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 w-80 text-left">
                     <ul id="errorList" class="list-disc pl-5">
@@ -70,12 +69,6 @@
                             Login
                         </button>
                     </div>
-
-                    <p class="mt-3 text-sm text-center whitespace-nowrap justify-center">
-                        Belum punya akun? <a href="{{ route('admin.register') }}"
-                            class="text-[#F20E0F] hover:underline">daftar</a>
-                        disini.
-                    </p>
                 </form>
             </div>
         </section>
