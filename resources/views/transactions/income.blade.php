@@ -76,7 +76,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="bg-white rounded-lg shadow-md p-6">
-            <h3 class="text-xl text-center font-semibold text-[#0B3B9F] mb-4">Transaksi per Bulan Tahun {{ $year }}
+            <h3 class="text-xl text-center font-semibold text-[#0B3B9F] mb-4">Transaksi Tahun {{ $year }}
             </h3>
             <div class="w-full overflow-hidden">
                 <div class="chart-responsive-wrapper">

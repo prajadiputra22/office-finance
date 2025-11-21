@@ -11,7 +11,7 @@
                         class="w-full pl-5 pr-4 py-2 border-2 border-[#e1e5e9] rounded-lg bg-[#f8f9fa] focus:border-[#0B3B9F] focus:bg-white outline-none text-sm">
                     <div class="absolute right-5 top-1/2 -translate-y-1/2 flex items-center gap-2">
                         @if (request('search'))
-                            <a href="{{ route('transactions.index') }}" class=" py-1 text-[#F20E0F] text-xl transition">
+                            <a href="{{ route('transactions.index') }}" class="py-1 text-[#F20E0F] text-xl transition">
                                 ✕
                             </a>
                             <div class="h-6 border-l border-gray-300"></div>
@@ -38,57 +38,63 @@
     <div x-data="transactionManager()">
         <div class="w-full max-w-screen-xl">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5 animate-fadeIn">
-              <div
-              class="p-4 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
-              <h3 class="text-blue-600 font-medium">Pemasukan</h3>
-              <p class="pt-2 text-2xl font-bold text-[#1f2937]">
-                {{ 'Rp. ' . number_format($income ?? 0, 0, ',', '.') }}
-              </p>
-              </div>
-              
-              <div class="p-4 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
-                <h3 class="text-red-600 font-medium">Pengeluaran</h3>
-                <p class="pt-2 text-2xl font-bold text-[#1f2937]">
-                  {{ 'Rp. ' . number_format($expenditure ?? 0, 0, ',', '.') }}
-                </p>
-              </div>
-              
-              <div
-              class="p-4 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
-              <h3 class="text-green-400 font-medium">Giro Masuk</h3>
-              <p class="pt-2 text-2xl font-bold text-[#1f2937]">
-                {{ 'Rp. ' . number_format($giroIncome ?? 0, 0, ',', '.') }}
-              </p>
-            </div>
-            
-            <div class="p-4 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
-              <h3 class="text-orange-600 font-medium">Giro Keluar</h3>
-              <p class="pt-2 text-2xl font-bold text-[#1f2937]">
-                {{ 'Rp. ' . number_format($giroExpenditure ?? 0, 0, ',', '.') }}
-              </p>
-            </div>
-            
-            @auth
-            @if (auth()->user()->role === 'admin')
-            <button 
-            type="button" 
-            @click="showAddModal = true"
-            class="p-3 bg-white border-2 border-[#e1e5e9] rounded-xl shadow 
+                <div
+                    class="p-4 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
+                    <h3 class="text-blue-600 font-medium">Pemasukan</h3>
+                    <p class="pt-2 text-2xl font-bold text-[#1f2937]">
+                        {{ 'Rp. ' . number_format($income ?? 0, 0, ',', '.') }}
+                    </p>
+                </div>
+
+                <div
+                    class="p-4 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
+                    <h3 class="text-red-600 font-medium">Pengeluaran</h3>
+                    <p class="pt-2 text-2xl font-bold text-[#1f2937]">
+                        {{ 'Rp. ' . number_format($expenditure ?? 0, 0, ',', '.') }}
+                    </p>
+                </div>
+
+                <div
+                    class="p-4 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
+                    <h3 class="text-green-400 font-medium">Giro Masuk</h3>
+                    <p class="pt-2 text-2xl font-bold text-[#1f2937]">
+                        {{ 'Rp. ' . number_format($giroIncome ?? 0, 0, ',', '.') }}
+                    </p>
+                </div>
+
+                <div
+                    class="p-4 bg-white border border-[#e1e5e9] rounded-xl shadow hover:shadow-lg transition animate-slideInLeft">
+                    <h3 class="text-orange-600 font-medium">Giro Keluar</h3>
+                    <p class="pt-2 text-2xl font-bold text-[#1f2937]">
+                        {{ 'Rp. ' . number_format($giroExpenditure ?? 0, 0, ',', '.') }}
+                    </p>
+                </div>
+
+                @auth
+                    @if (auth()->user()->role === 'admin')
+                        <button type="button" @click="showAddModal = true"
+                            class="p-3 bg-white border-2 border-[#e1e5e9] rounded-xl shadow 
             flex items-center justify-center gap-2 font-semibold text-gray-700
             hover:bg-[#0B3B9F] hover:border-[#0B3B9F] hover:text-white transition">
-            <span class="font-bold text-xl">+</span>
-                Tambah Transaksi
-            </button>
-            @endif
-          @endauth
-        </div>
-            <div class="bg-white rounded-xl shadow p-6 animate-fadeIn ">
-                <div class="flex justify-between items-center mb-5">
+                            <span class="font-bold text-xl">+</span>
+                            Tambah Transaksi
+                        </button>
+                    @endif
+                @endauth
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-6 animate-fadeIn">
+                <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
                     <h2 class="text-lg font-bold text-[#333]">
                         Riwayat Transaksi
                         @if (request('search'))
                             <span class="text-sm font-normal text-gray-600">
                                 - Hasil pencarian: "{{ request('search') }}"
+                            </span>
+                        @endif
+                        @if (request('filter_date'))
+                            <span class="text-sm font-normal text-gray-600">
+                                - Filter tanggal: {{ \Carbon\Carbon::parse(request('filter_date'))->format('d/m/Y') }}
                             </span>
                         @endif
                     </h2>
@@ -118,443 +124,569 @@
                         @endif
                     @endauth
                 </div>
-                <div x-data="{
-                    selectedDate: '',
-                    get uniqueDates() {
-                        const dates = @js($transactions->pluck('date')->map(fn($d) => \Carbon\Carbon::parse($d)->format('d/m/Y'))->unique()->values());
-                        return dates;
-                    }
-                }">
-                    <div x-data="{
-                        selectedMonth: '',
-                        get uniqueMonths() {
-                            const months = @js($transactions->pluck('date')->map(fn($d) => \Carbon\Carbon::parse($d)->format('Y-m'))->unique()->values());
-                            return months;
-                        }
-                    }">
-                        <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-x"
-                            x-ref="tableContainer" @scroll="onTableScroll">
-                            <table
-                                class="w-full text-center border border-[#e1e5e9] rounded-lg overflow-hidden text-sm min-w-[800px] whitespace-nowrap">
-                                <thead class="bg-[#f8f9fa]">
-                                    <tr>
-                                        @auth
-                                            @if (auth()->user()->role === 'admin')
-                                                <th class="p-4 font-semibold text-[#333] text-center">
-                                                    <input type="checkbox" @change="toggleSelectAll()"
-                                                        :checked="selectAllChecked" :indeterminate="selectAllIndeterminate"
-                                                        class="w-4 h-4 mt-2 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                                                </th>
-                                            @endif
-                                        @endauth
-                                        <th class="p-4 font-semibold text-[#333] text-center relative">
-                                            <div class="inline-block">
-                                                <label for="filterMonth" class="text-sm font-large text-gray-600">Tanggal
-                                                    Transaksi</label>
-                                                <input type="month" id="filterMonth" x-model="selectedMonth"
-                                                    class="mt-1 border border-gray-300 rounded px-[5px] py-[5px] text-xs appearance-none cursor-pointer w-[27.5px] h-[30px]">
-                                            </div>
+
+                <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-x"
+                    x-ref="tableContainer" @scroll="onTableScroll">
+                    <table
+                        class="w-full text-center border border-[#e1e5e9] rounded-lg overflow-hidden text-sm min-w-[800px] whitespace-nowrap">
+                        <thead class="bg-[#f8f9fa]">
+                            <tr>
+                                @auth
+                                    @if (auth()->user()->role === 'admin')
+                                        <th class="p-4 font-semibold text-[#333] text-center">
+                                            <input type="checkbox" @change="toggleSelectAll()" :checked="selectAllChecked"
+                                                :indeterminate="selectAllIndeterminate"
+                                                class="w-4 h-4 mt-2 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
                                         </th>
-                                        <th class="p-4 font-semibold text-[#333] text-left">Kategori</th>
-                                        <th class="p-4 font-semibold text-[#333] text-center">Status</th>
-                                        <th class="p-4 font-semibold text-[#333] text-center">Pembayaran</th>
-                                        <th class="p-4 font-semibold text-[#333] text-center">Jumlah</th>
-                                        <th class="p-4 font-semibold text-[#333] text-center">No. Faktur</th>
-                                        <th class="p-4 font-semibold text-[#333] text-center">Tgl. Faktur</th>
-                                        <th class="p-4 font-semibold text-[#333] text-center">Tgl. Cair</th>
-                                        <th class="p-4 font-semibold text-[#333] text-center">Lampiran</th>
-                                        <th class="p-4 font-semibold text-[#333] text-left">Keterangan</th>
-                                    </tr>
-                                </thead>
-                                <tbody x-data="{ hasVisible: false }" x-init="$watch('selectedMonth', () => { hasVisible = false; })">
-
-                                    @forelse ($transactions as $trx)
-                                        <tr class="border-b border-[#e1e5e9] hover:bg-[#f8f9fa]"
-                                            x-show="
-                              selectedMonth === '' ||
-                              selectedMonth === '{{ \Carbon\Carbon::parse($trx->date)->format('Y-m') }}'
-                            "
-                                            x-init="$watch('selectedMonth', value => {
-                                                if (value === '' || value === '{{ \Carbon\Carbon::parse($trx->date)->format('Y-m') }}') {
-                                                    hasVisible = true;
-                                                }
-                                            })">
-                                            @auth
-                                                @if (auth()->user()->role === 'admin')
-                                                    <td class="p-4 text-center">
-                                                        <input type="checkbox" x-model="selectedTransactions"
-                                                            value="{{ $trx->id }}" @change="updateSelectAllState()"
-                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                                                    </td>
-                                                @endif
-                                            @endauth
-                                            <td class="p-4 text-left">
-                                                {{ \Carbon\Carbon::parse($trx->date)->format('d/m/Y') }}</td>
-                                            <td class="p-4 text-left">
-                                                {{ $trx->category->name ?? ($trx->category->category_name ?? 'Tidak ada kategori') }}
-                                            </td>
+                                    @endif
+                                @endauth
+                                <th class="p-4 font-semibold text-[#333] text-center relative">
+                                    <div class="inline-flex items-center gap-2">
+                                        <span class="text-sm font-large text-gray-600">Tanggal Transaksi</span>
+                                        <form method="GET" action="{{ route('transactions.index') }}" class="inline">
+                                            <input type="hidden" name="search" value="{{ request('search') }}">
+                                            <input type="date" name="filter_date" value="{{ request('filter_date') }}"
+                                                 class="mt-1 border border-gray-300 rounded px-[2px] pt-[2px] text-xl appearance-none cursor-pointer w-[28px] h-[28px]"
+                                                style="color: transparent;"
+                                                onchange="this.form.submit()">
+                                        </form>
+                                    </div>
+                                </th>
+                                <th class="p-4 font-semibold text-[#333] text-left">Kategori</th>
+                                <th class="p-4 font-semibold text-[#333] text-center">Status</th>
+                                <th class="p-4 font-semibold text-[#333] text-center">Pembayaran</th>
+                                <th class="p-4 font-semibold text-[#333] text-center">Jumlah</th>
+                                <th class="p-4 font-semibold text-[#333] text-center">No. Faktur</th>
+                                <th class="p-4 font-semibold text-[#333] text-center">Tgl. Faktur</th>
+                                <th class="p-4 font-semibold text-[#333] text-center">Tgl. Cair</th>
+                                <th class="p-4 font-semibold text-[#333] text-center">Lampiran</th>
+                                <th class="p-4 font-semibold text-[#333] text-left">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($transactions as $trx)
+                                <tr class="border-b border-[#e1e5e9] hover:bg-[#f8f9fa]">
+                                    @auth
+                                        @if (auth()->user()->role === 'admin')
                                             <td class="p-4 text-center">
-                                                <span
-                                                    class="{{ $trx->type == 'income' ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-[#F20E0F]' }} px-3 py-1 rounded-full text-sm font-medium">
-                                                    {{ $trx->type == 'income' ? 'Pemasukan' : 'Pengeluaran' }}
-                                                </span>
+                                                <input type="checkbox" x-model="selectedTransactions"
+                                                    value="{{ $trx->id }}" @change="updateSelectAllState()"
+                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
                                             </td>
-                                            <td class="p-4 text-center">
-                                                @if($trx->payment == 'giro')
-                                                    <span class="inline-flex items-center">
-                                                        Giro
-                                                        @if($trx->date_maturity && \Carbon\Carbon::parse($trx->date_maturity)->lte(\Carbon\Carbon::now()))
-                                                            <span class="ml-2 px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">Cair</span>
-                                                        @else
-                                                            <span class="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full">Pending</span>
-                                                        @endif
-                                                    </span>
+                                        @endif
+                                    @endauth
+                                    <td class="p-4 text-left">
+                                        {{ \Carbon\Carbon::parse($trx->date)->format('d/m/Y') }}</td>
+                                    <td class="p-4 text-left">
+                                        {{ $trx->category->name ?? ($trx->category->category_name ?? 'Tidak ada kategori') }}
+                                    </td>
+                                    <td class="p-4 text-center">
+                                        <span
+                                            class="{{ $trx->type == 'income' ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-[#F20E0F]' }} px-3 py-1 rounded-full text-sm font-medium">
+                                            {{ $trx->type == 'income' ? 'Pemasukan' : 'Pengeluaran' }}
+                                        </span>
+                                    </td>
+                                    <td class="p-4 text-center">
+                                        @if ($trx->payment == 'giro')
+                                            <span class="inline-flex items-center">
+                                                Giro
+                                                @if ($trx->date_maturity && \Carbon\Carbon::parse($trx->date_maturity)->lte(\Carbon\Carbon::now()))
+                                                    <span
+                                                        class="ml-2 px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">Cair</span>
                                                 @else
-                                                    {{ $trx->payment == 'cash' ? 'Cash' : 'Transfer' }}
+                                                    <span
+                                                        class="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full">Pending</span>
                                                 @endif
-                                            </td>
-                                            <td class="p-4 text-center">
-                                                <span class="font-semibold text-gray-800">
-                                                    {{ 'Rp ' . number_format($trx->amount, 0, ',', '.') }}
-                                                </span>
-                                            </td>
-                                            <td class="p-4 text-center">{{ $trx->no_factur ?? '-' }}</td>
-                                            <td class="p-4 text-center">
-                                                {{ $trx->date_factur ? \Carbon\Carbon::parse($trx->date_factur)->format('d/m/Y') : '-' }}
-                                            </td>
-                                            <td class="p-4 text-center">
-                                                @if($trx->payment == 'giro' && $trx->date_maturity)
-                                                    {{ \Carbon\Carbon::parse($trx->date_maturity)->format('d/m/Y') }}
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
-                                            <td class="p-4 text-center">
-                                                @if ($trx->attachment)
-                                                    <a href="{{ route('transactions.download', $trx->id) . '?v=' . time() }}"
-                                                        download
-                                                        class="inline-flex items-center px-3 py-1 bg-[#0B3B9F] text-white text-xs rounded-md hover:bg-blue-700 transition">
-                                                        Download
-                                                    </a>
-                                                @else
-                                                    <span class="text-sm text-gray-400 italic">-</span>
-                                                @endif
-                                            </td>
-                                            <td class="p-4 text-left">{{ $trx->description ?? '-' }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="11" class="p-8 text-center text-gray-500 text-sm">
-                                                Tidak ada transaksi
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                    <tr x-show="!hasVisible && selectedMonth !== ''" x-cloak>
-                                        <td colspan="11" class="p-8 text-center text-gray-500 text-sm">
-                                            Belum ada transaksi pada bulan ini
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    @if (method_exists($transactions, 'links'))
-                        <div class="mt-6">
-                            {{ $transactions->links() }}
-                        </div>
-                    @endif
+                                            </span>
+                                        @else
+                                            {{ $trx->payment == 'cash' ? 'Cash' : 'Transfer' }}
+                                        @endif
+                                    </td>
+                                    <td class="p-4 text-center">
+                                        <span class="font-semibold text-gray-800">
+                                            {{ 'Rp ' . number_format($trx->amount, 0, ',', '.') }}
+                                        </span>
+                                    </td>
+                                    <td class="p-4 text-center">{{ $trx->no_factur ?? '-' }}</td>
+                                    <td class="p-4 text-center">
+                                        {{ $trx->date_factur ? \Carbon\Carbon::parse($trx->date_factur)->format('d/m/Y') : '-' }}
+                                    </td>
+                                    <td class="p-4 text-center">
+                                        @if ($trx->payment == 'giro' && $trx->date_maturity)
+                                            {{ \Carbon\Carbon::parse($trx->date_maturity)->format('d/m/Y') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td class="p-4 text-center">
+                                        @if ($trx->attachment)
+                                            <a href="{{ route('transactions.download', $trx->id) . '?v=' . time() }}"
+                                                download
+                                                class="inline-flex items-center px-3 py-1 bg-[#0B3B9F] text-white text-xs rounded-md hover:bg-blue-700 transition">
+                                                Download
+                                            </a>
+                                        @else
+                                            <span class="text-sm text-gray-400 italic">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="p-4 text-left">{{ $trx->description ?? '-' }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="11" class="p-8 text-center text-gray-500 text-sm">
+                                        Tidak ada transaksi
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
 
-                {{-- Modal Tambah Transaksi --}}
-                @auth
-                    @if (auth()->user()->role === 'admin')
-                        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-                            x-show="showAddModal" x-transition.opacity style="display: none;">
-                            <div class="bg-white p-4 rounded-xl w-full max-w-sm shadow-lg max-h-[90vh] overflow-y-auto"
-                                @click.outside="closeAddModal()">
-                                <div class="flex justify-between items-center mb-3">
-                                    <h2 class="text-base font-semibold">Tambah Transaksi</h2>
-                                    <button type="button" class="text-gray-500 hover:text-gray-800"
-                                        @click="closeAddModal()">
-                                        ✕
-                                    </button>
-                                </div>
+                @if (method_exists($transactions, 'links'))
+                    <div class="mt-6">
+                        {{ $transactions->links() }}
+                    </div>
+                @endif
+            </div>
 
-                                <div x-show="addFormErrors.length > 0"
-                                    class="mb-3 p-2 bg-red-100 border border-red-300 rounded-md">
-                                    <ul class="text-xs text-red-600 list-disc list-inside">
-                                        <template x-for="error in addFormErrors">
-                                            <li x-text="error"></li>
-                                        </template>
-                                    </ul>
-                                </div>
+            {{-- Modal Tambah Transaksi --}}
+            @auth
+                @if (auth()->user()->role === 'admin')
+                    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                        x-show="showAddModal" x-transition.opacity style="display: none;">
+                        <div class="bg-white p-4 rounded-xl w-full max-w-sm shadow-lg max-h-[90vh] overflow-y-auto"
+                            @click.outside="closeAddModal()">
+                            <div class="flex justify-between items-center mb-3">
+                                <h2 class="text-base font-semibold">Tambah Transaksi</h2>
+                                <button type="button" class="text-gray-500 hover:text-gray-800" @click="closeAddModal()">
+                                    ✕
+                                </button>
+                            </div>
 
-                                <form @submit.prevent="submitAddForm()" class="space-y-3" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div>
-                                            <label class="block text-xs font-medium mb-1">Tipe <span
-                                                    class="text-red-500">*</span></label>
-                                            <select x-model="addForm.type" @change="loadAddCategories()"
-                                                class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                                <option value="">Pilih Tipe</option>
-                                                <option value="income">Pemasukan</option>
-                                                <option value="expenditure">Pengeluaran</option>
-                                            </select>
-                                        </div>
+                            <div x-show="addFormErrors.length > 0"
+                                class="mb-3 p-2 bg-red-100 border border-red-300 rounded-md">
+                                <ul class="text-xs text-red-600 list-disc list-inside">
+                                    <template x-for="error in addFormErrors">
+                                        <li x-text="error"></li>
+                                    </template>
+                                </ul>
+                            </div>
 
-                                        <div>
-                                            <label class="block text-xs font-medium mb-1">Kategori <span
-                                                    class="text-red-500">*</span></label>
-                                            <select x-model="addForm.category_id"
-                                                class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                                <option value="">Pilih Tipe Dulu</option>
-                                                <template x-for="category in addCategories">
-                                                    <option :value="category.id" x-text="category.category_name"></option>
-                                                </template>
-                                            </select>
-                                        </div>
-                                    </div>
+                            <form @submit.prevent="submitAddForm()" class="space-y-3" enctype="multipart/form-data">
+                                @csrf
+                                <div class="grid grid-cols-2 gap-3">
                                     <div>
-                                        <label class="block text-xs font-medium mb-1">Pembayaran <span
+                                        <label class="block text-xs font-medium mb-1">Tipe <span
                                                 class="text-red-500">*</span></label>
-                                        <select x-model="addForm.payment"
+                                        <select x-model="addForm.type" @change="loadAddCategories()"
                                             class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                            <option value="">Pilih Metode Pembayaran</option>
-                                            <option value="cash">Cash</option>
-                                            <option value="transfer">Transfer</option>
-                                            <option value="giro">Giro</option>
+                                            <option value="">Pilih Tipe</option>
+                                            <option value="income">Pemasukan</option>
+                                            <option value="expenditure">Pengeluaran</option>
                                         </select>
                                     </div>
 
-                                    <div x-show="addForm.payment === 'giro'">
-                                        <label class="block text-xs font-medium mb-1">Tanggal Cair <span
+                                    <div>
+                                        <label class="block text-xs font-medium mb-1">Kategori <span
                                                 class="text-red-500">*</span></label>
-                                        <input type="date" x-model="addForm.date_maturity"
+                                        <select x-model="addForm.category_id"
                                             class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                        <p class="text-[10px] text-gray-500 mt-1">Tanggal ketika giro akan dicairkan</p>
+                                            <option value="">Pilih Tipe Dulu</option>
+                                            <template x-for="category in addCategories">
+                                                <option :value="category.id" x-text="category.category_name"></option>
+                                            </template>
+                                        </select>
                                     </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium mb-1">Pembayaran <span
+                                            class="text-red-500">*</span></label>
+                                    <select x-model="addForm.payment"
+                                        class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                                        <option value="">Pilih Metode Pembayaran</option>
+                                        <option value="cash">Cash</option>
+                                        <option value="transfer">Transfer</option>
+                                        <option value="giro">Giro</option>
+                                    </select>
+                                </div>
 
-                                    <div>
-                                        <label class="block text-xs font-medium mb-1">
-                                            Jumlah: <span class="font-bold text-[#0B3B9F] text-xs"
-                                                x-text="'IDR ' + addForm.amount.toLocaleString('id-ID')"></span>
-                                        </label>
-                                        <div class="space-y-2">
-                                            <input type="range" x-model="addForm.amount" min="10000" max="10000000"
-                                                step="10000"
-                                                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                                <div x-show="addForm.payment === 'giro'">
+                                    <label class="block text-xs font-medium mb-1">Tanggal Cair <span
+                                            class="text-red-500">*</span></label>
+                                    <input type="date" x-model="addForm.date_maturity"
+                                        class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                                    <p class="text-[10px] text-gray-500 mt-1">Tanggal ketika giro akan dicairkan</p>
+                                </div>
 
-                                            <input type="text" x-model="addFormAmountDisplay" @input="formatAddAmount()"
-                                                placeholder="Contoh: 1.000.000"
-                                                class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                        </div>
-                                    </div>
+                                <div>
+                                    <label class="block text-xs font-medium mb-1">
+                                        Jumlah: <span class="font-bold text-[#0B3B9F] text-xs"
+                                            x-text="'IDR ' + addForm.amount.toLocaleString('id-ID')"></span>
+                                    </label>
+                                    <div class="space-y-2">
+                                        <input type="range" x-model="addForm.amount" min="10000" max="10000000"
+                                            step="10000"
+                                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
 
-                                    <div>
-                                        <label class="block text-xs font-medium mb-1">Tanggal</label>
-                                        <input type="date" x-model="addForm.date"
+                                        <input type="text" x-model="addFormAmountDisplay" @input="formatAddAmount()"
+                                            placeholder="Contoh: 1.000.000"
                                             class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
                                     </div>
+                                </div>
 
-                                    <div>
-                                        <label class="block text-xs font-medium mb-1">No. Faktur</label>
-                                        <input type="text" x-model="addForm.no_factur" placeholder="Masukkan nomor faktur"
-                                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                    </div>
+                                <div>
+                                    <label class="block text-xs font-medium mb-1">Tanggal</label>
+                                    <input type="date" x-model="addForm.date"
+                                        class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                                </div>
 
-                                    <div>
-                                        <label class="block text-xs font-medium mb-1">Tanggal Faktur</label>
-                                        <input type="date" x-model="addForm.date_factur"
-                                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                    </div>
+                                <div>
+                                    <label class="block text-xs font-medium mb-1">No. Faktur</label>
+                                    <input type="text" x-model="addForm.no_factur" placeholder="Masukkan nomor faktur"
+                                        class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                                </div>
 
-                                    <div>
-                                        <label class="block text-xs font-medium mb-1">Lampiran (Attachment)</label>
-                                        <input type="file" @change="addForm.attachment = $event.target.files[0]"
-                                            class="w-full text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                        <p class="text-[10px] text-gray-500 mt-1">Format: JPG, PNG, PDF (max 2MB)</p>
-                                    </div>
+                                <div>
+                                    <label class="block text-xs font-medium mb-1">Tanggal Faktur</label>
+                                    <input type="date" x-model="addForm.date_factur"
+                                        class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                                </div>
 
-                                    <div>
-                                        <label class="block text-xs font-medium mb-1">Keterangan</label>
-                                        <textarea x-model="addForm.description" rows="2" placeholder="Keterangan (opsional)"
-                                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F] resize-none"></textarea>
-                                    </div>
+                                <div>
+                                    <label class="block text-xs font-medium mb-1">Lampiran (Attachment)</label>
+                                    <input type="file" @change="addForm.attachment = $event.target.files[0]"
+                                        class="w-full text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                                    <p class="text-[10px] text-gray-500 mt-1">Format: JPG, PNG, PDF (max 2MB)</p>
+                                </div>
 
-                                    <div class="flex justify-end gap-2 pt-2">
-                                        <button type="button" @click="closeAddModal()"
-                                            class="px-3 py-1.5 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition text-xs">
-                                            Batal
-                                        </button>
-                                        <button type="submit"
-                                            class="px-3 py-1.5 bg-blue-500 text-white rounded-md hover:bg-blue-900 transition text-xs">
-                                            Simpan
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    @endif
-                @endauth
+                                <div>
+                                    <label class="block text-xs font-medium mb-1">Keterangan</label>
+                                    <textarea x-model="addForm.description" rows="2" placeholder="Keterangan (opsional)"
+                                        class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F] resize-none"></textarea>
+                                </div>
 
-                {{-- Modal Edit Transaksi --}}
-                @auth
-                    @if (auth()->user()->role === 'admin')
-                        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-                            x-show="showEditModal" x-transition.opacity style="display: none;">
-                            <div class="bg-white p-4 rounded-xl w-full max-w-sm shadow-lg max-h-[90vh] overflow-y-auto"
-                                @click.outside="closeEditModal()">
-                                <div class="flex justify-between items-center mb-3">
-                                    <h2 class="text-base font-semibold">Edit Transaksi</h2>
-                                    <button type="button" class="text-gray-500 hover:text-gray-800"
-                                        @click="closeEditModal()">
-                                        ✕
+                                <div class="flex justify-end gap-2 pt-2">
+                                    <button type="button" @click="closeAddModal()"
+                                        class="px-3 py-1.5 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition text-xs">
+                                        Batal
+                                    </button>
+                                    <button type="submit"
+                                        class="px-3 py-1.5 bg-blue-500 text-white rounded-md hover:bg-blue-900 transition text-xs">
+                                        Simpan
                                     </button>
                                 </div>
+                            </form>
+                        </div>
+                    </div>
+                @endif
+            @endauth
 
-                                <div x-show="editFormErrors.length > 0"
-                                    class="mb-3 p-2 bg-red-100 border border-red-300 rounded-md">
-                                    <ul class="text-xs text-red-600 list-disc list-inside">
-                                        <template x-for="error in editFormErrors">
-                                            <li x-text="error"></li>
-                                        </template>
-                                    </ul>
-                                </div>
+            {{-- Modal Edit Transaksi --}}
+            @auth
+                @if (auth()->user()->role === 'admin')
+                    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                        x-show="showEditModal" x-transition.opacity style="display: none;">
+                        <div class="bg-white p-4 rounded-xl w-full max-w-sm shadow-lg max-h-[90vh] overflow-y-auto"
+                            @click.outside="closeEditModal()">
+                            <div class="flex justify-between items-center mb-3">
+                                <h2 class="text-base font-semibold">Edit Transaksi</h2>
+                                <button type="button" class="text-gray-500 hover:text-gray-800" @click="closeEditModal()">
+                                    ✕
+                                </button>
+                            </div>
 
-                                <form @submit.prevent="submitEditForm()" class="space-y-3" enctype="multipart/form-data">
-                                    @csrf
-                                    @method('PUT')
+                            <div x-show="editFormErrors.length > 0"
+                                class="mb-3 p-2 bg-red-100 border border-red-300 rounded-md">
+                                <ul class="text-xs text-red-600 list-disc list-inside">
+                                    <template x-for="error in editFormErrors">
+                                        <li x-text="error"></li>
+                                    </template>
+                                </ul>
+                            </div>
 
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div>
-                                            <label class="block text-xs font-medium mb-1">Tipe <span
-                                                    class="text-red-500">*</span></label>
-                                            <select x-model="editForm.type" @change="loadEditCategories()"
-                                                class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                                <option value="">Pilih Tipe</option>
-                                                <option value="income">Pemasukan</option>
-                                                <option value="expenditure">Pengeluaran</option>
-                                            </select>
-                                        </div>
+                            <form @submit.prevent="submitEditForm()" class="space-y-3" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
 
-                                        <div>
-                                            <label class="block text-xs font-medium mb-1">Kategori <span
-                                                    class="text-red-500">*</span></label>
-                                            <select x-model="editForm.category_id"
-                                                class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                                <option value="">Loading...</option>
-                                                <template x-for="category in editCategories">
-                                                    <option :value="category.id" x-text="category.category_name"></option>
-                                                </template>
-                                            </select>
-                                        </div>
-                                    </div>
-
+                                <div class="grid grid-cols-2 gap-3">
                                     <div>
-                                        <label class="block text-xs font-medium mb-1">Pembayaran <span
+                                        <label class="block text-xs font-medium mb-1">Tipe <span
                                                 class="text-red-500">*</span></label>
-                                        <select x-model="editForm.payment"
+                                        <select x-model="editForm.type" @change="loadEditCategories()"
                                             class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                            <option value="">Pilih Metode Pembayaran</option>
-                                            <option value="cash">Cash</option>
-                                            <option value="transfer">Transfer</option>
-                                            <option value="giro">Giro</option>
+                                            <option value="">Pilih Tipe</option>
+                                            <option value="income">Pemasukan</option>
+                                            <option value="expenditure">Pengeluaran</option>
                                         </select>
                                     </div>
 
-                                    <div x-show="editForm.payment === 'giro'">
-                                        <label class="block text-xs font-medium mb-1">Tanggal Cair <span
+                                    <div>
+                                        <label class="block text-xs font-medium mb-1">Kategori <span
                                                 class="text-red-500">*</span></label>
-                                        <input type="date" x-model="editForm.date_maturity"
+                                        <select x-model="editForm.category_id"
                                             class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                        <p class="text-[10px] text-gray-500 mt-1">Tanggal ketika giro akan dicairkan</p>
+                                            <option value="">Loading...</option>
+                                            <template x-for="category in editCategories">
+                                                <option :value="category.id" x-text="category.category_name"></option>
+                                            </template>
+                                        </select>
                                     </div>
+                                </div>
 
-                                    <div>
-                                        <label class="block text-xs font-medium mb-1">
-                                            Jumlah: <span class="font-bold text-[#0B3B9F] text-xs"
-                                                x-text="'IDR ' + editForm.amount.toLocaleString('id-ID')"></span>
-                                        </label>
-                                        <div class="space-y-2">
-                                            <input type="range" x-model="editForm.amount" min="10000" max="10000000"
-                                                step="10000"
-                                                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                                <div>
+                                    <label class="block text-xs font-medium mb-1">Pembayaran <span
+                                            class="text-red-500">*</span></label>
+                                    <select x-model="editForm.payment"
+                                        class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                                        <option value="">Pilih Metode Pembayaran</option>
+                                        <option value="cash">Cash</option>
+                                        <option value="transfer">Transfer</option>
+                                        <option value="giro">Giro</option>
+                                    </select>
+                                </div>
 
-                                            <input type="text" x-model="editFormAmountDisplay" @input="formatEditAmount()"
-                                                placeholder="Contoh: 1.000.000"
-                                                class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                        </div>
-                                    </div>
+                                <div x-show="editForm.payment === 'giro'">
+                                    <label class="block text-xs font-medium mb-1">Tanggal Cair <span
+                                            class="text-red-500">*</span></label>
+                                    <input type="date" x-model="editForm.date_maturity"
+                                        class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                                    <p class="text-[10px] text-gray-500 mt-1">Tanggal ketika giro akan dicairkan</p>
+                                </div>
 
-                                    <div>
-                                        <label class="block text-xs font-medium mb-1">Tanggal</label>
-                                        <input type="date" x-model="editForm.date"
+                                <div>
+                                    <label class="block text-xs font-medium mb-1">
+                                        Jumlah: <span class="font-bold text-[#0B3B9F] text-xs"
+                                            x-text="'IDR ' + editForm.amount.toLocaleString('id-ID')"></span>
+                                    </label>
+                                    <div class="space-y-2">
+                                        <input type="range" x-model="editForm.amount" min="10000" max="10000000"
+                                            step="10000"
+                                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+
+                                        <input type="text" x-model="editFormAmountDisplay" @input="formatEditAmount()"
+                                            placeholder="Contoh: 1.000.000"
                                             class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
                                     </div>
+                                </div>
 
-                                    <div>
-                                        <label class="block text-xs font-medium mb-1">No. Faktur</label>
-                                        <input type="text" x-model="editForm.no_factur"
-                                            placeholder="Masukkan nomor faktur"
-                                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                    </div>
+                                <div>
+                                    <label class="block text-xs font-medium mb-1">Tanggal</label>
+                                    <input type="date" x-model="editForm.date"
+                                        class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                                </div>
 
-                                    <div>
-                                        <label class="block text-xs font-medium mb-1">Tanggal Faktur</label>
-                                        <input type="date" x-model="editForm.date_factur"
-                                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                    </div>
+                                <div>
+                                    <label class="block text-xs font-medium mb-1">No. Faktur</label>
+                                    <input type="text" x-model="editForm.no_factur" placeholder="Masukkan nomor faktur"
+                                        class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                                </div>
 
-                                    <div>
-                                        <label class="block text-xs font-medium mb-1">Lampiran (Attachment)</label>
-                                        <input type="file" @change="editForm.attachment = $event.target.files[0]"
-                                            class="w-full text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
-                                        <p class="text-[10px] text-gray-500 mt-1">Format: JPG, PNG, PDF (max 2MB)</p>
-                                        <div x-show="editForm.current_attachment" class="mt-1">
-                                            <p class="text-xs text-gray-600 mt-1">
-                                                File saat ini:
-                                                <a :href="'/storage/' + editForm.current_attachment" target="_blank"
-                                                    class="text-blue-600 hover:underline"
-                                                    x-text="editForm.current_attachment ? editForm.current_attachment.split('/').pop() : ''">
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </div>
+                                <div>
+                                    <label class="block text-xs font-medium mb-1">Tanggal Faktur</label>
+                                    <input type="date" x-model="editForm.date_factur"
+                                        class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                                </div>
 
-                                    <div>
-                                        <label class="block text-xs font-medium mb-1">Keterangan</label>
-                                        <textarea x-model="editForm.description" rows="2" placeholder="Keterangan (opsional)"
-                                            class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F] resize-none"></textarea>
+                                <div>
+                                    <label class="block text-xs font-medium mb-1">Lampiran (Attachment)</label>
+                                    <input type="file" @change="editForm.attachment = $event.target.files[0]"
+                                        class="w-full text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
+                                    <p class="text-[10px] text-gray-500 mt-1">Format: JPG, PNG, PDF (max 2MB)</p>
+                                    <div x-show="editForm.current_attachment" class="mt-1">
+                                        <p class="text-xs text-gray-600 mt-1">
+                                            File saat ini:
+                                            <a :href="'/storage/' + editForm.current_attachment" target="_blank"
+                                                class="text-blue-600 hover:underline"
+                                                x-text="editForm.current_attachment ? editForm.current_attachment.split('/').pop() : ''">
+                                            </a>
+                                        </p>
                                     </div>
+                                </div>
 
-                                    <div class="flex justify-end gap-2 pt-2">
-                                        <button type="button" @click="closeEditModal()"
-                                            class="px-3 py-1.5 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition text-xs">
-                                            Batal
-                                        </button>
-                                        <button type="submit"
-                                            class="px-3 py-1.5 bg-green-500 text-white rounded-md hover:bg-green-600 transition text-xs">
-                                            Update
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
+                                <div>
+                                    <label class="block text-xs font-medium mb-1">Keterangan</label>
+                                    <textarea x-model="editForm.description" rows="2" placeholder="Keterangan (opsional)"
+                                        class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F] resize-none"></textarea>
+                                </div>
+
+                                <div class="flex justify-end gap-2 pt-2">
+                                    <button type="button" @click="closeEditModal()"
+                                        class="px-3 py-1.5 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition text-xs">
+                                        Batal
+                                    </button>
+                                    <button type="submit"
+                                        class="px-3 py-1.5 bg-green-500 text-white rounded-md hover:bg-green-600 transition text-xs">
+                                        Update
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                    @endif
-                @endauth
+                    </div>
+                @endif
+            @endauth
 
-                <script>
-                    function transactionManager() {
-                        return {
-                            showAddModal: false,
-                            showEditModal: false,
-                            scrollPercent: 0,
-                            selectedTransactions: [],
-                            selectAllChecked: false,
-                            selectAllIndeterminate: false,
-                            addForm: {
+            <script>
+                function transactionManager() {
+                    return {
+                        showAddModal: false,
+                        showEditModal: false,
+                        scrollPercent: 0,
+                        selectedTransactions: [],
+                        selectAllChecked: false,
+                        selectAllIndeterminate: false,
+                        addForm: {
+                            type: '',
+                            category_id: '',
+                            payment: '',
+                            amount: 50000,
+                            date: new Date().toISOString().split('T')[0],
+                            description: '',
+                            date_factur: '',
+                            no_factur: '',
+                            date_maturity: '',
+                            attachment: null
+                        },
+                        editForm: {
+                            id: '',
+                            type: '',
+                            category_id: '',
+                            payment: '',
+                            amount: 50000,
+                            date: '',
+                            description: '',
+                            date_factur: '',
+                            no_factur: '',
+                            date_maturity: '',
+                            attachment: null,
+                            current_attachment: ''
+                        },
+                        addCategories: [],
+                        editCategories: [],
+                        addFormAmountDisplay: '',
+                        editFormAmountDisplay: '',
+                        addFormErrors: [],
+                        editFormErrors: [],
+                        init() {
+                            this.updateAmountDisplays();
+                            this.$watch('addForm.amount', () => {
+                                this.addFormAmountDisplay = parseInt(this.addForm.amount).toLocaleString('id-ID');
+                            });
+                            this.$watch('editForm.amount', () => {
+                                this.editFormAmountDisplay = parseInt(this.editForm.amount).toLocaleString('id-ID');
+                            });
+                            this.$nextTick(() => {
+                                this.onTableScroll();
+                            });
+                        },
+                        openAddModal() {
+                            this.resetAddForm();
+                            this.showAddModal = true;
+                        },
+                        closeAddModal() {
+                            this.showAddModal = false;
+                            this.addFormErrors = [];
+                        },
+                        closeEditModal() {
+                            this.showEditModal = false;
+                            this.editFormErrors = [];
+                            this.selectedTransactions = [];
+                            this.updateSelectAllState();
+                        },
+                        onTableScroll() {
+                            const el = this.$refs.tableContainer;
+                            if (!el) return;
+                            const max = el.scrollWidth - el.clientWidth;
+                            this.scrollPercent = max > 0 ? Math.round((el.scrollLeft / max) * 100) : 0;
+                        },
+                        onSliderInput() {
+                            const el = this.$refs.tableContainer;
+                            if (!el) return;
+                            const max = el.scrollWidth - el.clientWidth;
+                            const left = (this.scrollPercent / 100) * max;
+                            el.scrollTo({
+                                left,
+                                behavior: 'smooth'
+                            });
+                        },
+                        scrollTable(direction) {
+                            const el = this.$refs.tableContainer;
+                            if (!el) return;
+                            const delta = direction === 'left' ? -el.clientWidth : el.clientWidth;
+                            el.scrollBy({
+                                left: delta,
+                                behavior: 'smooth'
+                            });
+                            setTimeout(() => this.onTableScroll(), 250);
+                        },
+                        toggleSelectAll() {
+                            const checkboxes = document.querySelectorAll('input[x-model="selectedTransactions"]');
+                            if (this.selectAllChecked) {
+                                this.selectedTransactions = [];
+                            } else {
+                                this.selectedTransactions = Array.from(checkboxes).map(cb => cb.value);
+                            }
+                            this.updateSelectAllState();
+                        },
+                        updateSelectAllState() {
+                            const totalCheckboxes = document.querySelectorAll('input[x-model="selectedTransactions"]').length;
+                            const selectedCount = this.selectedTransactions.length;
+                            if (selectedCount === 0) {
+                                this.selectAllChecked = false;
+                                this.selectAllIndeterminate = false;
+                            } else if (selectedCount === totalCheckboxes) {
+                                this.selectAllChecked = true;
+                                this.selectAllIndeterminate = false;
+                            } else {
+                                this.selectAllChecked = false;
+                                this.selectAllIndeterminate = true;
+                            }
+                        },
+                        async loadAddCategories() {
+                            if (!this.addForm.type) {
+                                this.addCategories = [];
+                                this.addForm.category_id = '';
+                                return;
+                            }
+                            try {
+                                const response = await fetch(`/api/category/${this.addForm.type}`);
+                                this.addCategories = await response.json();
+                                this.addForm.category_id = '';
+                            } catch (error) {
+                                this.addCategories = [];
+                            }
+                        },
+                        async loadEditCategories() {
+                            if (!this.editForm.type) {
+                                this.editCategories = [];
+                                return;
+                            }
+                            try {
+                                const response = await fetch(`/api/category/${this.editForm.type}`);
+                                this.editCategories = await response.json();
+                            } catch (error) {
+                                this.editCategories = [];
+                            }
+                        },
+                        formatAddAmount() {
+                            let value = this.addFormAmountDisplay.replace(/\D/g, '');
+                            if (value) {
+                                this.addForm.amount = parseInt(value);
+                                this.addFormAmountDisplay = parseInt(value).toLocaleString('id-ID');
+                            }
+                        },
+                        formatEditAmount() {
+                            let value = this.editFormAmountDisplay.replace(/\D/g, '');
+                            if (value) {
+                                this.editForm.amount = parseInt(value);
+                                this.editFormAmountDisplay = parseInt(value).toLocaleString('id-ID');
+                            }
+                        },
+                        updateAmountDisplays() {
+                            this.addFormAmountDisplay = parseInt(this.addForm.amount).toLocaleString('id-ID');
+                            this.editFormAmountDisplay = parseInt(this.editForm.amount).toLocaleString('id-ID');
+                        },
+                        resetAddForm() {
+                            this.addForm = {
                                 type: '',
                                 category_id: '',
                                 payment: '',
@@ -565,314 +697,161 @@
                                 no_factur: '',
                                 date_maturity: '',
                                 attachment: null
-                            },
-                            editForm: {
-                                id: '',
-                                type: '',
-                                category_id: '',
-                                payment: '',
-                                amount: 50000,
-                                date: '',
-                                description: '',
-                                date_factur: '',
-                                no_factur: '',
-                                date_maturity: '',
-                                attachment: null,
-                                current_attachment: ''
-                            },
-                            addCategories: [],
-                            editCategories: [],
-                            addFormAmountDisplay: '',
-                            editFormAmountDisplay: '',
-                            addFormErrors: [],
-                            editFormErrors: [],
-                            init() {
-                                this.updateAmountDisplays();
-                                this.$watch('addForm.amount', () => {
-                                    this.addFormAmountDisplay = parseInt(this.addForm.amount).toLocaleString('id-ID');
-                                });
-                                this.$watch('editForm.amount', () => {
-                                    this.editFormAmountDisplay = parseInt(this.editForm.amount).toLocaleString('id-ID');
-                                });
-                                this.$nextTick(() => {
-                                    this.onTableScroll();
-                                });
-                            },
-                            openAddModal() {
-                                this.resetAddForm();
-                                this.showAddModal = true;
-                            },
-                            closeAddModal() {
-                                this.showAddModal = false;
-                                this.addFormErrors = [];
-                            },
-                            closeEditModal() {
-                                this.showEditModal = false;
-                                this.editFormErrors = [];
-                                this.selectedTransactions = [];
-                                this.updateSelectAllState();
-                            },
-                            onTableScroll() {
-                                const el = this.$refs.tableContainer;
-                                if (!el) return;
-                                const max = el.scrollWidth - el.clientWidth;
-                                this.scrollPercent = max > 0 ? Math.round((el.scrollLeft / max) * 100) : 0;
-                            },
-                            onSliderInput() {
-                                const el = this.$refs.tableContainer;
-                                if (!el) return;
-                                const max = el.scrollWidth - el.clientWidth;
-                                const left = (this.scrollPercent / 100) * max;
-                                el.scrollTo({
-                                    left,
-                                    behavior: 'smooth'
-                                });
-                            },
-                            scrollTable(direction) {
-                                const el = this.$refs.tableContainer;
-                                if (!el) return;
-                                const delta = direction === 'left' ? -el.clientWidth : el.clientWidth;
-                                el.scrollBy({
-                                    left: delta,
-                                    behavior: 'smooth'
-                                });
-                                setTimeout(() => this.onTableScroll(), 250);
-                            },
-                            toggleSelectAll() {
-                                const checkboxes = document.querySelectorAll('input[x-model="selectedTransactions"]');
-                                if (this.selectAllChecked) {
-                                    this.selectedTransactions = [];
-                                } else {
-                                    this.selectedTransactions = Array.from(checkboxes).map(cb => cb.value);
-                                }
-                                this.updateSelectAllState();
-                            },
-                            updateSelectAllState() {
-                                const totalCheckboxes = document.querySelectorAll('input[x-model="selectedTransactions"]').length;
-                                const selectedCount = this.selectedTransactions.length;
-                                if (selectedCount === 0) {
-                                    this.selectAllChecked = false;
-                                    this.selectAllIndeterminate = false;
-                                } else if (selectedCount === totalCheckboxes) {
-                                    this.selectAllChecked = true;
-                                    this.selectAllIndeterminate = false;
-                                } else {
-                                    this.selectAllChecked = false;
-                                    this.selectAllIndeterminate = true;
-                                }
-                            },
-                            async loadAddCategories() {
-                                if (!this.addForm.type) {
-                                    this.addCategories = [];
-                                    this.addForm.category_id = '';
-                                    return;
-                                }
-                                try {
-                                    const response = await fetch(`/api/category/${this.addForm.type}`);
-                                    this.addCategories = await response.json();
-                                    this.addForm.category_id = '';
-                                } catch (error) {
-                                    this.addCategories = [];
-                                }
-                            },
-                            async loadEditCategories() {
-                                if (!this.editForm.type) {
-                                    this.editCategories = [];
-                                    return;
-                                }
-                                try {
-                                    const response = await fetch(`/api/category/${this.editForm.type}`);
-                                    this.editCategories = await response.json();
-                                } catch (error) {
-                                    this.editCategories = [];
-                                }
-                            },
-                            formatAddAmount() {
-                                let value = this.addFormAmountDisplay.replace(/\D/g, '');
-                                if (value) {
-                                    this.addForm.amount = parseInt(value);
-                                    this.addFormAmountDisplay = parseInt(value).toLocaleString('id-ID');
-                                }
-                            },
-                            formatEditAmount() {
-                                let value = this.editFormAmountDisplay.replace(/\D/g, '');
-                                if (value) {
-                                    this.editForm.amount = parseInt(value);
-                                    this.editFormAmountDisplay = parseInt(value).toLocaleString('id-ID');
-                                }
-                            },
-                            updateAmountDisplays() {
-                                this.addFormAmountDisplay = parseInt(this.addForm.amount).toLocaleString('id-ID');
-                                this.editFormAmountDisplay = parseInt(this.editForm.amount).toLocaleString('id-ID');
-                            },
-                            resetAddForm() {
-                                this.addForm = {
-                                    type: '',
-                                    category_id: '',
-                                    payment: '',
-                                    amount: 50000,
-                                    date: new Date().toISOString().split('T')[0],
-                                    description: '',
-                                    date_factur: '',
-                                    no_factur: '',
-                                    date_maturity: '',
-                                    attachment: null
-                                };
-                                this.addCategories = [];
-                                this.addFormErrors = [];
-                                this.updateAmountDisplays();
-                            },
-                            validateAddForm() {
-                                const errors = [];
-                                if (!this.addForm.type) errors.push('Tipe transaksi harus dipilih');
-                                if (!this.addForm.category_id) errors.push('Kategori harus dipilih');
-                                if (!this.addForm.payment) errors.push('Metode pembayaran harus dipilih');
-                                if (this.addForm.payment === 'giro' && !this.addForm.date_maturity) {
-                                    errors.push('Tanggal cair harus diisi untuk pembayaran Giro');
-                                }
-                                if (!this.addForm.amount || this.addForm.amount <= 0) errors.push(
-                                    'Jumlah harus diisi dan lebih dari 0');
-                                this.addFormErrors = errors;
-                                return errors.length === 0;
-                            },
-                            validateEditForm() {
-                                const errors = [];
-                                if (!this.editForm.type) errors.push('Tipe transaksi harus dipilih');
-                                if (!this.editForm.category_id) errors.push('Kategori harus dipilih');
-                                if (!this.editForm.payment) errors.push('Metode pembayaran harus dipilih');
-                                if (this.editForm.payment === 'giro' && !this.editForm.date_maturity) {
-                                    errors.push('Tanggal cair harus diisi untuk pembayaran Giro');
-                                }
-                                if (!this.editForm.amount || this.editForm.amount <= 0) errors.push(
-                                    'Jumlah harus diisi dan lebih dari 0');
-                                this.editFormErrors = errors;
-                                return errors.length === 0;
-                            },
-                            async submitAddForm() {
-                                if (!this.validateAddForm()) return;
-                                const formData = new FormData();
-                                formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-                                formData.append('type', this.addForm.type);
-                                formData.append('category_id', this.addForm.category_id);
-                                formData.append('payment', this.addForm.payment);
-                                formData.append('amount', this.addForm.amount);
-                                formData.append('date', this.addForm.date);
-                                formData.append('description', this.addForm.description);
-                                formData.append('date_factur', this.addForm.date_factur);
-                                formData.append('no_factur', this.addForm.no_factur);
-                                if (this.addForm.payment === 'giro' && this.addForm.date_maturity) {
-                                    formData.append('date_maturity', this.addForm.date_maturity);
-                                }
-                                if (this.addForm.attachment) formData.append('attachment', this.addForm.attachment);
-                                const response = await fetch('{{ route('transactions.store') }}', {
-                                    method: 'POST',
-                                    body: formData
-                                });
-                                if (response.ok) window.location.reload();
-                            },
-                            async submitEditForm() {
-                                if (!this.validateEditForm()) return;
-                                const formData = new FormData();
-                                formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-                                formData.append('_method', 'PUT');
-                                formData.append('type', this.editForm.type);
-                                formData.append('category_id', this.editForm.category_id);
-                                formData.append('payment', this.editForm.payment);
-                                formData.append('amount', this.editForm.amount);
-                                formData.append('date', this.editForm.date);
-                                formData.append('description', this.editForm.description);
-                                formData.append('date_factur', this.editForm.date_factur);
-                                formData.append('no_factur', this.editForm.no_factur);
-                                if (this.editForm.payment === 'giro' && this.editForm.date_maturity) {
-                                    formData.append('date_maturity', this.editForm.date_maturity);
-                                }
-                                if (this.editForm.attachment) formData.append('attachment', this.editForm.attachment);
-                                const response = await fetch(`/transactions/${this.editForm.id}`, {
-                                    method: 'POST',
-                                    body: formData
-                                });
-                                if (response.ok) window.location.reload();
-                            },
-                            async editSelected() {
-                                if (this.selectedTransactions.length !== 1) {
-                                    alert('Pilih tepat satu transaksi untuk diedit!');
-                                    return;
-                                }
-                                try {
-                                    const response = await fetch(`/transactions/${this.selectedTransactions[0]}`);
-                                    const transaction = await response.json();
-                                    this.editForm = {
-                                        id: transaction.id,
-                                        type: transaction.type,
-                                        category_id: transaction.category_id,
-                                        payment: transaction.payment,
-                                        amount: transaction.amount,
-                                        date: transaction.date,
-                                        description: transaction.description || '',
-                                        date_factur: transaction.date_factur || '',
-                                        no_factur: transaction.no_factur || '',
-                                        date_maturity: transaction.date_maturity || '',
-                                        attachment: null,
-                                        current_attachment: transaction.attachment || ''
-                                    };
-                                    await this.loadEditCategories();
-                                    this.updateAmountDisplays();
-                                    this.showEditModal = true;
-                                } catch (error) {
-                                    console.error('[v0] Error loading transaction:', error);
-                                    alert('Gagal memuat data transaksi');
-                                }
-                            },
-                            async deleteSelected() {
-                                if (this.selectedTransactions.length === 0) {
-                                    alert('Pilih minimal satu transaksi untuk dihapus!');
-                                    return;
-                                }
-                                const confirmMessage = this.selectedTransactions.length === 1 ?
-                                    'Apakah Anda yakin ingin menghapus transaksi ini?' :
-                                    `Apakah Anda yakin ingin menghapus ${this.selectedTransactions.length} transaksi yang dipilih?`;
-                                Swal.fire({
-                                    title: 'Konfirmasi Hapus',
-                                    text: confirmMessage,
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#d33',
-                                    cancelButtonColor: '#3085d6',
-                                    confirmButtonText: 'Ya, hapus',
-                                    cancelButtonText: 'Batal'
-                                }).then(async (result) => {
-                                    if (result.isConfirmed) {
-                                        try {
-                                            const formData = new FormData();
-                                            formData.append('_token', document.querySelector('meta[name="csrf-token"]')
-                                                .content);
-                                            this.selectedTransactions.forEach(id => {
-                                                formData.append('transaction_ids[]', id);
-                                            });
-                                            const response = await fetch('/transactions/bulk-delete', {
-                                                method: 'POST',
-                                                body: formData
-                                            });
-                                            if (response.ok) {
-                                                Swal.fire('Terhapus!', 'Transaksi berhasil dihapus.', 'success')
-                                                    .then(() => window.location.reload());
-                                            } else {
-                                                const errorText = await response.text();
-                                                Swal.fire('Gagal!', 'Terjadi kesalahan pada server.', 'error');
-                                            }
-                                        } catch (error) {
-                                            console.error('[v0] Error deleting transactions:', error);
-                                            Swal.fire('Error!', 'Gagal menghapus transaksi.', 'error');
-                                        }
-                                    }
-                                });
+                            };
+                            this.addCategories = [];
+                            this.addFormErrors = [];
+                            this.updateAmountDisplays();
+                        },
+                        validateAddForm() {
+                            const errors = [];
+                            if (!this.addForm.type) errors.push('Tipe transaksi harus dipilih');
+                            if (!this.addForm.category_id) errors.push('Kategori harus dipilih');
+                            if (!this.addForm.payment) errors.push('Metode pembayaran harus dipilih');
+                            if (this.addForm.payment === 'giro' && !this.addForm.date_maturity) {
+                                errors.push('Tanggal cair harus diisi untuk pembayaran Giro');
                             }
+                            if (!this.addForm.amount || this.addForm.amount <= 0) errors.push(
+                                'Jumlah harus diisi dan lebih dari 0');
+                            this.addFormErrors = errors;
+                            return errors.length === 0;
+                        },
+                        validateEditForm() {
+                            const errors = [];
+                            if (!this.editForm.type) errors.push('Tipe transaksi harus dipilih');
+                            if (!this.editForm.category_id) errors.push('Kategori harus dipilih');
+                            if (!this.editForm.payment) errors.push('Metode pembayaran harus dipilih');
+                            if (this.editForm.payment === 'giro' && !this.editForm.date_maturity) {
+                                errors.push('Tanggal cair harus diisi untuk pembayaran Giro');
+                            }
+                            if (!this.editForm.amount || this.editForm.amount <= 0) errors.push(
+                                'Jumlah harus diisi dan lebih dari 0');
+                            this.editFormErrors = errors;
+                            return errors.length === 0;
+                        },
+                        async submitAddForm() {
+                            if (!this.validateAddForm()) return;
+                            const formData = new FormData();
+                            formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+                            formData.append('type', this.addForm.type);
+                            formData.append('category_id', this.addForm.category_id);
+                            formData.append('payment', this.addForm.payment);
+                            formData.append('amount', this.addForm.amount);
+                            formData.append('date', this.addForm.date);
+                            formData.append('description', this.addForm.description);
+                            formData.append('date_factur', this.addForm.date_factur);
+                            formData.append('no_factur', this.addForm.no_factur);
+                            if (this.addForm.payment === 'giro' && this.addForm.date_maturity) {
+                                formData.append('date_maturity', this.addForm.date_maturity);
+                            }
+                            if (this.addForm.attachment) formData.append('attachment', this.addForm.attachment);
+                            const response = await fetch('{{ route('transactions.store') }}', {
+                                method: 'POST',
+                                body: formData
+                            });
+                            if (response.ok) window.location.reload();
+                        },
+                        async submitEditForm() {
+                            if (!this.validateEditForm()) return;
+                            const formData = new FormData();
+                            formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+                            formData.append('_method', 'PUT');
+                            formData.append('type', this.editForm.type);
+                            formData.append('category_id', this.editForm.category_id);
+                            formData.append('payment', this.editForm.payment);
+                            formData.append('amount', this.editForm.amount);
+                            formData.append('date', this.editForm.date);
+                            formData.append('description', this.editForm.description);
+                            formData.append('date_factur', this.editForm.date_factur);
+                            formData.append('no_factur', this.editForm.no_factur);
+                            if (this.editForm.payment === 'giro' && this.editForm.date_maturity) {
+                                formData.append('date_maturity', this.editForm.date_maturity);
+                            }
+                            if (this.editForm.attachment) formData.append('attachment', this.editForm.attachment);
+                            const response = await fetch(`/transactions/${this.editForm.id}`, {
+                                method: 'POST',
+                                body: formData
+                            });
+                            if (response.ok) window.location.reload();
+                        },
+                        async editSelected() {
+                            if (this.selectedTransactions.length !== 1) {
+                                alert('Pilih tepat satu transaksi untuk diedit!');
+                                return;
+                            }
+                            try {
+                                const response = await fetch(`/transactions/${this.selectedTransactions[0]}`);
+                                const transaction = await response.json();
+                                this.editForm = {
+                                    id: transaction.id,
+                                    type: transaction.type,
+                                    category_id: transaction.category_id,
+                                    payment: transaction.payment,
+                                    amount: transaction.amount,
+                                    date: transaction.date,
+                                    description: transaction.description || '',
+                                    date_factur: transaction.date_factur || '',
+                                    no_factur: transaction.no_factur || '',
+                                    date_maturity: transaction.date_maturity || '',
+                                    attachment: null,
+                                    current_attachment: transaction.attachment || ''
+                                };
+                                await this.loadEditCategories();
+                                this.updateAmountDisplays();
+                                this.showEditModal = true;
+                            } catch (error) {
+                                console.error('[v0] Error loading transaction:', error);
+                                alert('Gagal memuat data transaksi');
+                            }
+                        },
+                        async deleteSelected() {
+                            if (this.selectedTransactions.length === 0) {
+                                alert('Pilih minimal satu transaksi untuk dihapus!');
+                                return;
+                            }
+                            const confirmMessage = this.selectedTransactions.length === 1 ?
+                                'Apakah Anda yakin ingin menghapus transaksi ini?' :
+                                `Apakah Anda yakin ingin menghapus ${this.selectedTransactions.length} transaksi yang dipilih?`;
+                            Swal.fire({
+                                title: 'Konfirmasi Hapus',
+                                text: confirmMessage,
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#d33',
+                                cancelButtonColor: '#3085d6',
+                                confirmButtonText: 'Ya, hapus',
+                                cancelButtonText: 'Batal'
+                            }).then(async (result) => {
+                                if (result.isConfirmed) {
+                                    try {
+                                        const formData = new FormData();
+                                        formData.append('_token', document.querySelector('meta[name="csrf-token"]')
+                                            .content);
+                                        this.selectedTransactions.forEach(id => {
+                                            formData.append('transaction_ids[]', id);
+                                        });
+                                        const response = await fetch('/transactions/bulk-delete', {
+                                            method: 'POST',
+                                            body: formData
+                                        });
+                                        if (response.ok) {
+                                            Swal.fire('Terhapus!', 'Transaksi berhasil dihapus.', 'success')
+                                                .then(() => window.location.reload());
+                                        } else {
+                                            const errorText = await response.text();
+                                            Swal.fire('Gagal!', 'Terjadi kesalahan pada server.', 'error');
+                                        }
+                                    } catch (error) {
+                                        console.error('[v0] Error deleting transactions:', error);
+                                        Swal.fire('Error!', 'Gagal menghapus transaksi.', 'error');
+                                    }
+                                }
+                            });
                         }
                     }
-                </script>
+                }
+            </script>
 
-                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-            </div>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         </div>
     </div>
 @endsection

@@ -26,6 +26,11 @@ class TransactionController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
+        if ($request->has('filter_date') && !empty($request->filter_date)) {
+            $filterDate = $request->filter_date;
+            $query->whereDate('date', $filterDate);
+        }
+
         if ($request->has('search') && !empty($request->search)) {
             $searchTerm = strtolower($request->search);
 
