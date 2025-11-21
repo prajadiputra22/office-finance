@@ -20,13 +20,13 @@ class CategoryTransactionController extends Controller
             ->where('type', 'income')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
-            ->get();
+            ->simplePaginate(4);
 
         $recentTransactions = Transaction::where('category_id', $category->id)
             ->where('type', 'income')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
-            ->limit(10)
+            ->limit(4)
             ->get();
 
         $monthlyData = Transaction::where('category_id', $category->id)
@@ -67,7 +67,7 @@ class CategoryTransactionController extends Controller
             ->pluck('year')
             ->toArray();
 
-        return view('transactions.income', compact('category', 'chart', 'recentTransactions', 'year', 'availableYears'));
+        return view('transactions.income', compact('category', 'chart', 'recentTransactions', 'transactions', 'year', 'availableYears'));
     }
 
     public function expenditure(Request $request, $slug)
@@ -79,13 +79,13 @@ class CategoryTransactionController extends Controller
             ->where('type', 'expenditure')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
-            ->get();
+            ->simplePaginate(4);
 
         $recentTransactions = Transaction::where('category_id', $category->id)
             ->where('type', 'expenditure')
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
-            ->limit(10)
+            ->limit(4)
             ->get();
 
         $monthlyData = Transaction::where('category_id', $category->id)
@@ -127,7 +127,7 @@ class CategoryTransactionController extends Controller
             ->pluck('year')
             ->toArray();
 
-        return view('transactions.expenditure', compact('category', 'chart', 'recentTransactions', 'year', 'availableYears'));
+        return view('transactions.expenditure', compact('category', 'chart', 'recentTransactions', 'transactions', 'year', 'availableYears'));
     }
 
     public function exportIncome(Request $request, $slug)

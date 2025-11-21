@@ -88,7 +88,7 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <h3 class="text-xl font-semibold text-[#F20E0F] mb-4">Transaksi Terbaru</h3>
             <div class="overflow-x-auto">
-                @if ($recentTransactions->count() > 0)
+                @if ($transactions->count() > 0)
                     <table class="w-full">
                         <thead>
                             <tr class="border-b border-gray-200">
@@ -98,7 +98,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($recentTransactions as $transaction)
+                            @foreach ($transactions as $transaction)
                                 <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
                                     <td class="py-3 px-2 text-sm text-gray-600">
                                         {{ $transaction->date ? $transaction->date->format('d/m/Y') : '-' }}
@@ -118,6 +118,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="mt-4">
+                        {{ $transactions->links() }}
+                    </div>
                 @else
                     <div class="text-center py-8 text-gray-500">
                         <i class="fas fa-inbox text-4xl mb-3"></i>
@@ -138,9 +141,6 @@
     </div>
 
     @push('scripts')
-        <script src="{{ $chart->cdn() }}"></script>
-        {{ $chart->script() }}
-
         <script src="{{ $chart->cdn() }}"></script>
         {{ $chart->script() }}
 
