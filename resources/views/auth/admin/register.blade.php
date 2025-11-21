@@ -23,19 +23,19 @@
 
 <body class="min-h-screen flex items-center justify-center font-poppins bg-cover bg-center bg-no-repeat bg-fixed"
     style="background-image: linear-gradient(rgba(255,255,255,0.9), rgba(251,252,255,0.85)), url('/assets/picture/background.png');">
-    <main class="flex items-center justify-center w-full h-screen">
+    <main class="flex items-center justify-center w-full min-h-screen px-4 py-6">
         <section
-            class="bg-white/90 backdrop-blur-md p-6 md:p-8 rounded-xl shadow-lg flex flex-col items-center w-[90%] max-w-sm animate-fadeIn">
+            class="bg-white/90 backdrop-blur-md p-4 sm:p-6 md:p-8 rounded-xl shadow-lg flex flex-col items-center w-full maax-w-xs sm:max-w-sm md:max-w-md animate-fadeIn">
             <div class="mb-1 flex flex-col items-center justify-center">
                 <img src="{{ asset('assets/picture/logo.png') }}" alt="logo TigaJaya Finance"
-                    class="w-36 md:w-40 lg:w-40 mb-6 object-contain">
+                    class="w-36 md:w-40 lg:w-40 mb-4 sm:mb-6 object-contain">
             </div>
 
-            <div class="flex flex-col items-center">
+            <div class="flex flex-col items-center w-full">
                 <h1 class="text-2xl font-bold text-[#0B3B9F] mb-6">Daftar Admin</h1>
                 @if ($errors->any())
-                    <div id="serverErrors" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                        <ul class="list-disc pl-5">
+                    <div id="serverErrors" class="bg-red-100 border border-red-400 text-red-700 px-3 sm:px-4 py-2 sm:py-3 rounded mb-4 w-full text-left text-xs sm:text-sm">
+                        <ul class="list-disc pl-4 sm:pl-5">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
@@ -44,13 +44,13 @@
                 @endif
 
                 <form id="registerForm" method="POST" action="{{ route('admin.register') }}"
-                    class="flex flex-col w-80 items-center">
+                    class="flex flex-col w-full items-center">
                     @csrf
                     <div id="username" class="mt-2 w-full">
                         <label for="usernameInput" class="sr-only">Username</label>
                         <input id="usernameInput" name="username" type="text" placeholder="Username"
                             value="{{ old('username') }}" autofocus
-                            class="w-full px-4 py-3 border-2 border-[#0B3B9F] rounded-lg mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
+                            class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border-2 border-[#0B3B9F] rounded-lg mb-3 sm:mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
                         <div id="usernameError" class="hidden mt-1 mb-3">
                             <p class="text-red-500 text-xs italic text-left">Username is required.</p>
                         </div>
@@ -63,7 +63,7 @@
                     <div id="password" class="w-full">
                         <label for="passwordInput" class="sr-only">Password</label>
                         <input id="passwordInput" name="password" type="password" placeholder="Password"
-                            class="w-full px-4 py-3 border-2 border-[#0B3B9F] rounded-lg mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
+                            class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border-2 border-[#0B3B9F] rounded-lg mb-3 sm:mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
                         <div id="passwordError" class="hidden mt-1 mb-3">
                             <p class="text-red-500 text-xs italic text-left">Password is required.</p>
                         </div>
@@ -77,7 +77,7 @@
                         <label for="confirmPasswordInput" class="sr-only">Confirm Password</label>
                         <input id="confirmPasswordInput" name="password_confirmation" type="password"
                             placeholder="Confirm Password"
-                            class="w-full px-4 py-3 border-2 border-[#0B3B9F] rounded-lg mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
+                            class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border-2 border-[#0B3B9F] rounded-lg mb-3 sm:mb-4 outline-none focus:border-[#0B3B9F] focus:ring-2 focus:ring-[#0B3B9F] focus:ring-opacity-30">
                         <div id="confirmPasswordError" class="hidden mt-1 mb-3">
                             <p class="text-red-500 text-xs italic text-left">Confirm password is required.</p>
                         </div>
@@ -94,11 +94,11 @@
                         <p class="text-red-500 text-sm font-medium">All fields are required</p>
                     </div>
 
-                    <div class="flex items-center justify-between mt-2 mb-4 w-full">
+                    <div class="flex items-center justify-between mt-2 mb-3 sm:mb-4 w-full">
                         <div class="flex items-center">
                             <input type="checkbox" name="terms" id="terms"
                                 class="w-4 h-4 mr-2 appearance-none rounded border border-gray-400 checked:bg-[#0B3B9F] checked:border-[#0B3B9F] relative">
-                            <label for="terms" class="text-sm text-gray-700">Saya setuju dengan syarat &
+                            <label for="terms" class="text-xs sm:text-sm text-gray-700">Saya setuju dengan syarat &
                                 ketentuan</label>
                         </div>
                     </div>
@@ -108,7 +108,7 @@
 
                     <div id="button" class="mt-2 w-full">
                         <button type="submit"
-                            class="w-80 text-md bg-[#F20E0F] text-white py-3 rounded-lg font-bold transition duration-300 hover:bg-[#0B3B9F] hover:text-white active:scale-95">
+                            class="w-full text-sm sm:text-base md:text-lg bg-[#F20E0F] text-white py-2 sm:py-3 rounded-lg font-bold transition duration-300 hover:bg-[#0B3B9F] hover:text-white active:scale-95">
                             Daftar
                         </button>
                     </div>
