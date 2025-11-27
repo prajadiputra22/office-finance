@@ -7,7 +7,7 @@
     <h1 class="text-lg md:text-xl font-bold pr-24 md:pr-0">
         Transaksi Bulan {{ $selectedMonthName }} {{ $selectedYear }}
     </h1>
-    <div class="absolute right-0 top-0">
+    <div class="absolute right-0 top-0 animate-fadeIn">
        <img src="{{ asset('assets/picture/logo.png') }}" 
         alt="Logo TigaJaya Finance"
         class="w-16 md:w-24 lg:w-28 h-auto object-contain"> 

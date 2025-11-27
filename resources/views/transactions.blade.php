@@ -26,7 +26,7 @@
                     </div>
                 </div>
             </form>
-            <div class="hidden sm:flex flex-shrink-0 self-start">
+            <div class="hidden sm:flex flex-shrink-0 self-start animate-fadeIn">
                 <img src="{{ asset('assets/picture/logo.png') }}" alt="Logo TigaJaya Finance"
                     class="w-16 md:w-24 lg:w-28 h-auto object-contain">
             </div>
