@@ -16,9 +16,8 @@
         }
     </style>
     <!-- PWA  -->
-    <meta name="theme-color" content="#6777ef" />
     <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
-    <link rel="manifest" href="{{ asset('/manifest.json') }}">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
 </head>
 
 <body x-data="{ confirmLogout: false }" class="bg-[#f5f5f5] font-poppins">

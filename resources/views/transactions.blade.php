@@ -90,11 +90,21 @@
                         @if (request('search'))
                             <span class="text-xs sm:text-sm font-normal text-gray-600 block sm:inline">
                                 - Hasil pencarian: "{{ request('search') }}"
+                                <button onclick="clearSearch()" class="text-gray-400 hover:text-red-500 transition" title="Hapus pencarian">
+                                    <svg class="w-4 h-4 relative top-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
                             </span>
                         @endif
                         @if (request('filter_date'))
                             <span class="text-xs sm:text-sm font-normal text-gray-600 block sm:inline">
                                 - Filter tanggal: {{ \Carbon\Carbon::parse(request('filter_date'))->format('d/m/Y') }}
+                                <button onclick="clearDateFilter()" class="text-gray-400 hover:text-red-500 transition" title="Hapus filter tanggal">
+                                    <svg class="w-4 h-4 relative top-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
                             </span>
                         @endif
                     </h2>
@@ -621,8 +631,20 @@
             @endauth
 
             <script>
+                function clearSearch() {
+                    const currentUrl = new URL(window.location);
+                    currentUrl.searchParams.delete('search');
+                    window.location.href = currentUrl.toString();
+                }
+
+                function clearDateFilter() {
+                    const currentUrl = new URL(window.location);
+                    currentUrl.searchParams.delete('filter_date');
+                    window.location.href = currentUrl.toString();
+                }
                 function transactionManager() {
                     return {
+                        
                         showAddModal: false,
                         showEditModal: false,
                         scrollPercent: 0,

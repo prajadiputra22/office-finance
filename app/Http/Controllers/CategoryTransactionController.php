@@ -20,6 +20,7 @@ class CategoryTransactionController extends Controller
         $transactions = Transaction::where('category_id', $category->id)
             ->where('type', 'income')
             ->whereYear('date', $year)
+            ->whereMonth('date', $month)
             ->orderBy('date', 'desc')
             ->simplePaginate(4);
 
@@ -80,6 +81,7 @@ class CategoryTransactionController extends Controller
         $transactions = Transaction::where('category_id', $category->id)
             ->where('type', 'expenditure')
             ->whereYear('date', $year)
+            ->whereMonth('date', $month)
             ->orderBy('date', 'desc')
             ->simplePaginate(4);
 

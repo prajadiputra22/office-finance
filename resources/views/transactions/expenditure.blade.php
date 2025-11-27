@@ -34,20 +34,6 @@
                 </select>
             </div>
 
-            <!-- Filter Mobile -->
-            <div class="flex-1">
-                <label for="yearFilter" class="block text-xs font-medium text-gray-700 mb-1">Tahun :</label>
-                <select id="yearFilter"
-                    class="w-full px-2 py-2 border border-gray-300 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-[#F20E0F]"
-                    onchange="filterByYearMonth()">
-                    @foreach ($availableYears as $availableYear)
-                        <option value="{{ $availableYear }}" {{ $availableYear == $year ? 'selected' : '' }}>
-                            {{ $availableYear }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
             <div class="flex-1">
                 <label for="monthFilter" class="block text-xs font-medium text-gray-700 mb-1">Bulan :</label>
                 <select id="monthFilter"
@@ -60,14 +46,11 @@
                     @endforeach
                 </select>
             </div>
-        </div>
 
-        <!-- Filter Desktop -->
-        <div class="hidden md:flex justify-end items-center gap-3">
-            <div class="flex items-center gap-2 flex-col sm:flex-row sm:gap-3">
-                <label for="yearFilterDesktop" class="text-xs sm:text-sm font-medium text-gray-700">Tahun :</label>
-                <select id="yearFilterDesktop"
-                    class="px-2 sm:px-3 py-2 border border-gray-300 rounded-md text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#F20E0F]"
+            <div class="flex-1">
+                <label for="yearFilter" class="block text-xs font-medium text-gray-700 mb-1">Tahun :</label>
+                <select id="yearFilter"
+                    class="w-full px-2 py-2 border border-gray-300 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-[#F20E0F]"
                     onchange="filterByYearMonth()">
                     @foreach ($availableYears as $availableYear)
                         <option value="{{ $availableYear }}" {{ $availableYear == $year ? 'selected' : '' }}>
@@ -76,7 +59,9 @@
                     @endforeach
                 </select>
             </div>
+        </div>
 
+        <div class="hidden md:flex justify-end items-center gap-3">
             <div class="flex items-center gap-2 flex-col sm:flex-row sm:gap-3">
                 <label for="monthFilterDesktop" class="text-xs sm:text-sm font-medium text-gray-700">Bulan :</label>
                 <select id="monthFilterDesktop"
@@ -85,6 +70,19 @@
                     @foreach ($monthNames as $monthIndex => $monthName)
                         <option value="{{ $monthIndex + 1 }}" {{ $monthIndex + 1 == $month ? 'selected' : '' }}>
                             {{ $monthName }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="flex items-center gap-2 flex-col sm:flex-row sm:gap-3">
+                <label for="yearFilterDesktop" class="text-xs sm:text-sm font-medium text-gray-700">Tahun :</label>
+                <select id="yearFilterDesktop"
+                    class="px-2 sm:px-3 py-2 border border-gray-300 rounded-md text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#F20E0F]"
+                    onchange="filterByYearMonth()">
+                    @foreach ($availableYears as $availableYear)
+                        <option value="{{ $availableYear }}" {{ $availableYear == $year ? 'selected' : '' }}>
+                            {{ $availableYear }}
                         </option>
                     @endforeach
                 </select>
@@ -154,8 +152,7 @@
                         <thead>
                             <tr class="border-b border-gray-200">
                                 <th class="text-left py-3 px-2 text-xs sm:text-sm font-semibold text-gray-700">Tanggal</th>
-                                <th class="text-left py-3 px-2 text-xs sm:text-sm font-semibold text-gray-700">Keterangan
-                                </th>
+                                <th class="text-left py-3 px-2 text-xs sm:text-sm font-semibold text-gray-700">Keterangan</th>
                                 <th class="text-right py-3 px-2 text-xs sm:text-sm font-semibold text-gray-700">Jumlah</th>
                             </tr>
                         </thead>
@@ -186,8 +183,7 @@
                     <div class="bg-gray-50 rounded-lg p-3 border border-gray-200 hover:border-[#F20E0F] transition">
                         <div class="flex justify-between items-start mb-2">
                             <div>
-                                <p class="text-xs text-gray-500">
-                                    {{ $transaction->date ? $transaction->date->format('d/m/Y') : '-' }}</p>
+                                <p class="text-xs text-gray-500">{{ $transaction->date ? $transaction->date->format('d/m/Y') : '-' }}</p>
                                 <p class="text-sm font-medium text-gray-800">{{ $transaction->description ?? '-' }}</p>
                             </div>
                             <div class="text-right">
@@ -251,13 +247,26 @@
                     return;
                 }
 
-                const yearSelect = document.getElementById('yearFilter') || document.getElementById('yearFilterDesktop');
-                const monthSelect = document.getElementById('monthFilter') || document.getElementById('monthFilterDesktop');
-                const selectedYear = yearSelect.value;
-                const selectedMonth = monthSelect.value;
+                let yearSelect, monthSelect;
+                
+                const yearFilterEl = document.getElementById('yearFilter');
+                const yearFilterDesktopEl = document.getElementById('yearFilterDesktop');
+                yearSelect = (yearFilterEl && yearFilterEl.offsetParent !== null) ? yearFilterEl : yearFilterDesktopEl;
+    
+                const monthFilterEl = document.getElementById('monthFilter');
+                const monthFilterDesktopEl = document.getElementById('monthFilterDesktop');
+                monthSelect = (monthFilterEl && monthFilterEl.offsetParent !== null) ? monthFilterEl : monthFilterDesktopEl;
 
+                const selectedYear = yearSelect?.value;
+                const selectedMonth = monthSelect?.value;
+
+                if (!selectedYear || !selectedMonth) {
+                    console.error('Tahun atau Bulan tidak ditemukan');
+                    return;
+                }
+                
                 window.location.href = `{{ route('category.expenditure', ['slug' => ':slug']) }}`.replace(':slug', slug) +
-                    `?year=${selectedYear}&month=${selectedMonth}`;
+                `?year=${selectedYear}&month=${selectedMonth}`;
             }
         </script>
     @endpush

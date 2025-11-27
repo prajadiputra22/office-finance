@@ -32,18 +32,6 @@
                     @endif
                 </select>
             </div>
-            <!-- Filter Mobile -->
-            <div class="flex-1">
-                <label for="yearFilter" class="block text-xs font-medium text-gray-700 mb-1">Tahun :</label>
-                <select id="yearFilter" class="w-full px-2 py-2 border border-gray-300 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]" 
-                    onchange="filterByYearMonth()">
-                    @foreach($availableYears as $availableYear)
-                        <option value="{{ $availableYear }}" {{ $availableYear == $year ? 'selected' : '' }}>
-                            {{ $availableYear }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
  
             <div class="flex-1">
                 <label for="monthFilter" class="block text-xs font-medium text-gray-700 mb-1">Bulan :</label>
@@ -56,23 +44,21 @@
                     @endforeach
                 </select>
             </div>
-        </div>
 
-        <!-- Filter Desktop -->
-        <div class="hidden md:flex justify-end items-center gap-3">
-            <div class="flex items-center gap-2 flex-col sm:flex-row sm:gap-3">
-                <label for="yearFilterDesktop" class="text-xs sm:text-sm font-medium text-gray-700">Tahun :</label>
-                <select id="yearFilterDesktop"
-                    class="px-2 sm:px-3 py-2 border border-gray-300 rounded-md text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]"
+            <div class="flex-1">
+                <label for="yearFilter" class="block text-xs font-medium text-gray-700 mb-1">Tahun :</label>
+                <select id="yearFilter" class="w-full px-2 py-2 border border-gray-300 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]" 
                     onchange="filterByYearMonth()">
-                    @foreach ($availableYears as $availableYear)
+                    @foreach($availableYears as $availableYear)
                         <option value="{{ $availableYear }}" {{ $availableYear == $year ? 'selected' : '' }}>
                             {{ $availableYear }}
                         </option>
                     @endforeach
                 </select>
             </div>
-            
+        </div>
+
+        <div class="hidden md:flex justify-end items-center gap-3">
             <div class="flex items-center gap-2 flex-col sm:flex-row sm:gap-3">
                 <label for="monthFilterDesktop" class="text-xs sm:text-sm font-medium text-gray-700">Bulan :</label>
                 <select id="monthFilterDesktop"
@@ -81,6 +67,19 @@
                     @foreach ($monthNames as $monthIndex => $monthName)
                         <option value="{{ $monthIndex + 1 }}" {{ ($monthIndex + 1) == $month ? 'selected' : '' }}>
                             {{ $monthName }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="flex items-center gap-2 flex-col sm:flex-row sm:gap-3">
+                <label for="yearFilterDesktop" class="text-xs sm:text-sm font-medium text-gray-700">Tahun :</label>
+                <select id="yearFilterDesktop"
+                    class="px-2 sm:px-3 py-2 border border-gray-300 rounded-md text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]"
+                    onchange="filterByYearMonth()">
+                    @foreach ($availableYears as $availableYear)
+                        <option value="{{ $availableYear }}" {{ $availableYear == $year ? 'selected' : '' }}>
+                            {{ $availableYear }}
                         </option>
                     @endforeach
                 </select>
@@ -131,7 +130,8 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         <div class="bg-white rounded-lg shadow-md p-4 md:p-6">
-            <h3 class="text-lg md:text-xl text-center font-semibold text-[#0B3B9F] mb-4">Transaksi Tahun {{ $year }}
+            <h3 class="text-lg md:text-xl text-center font-semibold text-[#0B3B9F] mb-4">Transaksi Tahun 
+                {{ $year }}
             </h3>
             <div class="w-full overflow-hidden">
                 <div class="chart-responsive-wrapper">
@@ -241,13 +241,26 @@
                     return;
                 }
 
-                const yearSelect = document.getElementById('yearFilter') || document.getElementById('yearFilterDesktop');
-                const monthSelect = document.getElementById('monthFilter') || document.getElementById('monthFilterDesktop');
-                const selectedYear = yearSelect.value;
-                const selectedMonth = monthSelect.value;
+                let yearSelect, monthSelect;
+                
+                const yearFilterEl = document.getElementById('yearFilter');
+                const yearFilterDesktopEl = document.getElementById('yearFilterDesktop');
+                yearSelect = (yearFilterEl && yearFilterEl.offsetParent !== null) ? yearFilterEl : yearFilterDesktopEl;
+    
+                const monthFilterEl = document.getElementById('monthFilter');
+                const monthFilterDesktopEl = document.getElementById('monthFilterDesktop');
+                monthSelect = (monthFilterEl && monthFilterEl.offsetParent !== null) ? monthFilterEl : monthFilterDesktopEl;
 
+                const selectedYear = yearSelect?.value;
+                const selectedMonth = monthSelect?.value;
+
+                if (!selectedYear || !selectedMonth) {
+                    console.error('Tahun atau Bulan tidak ditemukan');
+                    return;
+                }
+                
                 window.location.href = `{{ route('category.income', ['slug' => ':slug']) }}`.replace(':slug', slug) +
-                    `?year=${selectedYear}&month=${selectedMonth}`;
+                `?year=${selectedYear}&month=${selectedMonth}`;
             }
         </script>
     @endpush
