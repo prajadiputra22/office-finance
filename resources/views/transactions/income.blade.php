@@ -32,10 +32,11 @@
                     @endif
                 </select>
             </div>
+            <!-- Filter Mobile -->
             <div class="flex-1">
                 <label for="yearFilter" class="block text-xs font-medium text-gray-700 mb-1">Tahun :</label>
                 <select id="yearFilter" class="w-full px-2 py-2 border border-gray-300 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]" 
-                    onchange="filterByYear(this.value)">
+                    onchange="filterByYearMonth()">
                     @foreach($availableYears as $availableYear)
                         <option value="{{ $availableYear }}" {{ $availableYear == $year ? 'selected' : '' }}>
                             {{ $availableYear }}
@@ -43,17 +44,43 @@
                     @endforeach
                 </select>
             </div>
+ 
+            <div class="flex-1">
+                <label for="monthFilter" class="block text-xs font-medium text-gray-700 mb-1">Bulan :</label>
+                <select id="monthFilter" class="w-full px-2 py-2 border border-gray-300 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]" 
+                    onchange="filterByYearMonth()">
+                    @foreach($monthNames as $monthIndex => $monthName)
+                        <option value="{{ $monthIndex + 1 }}" {{ ($monthIndex + 1) == $month ? 'selected' : '' }}>
+                            {{ $monthName }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
         </div>
 
-        <div class="hidden md:flex justify-end items-center">
+        <!-- Filter Desktop -->
+        <div class="hidden md:flex justify-end items-center gap-3">
             <div class="flex items-center gap-2 flex-col sm:flex-row sm:gap-3">
                 <label for="yearFilterDesktop" class="text-xs sm:text-sm font-medium text-gray-700">Tahun :</label>
                 <select id="yearFilterDesktop"
                     class="px-2 sm:px-3 py-2 border border-gray-300 rounded-md text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]"
-                    onchange="filterByYear(this.value)">
+                    onchange="filterByYearMonth()">
                     @foreach ($availableYears as $availableYear)
                         <option value="{{ $availableYear }}" {{ $availableYear == $year ? 'selected' : '' }}>
                             {{ $availableYear }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div class="flex items-center gap-2 flex-col sm:flex-row sm:gap-3">
+                <label for="monthFilterDesktop" class="text-xs sm:text-sm font-medium text-gray-700">Bulan :</label>
+                <select id="monthFilterDesktop"
+                    class="px-2 sm:px-3 py-2 border border-gray-300 rounded-md text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B9F]"
+                    onchange="filterByYearMonth()">
+                    @foreach ($monthNames as $monthIndex => $monthName)
+                        <option value="{{ $monthIndex + 1 }}" {{ ($monthIndex + 1) == $month ? 'selected' : '' }}>
+                            {{ $monthName }}
                         </option>
                     @endforeach
                 </select>
@@ -66,7 +93,7 @@
         hover:shadow-lg hover:from-[#1048c9] hover:to-[#2f70d4] transition-all">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs md:text-sm opacity-90">Total Transaksi</p>
+                    <p class="text-xs md:text-sm opacity-90">Total Transaksi {{ $monthNames[$month - 1] }}</p>
                     <p class="text-xl md:text-3xl font-bold mt-1 md:mt-2">{{ $recentTransactions->count() }}</p>
                 </div>
                 <i class="fas fa-list text-2xl md:text-4xl opacity-30"></i>
@@ -78,7 +105,7 @@
         hover:shadow-lg hover:from-[#1048c9] hover:to-[#2f70d4] transition-all">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs md:text-sm opacity-90">Total Pemasukan</p>
+                    <p class="text-xs md:text-sm opacity-90">Total Pemasukan {{ $monthNames[$month - 1] }}</p>
                     <p class="text-lg md:text-2xl font-bold mt-1 md:mt-2">
                        Rp {{ number_format($recentTransactions->sum('amount'), 0, ',', '.') }}</p>
                 </div>
@@ -91,7 +118,7 @@
         hover:shadow-lg hover:from-[#1048c9] hover:to-[#2f70d4] transition-all">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs md:text-sm opacity-90">Rata-rata</p>
+                    <p class="text-xs md:text-sm opacity-90">Rata-rata {{ $monthNames[$month - 1] }}</p>
                     <p class="text-lg md:text-2xl font-bold mt-1 md:mt-2">
                         Rp
                         {{ $recentTransactions->count() > 0 ? number_format($recentTransactions->avg('amount'), 0, ',', '.') : '0' }}
@@ -200,12 +227,13 @@
 
                 const urlParams = new URLSearchParams(window.location.search);
                 const year = urlParams.get('year') || new Date().getFullYear();
+                const month = urlParams.get('month') || new Date().getMonth() + 1;
 
                 window.location.href = `{{ route('category.income', ['slug' => ':slug']) }}`.replace(':slug', selectedSlug) +
-                    `?year=${year}`;
+                    `?year=${year}&month=${month}`;
             }
 
-            function filterByYear(selectedYear) {
+            function filterByYearMonth() {
                 const slug = '{{ $category->slug }}';
 
                 if (!slug) {
@@ -213,8 +241,13 @@
                     return;
                 }
 
+                const yearSelect = document.getElementById('yearFilter') || document.getElementById('yearFilterDesktop');
+                const monthSelect = document.getElementById('monthFilter') || document.getElementById('monthFilterDesktop');
+                const selectedYear = yearSelect.value;
+                const selectedMonth = monthSelect.value;
+
                 window.location.href = `{{ route('category.income', ['slug' => ':slug']) }}`.replace(':slug', slug) +
-                    `?year=${selectedYear}`;
+                    `?year=${selectedYear}&month=${selectedMonth}`;
             }
         </script>
     @endpush

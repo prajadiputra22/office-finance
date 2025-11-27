@@ -15,6 +15,7 @@ class CategoryTransactionController extends Controller
     {
         $category = Category::where('slug', $slug)->firstOrFail();
         $year = $request->query('year', now()->year);
+        $month = $request->query('month', now()->month);
 
         $transactions = Transaction::where('category_id', $category->id)
             ->where('type', 'income')
@@ -25,8 +26,8 @@ class CategoryTransactionController extends Controller
         $recentTransactions = Transaction::where('category_id', $category->id)
             ->where('type', 'income')
             ->whereYear('date', $year)
+            ->whereMonth('date', $month)
             ->orderBy('date', 'desc')
-            ->limit(4)
             ->get();
 
         $monthlyData = Transaction::where('category_id', $category->id)
@@ -67,13 +68,14 @@ class CategoryTransactionController extends Controller
             ->pluck('year')
             ->toArray();
 
-        return view('transactions.income', compact('category', 'chart', 'recentTransactions', 'transactions', 'year', 'availableYears'));
+        return view('transactions.income', compact('category', 'chart', 'recentTransactions', 'transactions', 'year', 'month', 'availableYears', 'monthNames'));
     }
 
     public function expenditure(Request $request, $slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
         $year = $request->query('year', now()->year);
+        $month = $request->query('month', now()->month);
 
         $transactions = Transaction::where('category_id', $category->id)
             ->where('type', 'expenditure')
@@ -84,8 +86,8 @@ class CategoryTransactionController extends Controller
         $recentTransactions = Transaction::where('category_id', $category->id)
             ->where('type', 'expenditure')
             ->whereYear('date', $year)
+            ->whereMonth('date', $month)
             ->orderBy('date', 'desc')
-            ->limit(4)
             ->get();
 
         $monthlyData = Transaction::where('category_id', $category->id)
@@ -118,7 +120,6 @@ class CategoryTransactionController extends Controller
             ->setHeight(250)
             ->setColors(['#F20E0F']);
 
-
         $availableYears = Transaction::where('category_id', $category->id)
             ->where('type', 'expenditure')
             ->selectRaw('YEAR(date) as year')
@@ -127,9 +128,9 @@ class CategoryTransactionController extends Controller
             ->pluck('year')
             ->toArray();
 
-        return view('transactions.expenditure', compact('category', 'chart', 'recentTransactions', 'transactions', 'year', 'availableYears'));
+        return view('transactions.expenditure', compact('category', 'chart', 'recentTransactions', 'transactions', 'year', 'month', 'availableYears', 'monthNames'));
     }
-
+    
     public function exportIncome(Request $request, $slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
