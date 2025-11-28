@@ -96,7 +96,7 @@
         hover:shadow-lg hover:from-[#ff1f1f] hover:to-[#ff5a4f] transition-all">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs md:text-sm opacity-90">Total Transaksi {{ $monthNames[$month - 1] }}</p>
+                    <p class="text-xs md:text-sm opacity-90">Total Transaksi {{ $monthNames[$month - 1] }} Tahun {{ $year }}</p>
                     <p class="text-xl md:text-3xl font-bold mt-1 md:mt-2">{{ $recentTransactions->count() }}</p>
                 </div>
                 <i class="fas fa-list text-2xl md:text-4xl opacity-30"></i>
@@ -108,7 +108,7 @@
          hover:shadow-lg hover:from-[#ff1f1f] hover:to-[#ff5a4f] transition-all">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs md:text-sm opacity-90">Total Pengeluaran {{ $monthNames[$month - 1] }}</p>
+                    <p class="text-xs md:text-sm opacity-90">Total Pengeluaran {{ $monthNames[$month - 1] }} Tahun {{ $year }}</p>
                     <p class="text-xl md:text-2xl font-bold mt-1 md:mt-2">Rp
                         {{ number_format($recentTransactions->sum('amount'), 0, ',', '.') }}</p>
                 </div>
@@ -121,7 +121,7 @@
          hover:shadow-lg hover:from-[#ff1f1f] hover:to-[#ff5a4f] transition-all">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs md:text-sm opacity-90">Rata-rata {{ $monthNames[$month - 1] }}</p>
+                    <p class="text-xs md:text-sm opacity-90">Rata-rata {{ $monthNames[$month - 1] }} Tahun {{ $year }}</p>
                     <p class="text-xl md:text-2xl font-bold mt-1 md:mt-2">
                         Rp
                         {{ $recentTransactions->count() > 0 ? number_format($recentTransactions->avg('amount'), 0, ',', '.') : '0' }}
@@ -145,7 +145,9 @@
         </div>
 
         <div class="bg-white rounded-lg shadow-md p-4 md:p-6">
-            <h3 class="text-lg md:text-xl font-semibold text-[#F20E0F] mb-4">Transaksi Terbaru</h3>
+            <h3 class="text-lg md:text-xl font-semibold text-[#F20E0F] mb-4">
+                Transaksi Bulan {{ $monthNames[$month - 1] }} Tahun {{ $year }}
+            </h3>
             <div class="overflow-x-auto hidden sm:block">
                 @if ($transactions->count() > 0)
                     <table class="w-full">
