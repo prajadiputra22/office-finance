@@ -93,7 +93,7 @@
     </nav>
 </aside>
 
-<nav class="fixed md:hidden bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-1 py-1 z-40">
+<nav class="fixed md:hidden bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-1 py-1 z-40 pb-4">
     <ul class="flex justify-evenly items-center">
         <li>
             <a href="{{ route('home') }}"
