@@ -22,7 +22,8 @@ class CategoryTransactionController extends Controller
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
             ->orderBy('date', 'desc')
-            ->simplePaginate(4);
+            ->simplePaginate(4)
+            ->appends(request()->query());
 
         $recentTransactions = Transaction::where('category_id', $category->id)
             ->where('type', 'income')
@@ -83,7 +84,8 @@ class CategoryTransactionController extends Controller
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
             ->orderBy('date', 'desc')
-            ->simplePaginate(4);
+            ->simplePaginate(4)
+            ->appends(request()->query());
 
         $recentTransactions = Transaction::where('category_id', $category->id)
             ->where('type', 'expenditure')
