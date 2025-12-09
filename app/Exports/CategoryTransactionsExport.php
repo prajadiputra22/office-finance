@@ -195,7 +195,7 @@ class CategoryYearSheet implements FromCollection, WithHeadings, WithColumnWidth
             if ($transaction->attachment) {
                 $attachmentPath = storage_path('app/public/' . $transaction->attachment);
                 if (file_exists($attachmentPath)) {
-                    $fileUrl = asset('storage/' . $transaction->attachment);
+                    $fileUrl = route('transactions.download', $transaction->id);
                     $sheet->getCell('J' . $row)->getHyperlink()->setUrl($fileUrl);
                     $sheet->getStyle('J' . $row)->getFont()
                         ->setUnderline(true)
