@@ -4,6 +4,24 @@
 
 @section('content')
 <div x-data="{ openAddCategory: false, filterDropdown: false }">
+    {{-- Modal peringatan global untuk pesan error delete --}}
+    @if(session('error_delete'))
+    <div x-data="{ showErrorModal: true }" x-show="showErrorModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg shadow-xl w-96 p-6 text-center transform transition-all">
+            <div class="mb-4 text-red-500">
+                <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Peringatan</h3>
+            <p class="text-gray-600 mb-6">{{ session('error_delete') }}</p>
+            <button @click="showErrorModal = false" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
+                OK
+            </button>
+        </div>
+    </div>
+    @endif
+
     <h2 id="saldo-title" class="lg:hidden text-xl md:text-2xl font-bold text-gray-800 mb-5">
         Masukkan Kategori
     </h2>
@@ -273,6 +291,7 @@
 
     @auth
         @if(auth()->user()->role === 'admin')
+    <!-- Updated form to use AJAX submission to keep modal open on error -->
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
         x-show="openAddCategory" x-transition.opacity style="display: none;">
         <div class="bg-white rounded-lg w-full max-w-md shadow-xl" @click.outside="openAddCategory = false">
@@ -281,29 +300,24 @@
                 <button type="button" class="text-gray-400 hover:text-gray-600 text-xl"
                     @click="openAddCategory = false">✕</button>
             </div>
-            <form action="{{ route('category.store') }}" method="POST" class="p-4">
+            <form id="addCategoryForm" class="p-4">
                 @csrf
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
-                    <input type="text" name="category_name" value="{{ old('category_name') }}"
-                        class="w-full px-3 py-2 bg-gray-100 border-0 rounded-md focus:bg-white focus:ring-2 focus:ring-[#0B3B9F] focus:outline-none transition-colors @error('category_name') ring-2 ring-red-500 @enderror"
-                        placeholder="Masukkan nama kategori" required>
-                    @error('category_name')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                    <input type="text" name="category_name" id="category_name"
+                        class="w-full px-3 py-2 bg-gray-100 border-0 rounded-md focus:bg-white focus:ring-2 focus:ring-[#0B3B9F] focus:outline-none transition-colors"
+                        placeholder="Masukkan nama kategori">
+                    <p id="category_name_error" class="text-red-500 text-sm mt-1 hidden"></p>
                 </div>
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                    <select name="type"
-                        class="w-full px-3 py-2 bg-gray-100 border-0 rounded-md focus:bg-white focus:ring-2 focus:ring-[#0B3B9F] focus:outline-none transition-colors @error('type') ring-2 ring-red-500 @enderror"
-                        required>
+                    <select name="type" id="type"
+                        class="w-full px-3 py-2 bg-gray-100 border-0 rounded-md focus:bg-white focus:ring-2 focus:ring-[#0B3B9F] focus:outline-none transition-colors">
                         <option value="">Pilih status</option>
-                        <option value="income" {{ old('type') == 'income' ? 'selected' : '' }}>Pemasukan</option>
-                        <option value="expenditure" {{ old('type') == 'expenditure' ? 'selected' : '' }}>Pengeluaran</option>
+                        <option value="income">Pemasukan</option>
+                        <option value="expenditure">Pengeluaran</option>
                     </select>
-                    @error('type')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                    <p id="type_error" class="text-red-500 text-sm mt-1 hidden"></p>
                 </div>
                 <div class="flex justify-end gap-3">
                     <button type="button" @click="openAddCategory = false"
@@ -318,6 +332,85 @@
             </form>
         </div>
     </div>
+
+    <script>
+        document.getElementById('addCategoryForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            document.getElementById('category_name_error').classList.add('hidden');
+            document.getElementById('type_error').classList.add('hidden');
+            document.getElementById('category_name').classList.remove('ring-2', 'ring-red-500');
+            document.getElementById('type').classList.remove('ring-2', 'ring-red-500');
+
+            const categoryName = document.getElementById('category_name').value.trim();
+            const type = document.getElementById('type').value.trim();
+
+            let hasError = false;
+
+            if (!categoryName) {
+                document.getElementById('category_name').classList.add('ring-2', 'ring-red-500');
+                document.getElementById('category_name_error').textContent = 'Harap mengisi kategori.';
+                document.getElementById('category_name_error').classList.remove('hidden');
+                hasError = true;
+            }
+
+            if (!type) {
+                document.getElementById('type').classList.add('ring-2', 'ring-red-500');
+                document.getElementById('type_error').textContent = 'Harap mengisi status.';
+                document.getElementById('type_error').classList.remove('hidden');
+                hasError = true;
+            }
+
+            if (hasError) {
+                return;
+            }
+
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('{{ route("category.store") }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    if (data.errors) {
+                        if (data.errors.category_name) {
+                            document.getElementById('category_name').classList.add('ring-2', 'ring-red-500');
+                            document.getElementById('category_name_error').textContent = data.errors.category_name[0];
+                            document.getElementById('category_name_error').classList.remove('hidden');
+                        }
+                        if (data.errors.type) {
+                            document.getElementById('type').classList.add('ring-2', 'ring-red-500');
+                            document.getElementById('type_error').textContent = data.errors.type[0];
+                            document.getElementById('type_error').classList.remove('hidden');
+                        }
+                    }
+                    return;
+                }
+
+                document.querySelector('[x-data*="openAddCategory"]').__x.$data.openAddCategory = false;
+                location.reload();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        document.getElementById('category_name').addEventListener('input', function() {
+            this.classList.remove('ring-2', 'ring-red-500');
+            document.getElementById('category_name_error').classList.add('hidden');
+        });
+
+        document.getElementById('type').addEventListener('change', function() {
+            this.classList.remove('ring-2', 'ring-red-500');
+            document.getElementById('type_error').classList.add('hidden');
+        });
+    </script>
         @endif
     @endauth
 @endsection

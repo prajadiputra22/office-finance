@@ -23,15 +23,62 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'category_name' => 'required|string|max:255',
             'type' => 'required|in:income,expenditure',
+        ], [
+            'type.in' => 'Tipe kategori tidak valid.',
         ]);
 
-        $data = $request->only('category_name', 'type');
-        $data['slug'] = Str::slug($request->input('category_name'));
+        $categoryName = $validated['category_name'];
+        $type = $validated['type'];
+        $baseSlug = Str::slug($categoryName);
+
+        $existingCategory = Category::where('category_name', $categoryName)
+            ->where('type', $type)
+            ->first();
+
+        if ($existingCategory) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'errors' => [
+                        'category_name' => ['Kategori sudah tersedia.']
+                    ]
+                ], 422);
+            }
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['category_name' => 'Kategori sudah tersedia.']);
+        }
+
+        // Check if category with same name but different type exists
+        $existingNameDifferentType = Category::where('category_name', $categoryName)
+            ->where('type', '!=', $type)
+            ->first();
+
+        if ($existingNameDifferentType) {
+            $existingTypeLabel = $existingNameDifferentType->type === 'income' ? 'income' : 'expenditure';
+            $existingNameDifferentType->update([
+                'slug' => $baseSlug . '-' . $existingTypeLabel
+            ]);
+
+            $typeLabel = $type === 'income' ? 'income' : 'expenditure';
+            $slug = $baseSlug . '-' . $typeLabel;
+        } else {
+            $slug = $baseSlug;
+        }
+
+        $data = [
+            'category_name' => $categoryName,
+            'type' => $type,
+            'slug' => $slug,
+        ];
 
         Category::create($data);
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Kategori berhasil ditambahkan.']);
+        }
 
         return redirect()->route('category.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
@@ -44,6 +91,13 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = Category::findOrFail($id);
+
+        $hasTransactions = \App\Models\Transaction::where('category_id', $id)->exists();
+
+        if ($hasTransactions) {
+            return redirect()->back()->with('error_delete', 'Kategori digunakan pada data transaksi');
+        }
+
         $category->delete();
 
         return redirect()->back()->with('success', 'Kategori berhasil dihapus!');
