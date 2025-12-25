@@ -441,7 +441,8 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-medium mb-1">Tanggal</label>
+                                    <label class="block text-xs font-medium mb-1">Tanggal <span
+                                            class="text-red-500">*</span></label>
                                     <input type="date" x-model="addForm.date"
                                         class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
                                 </div>
@@ -575,7 +576,8 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-medium mb-1">Tanggal</label>
+                                    <label class="block text-xs font-medium mb-1">Tanggal <span
+                                            class="text-red-500">*</span></label>
                                     <input type="date" x-model="editForm.date"
                                         class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B3B9F] focus:border-[#0B3B9F]">
                                 </div>
@@ -829,6 +831,7 @@
                             }
                             if (!this.addForm.amount || this.addForm.amount <= 0) errors.push(
                                 'Jumlah harus diisi dan lebih dari 0');
+                            if (!this.addForm.date) errors.push('Tanggal harus diisi');
                             this.addFormErrors = errors;
                             return errors.length === 0;
                         },
@@ -842,6 +845,7 @@
                             }
                             if (!this.editForm.amount || this.editForm.amount <= 0) errors.push(
                                 'Jumlah harus diisi dan lebih dari 0');
+                            if (!this.editForm.date) errors.push('Tanggal harus diisi');
                             this.editFormErrors = errors;
                             return errors.length === 0;
                         },

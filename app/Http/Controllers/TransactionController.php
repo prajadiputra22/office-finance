@@ -149,7 +149,9 @@ class TransactionController extends Controller
                 $validationRules['date_maturity'] = 'required|date';
             }
 
-            $request->validate($validationRules);
+            $request->validate($validationRules, [
+                'date.required' => 'Tanggal harus diisi',
+            ]);
 
             DB::beginTransaction();
 
@@ -206,7 +208,9 @@ class TransactionController extends Controller
                 $validationRules['date_maturity'] = 'required|date';
             }
 
-            $request->validate($validationRules);
+            $request->validate($validationRules, [
+                'date.required' => 'Tanggal harus diisi',
+            ]);
 
             DB::beginTransaction();
             
