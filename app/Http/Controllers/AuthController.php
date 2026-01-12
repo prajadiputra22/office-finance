@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -41,7 +41,10 @@ class AuthController extends Controller
             ])->onlyInput('username');
         }
 
-        if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
+        $user = User::where('username', $username)->where('role', 'admin')->first();
+
+        if ($user && Hash::check($credentials['password'], $user->password)) {
+            Auth::login($user, $request->boolean('remember'));
             $this->resetAttempts($username);
             $request->session()->regenerate();
             return redirect()->intended(route('home'));
@@ -132,17 +135,19 @@ class AuthController extends Controller
 
     /**
      * Handle admin registration
+     * Changed to save admin data to users table with role 'admin' instead of admin table
      */
     public function register(Request $request)
     {
         $request->validate([
-            'username' => ['required', 'string', 'max:255', 'unique:admin'],
+            'username' => ['required', 'string', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
         ]);
 
-        $admin = \App\Models\Admin::create([
+        User::create([
             'username' => $request->username,
-            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'email' => null,
+            'password' => Hash::make($request->password),
             'role' => 'admin',
         ]);
 
@@ -159,10 +164,10 @@ class AuthController extends Controller
             'new_password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $admin = Auth::guard('admin')->user();
+        $user = Auth::guard('admin')->user();
 
-        if ($admin instanceof Admin) {
-            $admin->update([
+        if ($user instanceof User) {
+            $user->update([
                 'password' => Hash::make($request->new_password),
             ]);
         }
