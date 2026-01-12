@@ -51,7 +51,6 @@ class CategoryController extends Controller
                 ->withErrors(['category_name' => 'Kategori sudah tersedia.']);
         }
 
-        // Check if category with same name but different type exists
         $existingNameDifferentType = Category::where('category_name', $categoryName)
             ->where('type', '!=', $type)
             ->first();
