@@ -164,7 +164,7 @@ class AuthController extends Controller
             'new_password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = Auth::guard('admin')->user();
+        $user = Auth::user();
 
         if ($user instanceof User) {
             $user->update([
@@ -188,7 +188,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        Auth::guard('admin')->logout();
+        Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
