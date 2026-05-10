@@ -21,11 +21,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer('*', function ($view) {
-            $view->with([
-                'sidebarIncomeCategories' => Category::income()->get(),
-                'sidebarExpenditureCategories' => Category::expenditure()->get()
-            ]);
-        });
+
     }
 }
