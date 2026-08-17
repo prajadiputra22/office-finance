@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use App\Models\Category;
-use App\Models\Income;
-use App\Models\Expenditure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\BaseController;
 use Carbon\Carbon;
 
-class TransactionController extends Controller
+class TransactionController extends BaseController
 {
     public function index(Request $request)
     {
@@ -251,11 +250,6 @@ class TransactionController extends Controller
         try {
             $transaction = Transaction::findOrFail($id);
 
-            if ($transaction->type === 'income' && $transaction->no_factur) {
-                Income::where('no_factur', $transaction->no_factur)->delete();
-            } elseif ($transaction->type === 'expenditure' && $transaction->no_factur) {
-                Expenditure::where('no_factur', $transaction->no_factur)->delete();
-            }
             if ($transaction->attachment) {
                 Storage::disk('public')->delete($transaction->attachment);
             }
@@ -288,11 +282,6 @@ class TransactionController extends Controller
             ]);
 
             foreach ($transactions as $transaction) {
-                if ($transaction->type === 'income' && $transaction->no_factur) {
-                    Income::where('no_factur', $transaction->no_factur)->delete();
-                } elseif ($transaction->type === 'expenditure' && $transaction->no_factur) {
-                    Expenditure::where('no_factur', $transaction->no_factur)->delete();
-                }
                 if ($transaction->attachment) {
                     Storage::disk('public')->delete($transaction->attachment);
                 }

@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 use ArielMejiaDev\LarapexCharts\LarapexChart;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CategoryTransactionsExport;
+use App\Http\Controllers\BaseController;
 
-class CategoryTransactionController extends Controller
+class CategoryTransactionController extends BaseController
 {
     public function income(Request $request, $slug)
     {

@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Http\Controllers\BaseController;
 
-class CategoryController extends Controller
+class CategoryController extends BaseController
 {
     public function index(Request $request)
     {

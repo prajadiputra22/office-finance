@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use ArielMejiaDev\LarapexCharts\LarapexChart;
 use App\Models\Transaction;
-use App\Models\Category;
+use App\Http\Controllers\BaseController;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TransactionsExport;
 
-class ReportsController extends Controller
+class ReportsController extends BaseController
 {
     public function index(Request $request)
     {

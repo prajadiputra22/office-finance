@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Charts\TransactionsChart;
 use App\Models\Transaction;
+use App\Http\Controllers\BaseController;
 use Carbon\Carbon;
 
-class HomeController extends Controller
+class HomeController extends BaseController
 {
     public function index(Request $request, TransactionsChart $transactionsChart)
     {
