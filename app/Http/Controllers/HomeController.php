@@ -53,7 +53,27 @@ class HomeController extends BaseController
             })
             ->sum('amount');
 
-        $balance = $totalIncome - $totalExpenditure;
+        $totalAllIncome = Transaction::where('type', 'income')
+            ->where(function($q) {
+                $q->where('payment', '!=', 'giro')
+                  ->orWhere(function($q2) {
+                      $q2->where('payment', 'giro')
+                         ->where('date_maturity', '<=', Carbon::now());
+                  });
+            })
+            ->sum('amount');
+
+        $totalAllExpenditure = Transaction::where('type', 'expenditure')
+            ->where(function($q) {
+                $q->where('payment', '!=', 'giro')
+                    ->orWhere(function($q2) {
+                        $q2->where('payment', 'giro')
+                            ->where('date_maturity', '<=', Carbon::now());
+                    });
+            })
+            ->sum('amount');
+
+        $balance = $totalAllIncome - $totalAllExpenditure;
         
         $recentTransactions = Transaction::with('category')
             ->whereYear('date', $year)

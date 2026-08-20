@@ -11,20 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->char('num_factur', 10)
-                ->unique()
-                ->default('NF-0001');
-            $table->string('name_customer');
-            $table->string('no_telephone', 20)->nullable();
-            $table->text('address')->nullable();
-            $table->string('recipient')->nullable();
-            $table->foreignId('id_products')->constrained('products')->onDelete('restrict');
-            $table->decimal('total_amount', 15, 2);
-            $table->string('payment_method', 50)->nullable();
-            $table->string('payment_status', 50)->nullable();
-            $table->text('notes')->nullable();
+            $table->enum('type', ['income', 'expenditure']);
+            $table->foreignId('category_id')->constrained('category')->onDelete('restrict');
+            $table->decimal('amount', 15, 2);
+            $table->enum('payment', ['cash', 'transfer', 'giro']);
+            $table->date('date_entry');
+            $table->string('description')->nullable();
+            $table->date('date_factur')->nullable();
+            $table->date('date_maturity')->nullable();
+            $table->integer('no_factur')->nullable();
+            $table->date('date');
+            $table->string('attachment')->nullable();
             $table->timestamps();
         });
     }
