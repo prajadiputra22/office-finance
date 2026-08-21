@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use App\Http\Controllers\BaseController;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TransactionsExport;
+use Carbon\Carbon;
 
 class ReportsController extends BaseController
 {
@@ -17,9 +18,18 @@ class ReportsController extends BaseController
         $selectedYear = $request->input('year', now()->year);
 
         $monthNames = [
-            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
         ];
 
         $selectedMonthName = $monthNames[$selectedMonth] ?? '';
@@ -33,8 +43,27 @@ class ReportsController extends BaseController
             ->whereMonth('date', $selectedMonth)
             ->whereYear('date', $selectedYear);
 
-        $income = (clone $query)->where('type', 'income')->sum('amount');
-        $expenditure = (clone $query)->where('type', 'expenditure')->sum('amount');
+        $income = (clone $query)
+            ->where('type', 'income')
+            ->where(function ($q) {
+                $q->where('payment', '!=', 'giro')
+                    ->orWhere(function ($q2) {
+                        $q2->where('payment', 'giro')
+                            ->where('date_maturity', '<=', Carbon::now());
+                    });
+            })
+            ->sum('amount');
+
+        $expenditure = (clone $query)
+            ->where('type', 'expenditure')
+            ->where(function ($q) {
+                $q->where('payment', '!=', 'giro')
+                    ->orWhere(function ($q2) {
+                        $q2->where('payment', 'giro')
+                            ->where('date_maturity', '<=', Carbon::now());
+                    });
+            })
+            ->sum('amount');
 
         $incomePerCategory = Transaction::join('category', 'transactions.category_id', '=', 'category.id')
             ->where('transactions.type', 'income')
@@ -58,11 +87,35 @@ class ReportsController extends BaseController
         $expenditureLabels = $expenditurePerCategory->pluck('category_name')->toArray();
         $expenditureValues = $expenditurePerCategory->pluck('total')->map(fn($v) => (float)$v)->toArray();
 
-        $incomeColors = ['#16A34A','#22C55E','#4ADE80','#86EFAC','#BBF7D0','#DCFCE7',
-                        '#15803D','#166534','#14532D','#047857','#065F46','#064E3B'];
-        
-        $expenditureColors = ['#DC2626','#EF4444','#F87171','#FCA5A5','#FECACA','#FEE2E2',
-                             '#B91C1C','#991B1B','#7F1D1D','#9F1239','#BE123C','#E11D48'];
+        $incomeColors = [
+            '#16A34A',
+            '#22C55E',
+            '#4ADE80',
+            '#86EFAC',
+            '#BBF7D0',
+            '#DCFCE7',
+            '#15803D',
+            '#166534',
+            '#14532D',
+            '#047857',
+            '#065F46',
+            '#064E3B'
+        ];
+
+        $expenditureColors = [
+            '#DC2626',
+            '#EF4444',
+            '#F87171',
+            '#FCA5A5',
+            '#FECACA',
+            '#FEE2E2',
+            '#B91C1C',
+            '#991B1B',
+            '#7F1D1D',
+            '#9F1239',
+            '#BE123C',
+            '#E11D48'
+        ];
 
         $incomeChart = (new LarapexChart)->pieChart()
             ->setDataset($incomeValues)
@@ -101,19 +154,24 @@ class ReportsController extends BaseController
         }
 
         return view('report', compact(
-            'income', 'expenditure',
-            'incomeChart', 'expenditureChart',
-            'incomePercentages', 'expenditurePercentages',
-            'selectedMonthName', 'selectedYear','availableYears'
+            'income',
+            'expenditure',
+            'incomeChart',
+            'expenditureChart',
+            'incomePercentages',
+            'expenditurePercentages',
+            'selectedMonthName',
+            'selectedYear',
+            'availableYears'
         ));
     }
-    
+
     public function export(Request $request)
-{
-    $selectedYear = $request->input('year', now()->year);
-    
-    $fileName = 'Laporan_Transaksi_' . $selectedYear . '.xlsx';
-    
-    return Excel::download(new TransactionsExport($selectedYear), $fileName);
-}
+    {
+        $selectedYear = $request->input('year', now()->year);
+
+        $fileName = 'Laporan_Transaksi_' . $selectedYear . '.xlsx';
+
+        return Excel::download(new TransactionsExport($selectedYear), $fileName);
+    }
 }
